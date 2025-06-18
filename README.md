@@ -115,6 +115,13 @@ The license requires you to:
 - State significant changes made to the software
 - Include any existing copyright notices
 - Include attribution notices
+- Include a copy of the NOTICE file if one exists
+
+### NOTICE File
+This project includes a [NOTICE](NOTICE) file that contains:
+- Copyright and attribution information
+- Third-party component licenses
+- Special notices about project-specific concepts and terminology
 
 For more information about the Apache License 2.0, please visit [https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
