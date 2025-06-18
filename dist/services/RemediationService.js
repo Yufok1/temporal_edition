@@ -1,0 +1,130 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RemediationService = void 0;
+const logger_1 = require("../utils/logger");
+const metrics_1 = require("../utils/metrics");
+class RemediationService {
+    constructor(redisClient, notificationService) {
+        this.redisClient = redisClient;
+        this.notificationService = notificationService;
+        this.lastActionTime = new Map();
+        this.actions = [];
+        this.initializeActions();
+    }
+    initializeActions() {
+        this.actions = [
+            {
+                type: 'queue_backlog',
+                severity: 'critical',
+                condition: 'queue_backlog_size > 1000',
+                action: async () => {
+                    logger_1.logger.info('Executing queue backlog remediation');
+                    // Scale up processing capacity
+                    await this.redisClient.set('queue_processing_capacity', '2x');
+                    await this.notificationService.sendAlert({
+                        severity: 'critical',
+                        message: 'Queue backlog detected - scaling up processing capacity',
+                        details: { action: 'scale_up' }
+                    });
+                },
+                cooldown: 5 * 60 * 1000 // 5 minutes
+            },
+            {
+                type: 'high_latency',
+                severity: 'warning',
+                condition: 'network_latency > 500',
+                action: async () => {
+                    logger_1.logger.info('Executing high latency remediation');
+                    // Implement circuit breaker
+                    await this.redisClient.set('circuit_breaker', 'enabled');
+                    await this.notificationService.sendAlert({
+                        severity: 'warning',
+                        message: 'High latency detected - enabling circuit breaker',
+                        details: { action: 'circuit_breaker' }
+                    });
+                },
+                cooldown: 2 * 60 * 1000 // 2 minutes
+            },
+            {
+                type: 'memory_pressure',
+                severity: 'critical',
+                condition: 'memory_usage > 0.9',
+                action: async () => {
+                    logger_1.logger.info('Executing memory pressure remediation');
+                    // Trigger garbage collection
+                    if (global.gc) {
+                        global.gc();
+                    }
+                    await this.notificationService.sendAlert({
+                        severity: 'critical',
+                        message: 'High memory usage detected - triggering garbage collection',
+                        details: { action: 'gc' }
+                    });
+                },
+                cooldown: 10 * 60 * 1000 // 10 minutes
+            },
+            {
+                type: 'alignment_drift',
+                severity: 'warning',
+                condition: 'solar_alignment_score < 0.7',
+                action: async () => {
+                    logger_1.logger.info('Executing alignment drift remediation');
+                    // Recalibrate alignment
+                    await this.redisClient.set('alignment_recalibration', 'in_progress');
+                    await this.notificationService.sendAlert({
+                        severity: 'warning',
+                        message: 'Alignment drift detected - initiating recalibration',
+                        details: { action: 'recalibrate' }
+                    });
+                },
+                cooldown: 15 * 60 * 1000 // 15 minutes
+            }
+        ];
+    }
+    async handleAlert(alert) {
+        const matchingAction = this.actions.find(a => a.type === alert.type);
+        if (!matchingAction) {
+            logger_1.logger.warn(`No remediation action found for alert type: ${alert.type}`);
+            return;
+        }
+        const lastAction = this.lastActionTime.get(alert.type) || 0;
+        const now = Date.now();
+        if (now - lastAction < matchingAction.cooldown) {
+            logger_1.logger.info(`Skipping remediation for ${alert.type} due to cooldown`);
+            return;
+        }
+        try {
+            await matchingAction.action();
+            this.lastActionTime.set(alert.type, now);
+            metrics_1.metricsService.incrementRemediationCount('system', alert.type);
+        }
+        catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            logger_1.logger.error(`Remediation action failed for ${alert.type}:`, errorMessage);
+            await this.notificationService.sendAlert({
+                severity: 'critical',
+                message: `Remediation action failed for ${alert.type}`,
+                details: { error: errorMessage }
+            });
+        }
+    }
+    async getRemediationStatus() {
+        const status = {};
+        for (const action of this.actions) {
+            const lastAction = this.lastActionTime.get(action.type) || 0;
+            const now = Date.now();
+            const timeSinceLastAction = now - lastAction;
+            const isInCooldown = timeSinceLastAction < action.cooldown;
+            status[action.type] = {
+                severity: action.severity,
+                lastAction: lastAction ? new Date(lastAction).toISOString() : null,
+                timeSinceLastAction,
+                isInCooldown,
+                cooldownRemaining: isInCooldown ? action.cooldown - timeSinceLastAction : 0
+            };
+        }
+        return status;
+    }
+}
+exports.RemediationService = RemediationService;
+//# sourceMappingURL=RemediationService.js.map

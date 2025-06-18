@@ -1,0 +1,56 @@
+groups:
+  - name: component_health
+    rules:
+      - alert: ComponentHealthDegraded
+        expr: component_health < 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Component health degraded"
+          description: "Component {{ $labels.component }} health is below 80% for 5 minutes"
+
+      - alert: HighNetworkLatency
+        expr: rate(network_latency_seconds_sum[5m]) / rate(network_latency_seconds_count[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network latency detected"
+          description: "Network latency for {{ $labels.endpoint }} is above 1 second for 5 minutes"
+
+      - alert: DataIntegrityIssues
+        expr: data_integrity_score < 0.95
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Data integrity issues detected"
+          description: "Data integrity score for {{ $labels.data_type }} is below 95% for 5 minutes"
+
+      - alert: DependencyHealthDegraded
+        expr: dependency_health < 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Dependency health degraded"
+          description: "Health of {{ $labels.dependency }} ({{ $labels.type }}) is below 90% for 5 minutes"
+
+      - alert: HighErrorRate
+        expr: rate(error_distribution_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate for {{ $labels.error_type }} in {{ $labels.component }} is above 0.1 per second for 5 minutes"
+
+      - alert: JobProcessingDelay
+        expr: rate(job_processing_total{status="pending"}[5m]) > rate(job_processing_total{status="completed"}[5m])
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Job processing delay detected"
+          description: "Job processing rate is slower than incoming rate for {{ $labels.type }} jobs of priority {{ $labels.priority }}" 

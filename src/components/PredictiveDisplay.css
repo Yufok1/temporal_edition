@@ -1,0 +1,198 @@
+.predictive-display {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.predictive-display h3 {
+  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+}
+
+.prediction-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.chart-section {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.metric-selector,
+.horizon-selector {
+  flex: 1;
+}
+
+.metric-selector label,
+.horizon-selector label {
+  margin-right: 10px;
+  color: #666;
+}
+
+.metric-selector select,
+.horizon-selector select {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+  font-size: 14px;
+  width: 100%;
+}
+
+.prediction-chart {
+  width: 100%;
+  height: 400px;
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.prediction-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.prediction-metric,
+.prediction-value,
+.prediction-confidence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.prediction-metric span:first-child,
+.prediction-value span:first-child,
+.prediction-confidence span:first-child {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.prediction-metric span:last-child,
+.prediction-value span:last-child,
+.prediction-confidence span:last-child {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.factors-section {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.factors-section h4 {
+  color: #333;
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+}
+
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.factor-item {
+  background-color: white;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.factor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.factor-name {
+  color: #333;
+  font-weight: 500;
+}
+
+.factor-influence {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.factor-influence.positive {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.factor-influence.negative {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.factor-bar {
+  height: 6px;
+  background-color: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.factor-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.factor-confidence {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: right;
+}
+
+.no-factors {
+  color: #666;
+  text-align: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .prediction-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .prediction-chart {
+    height: 300px;
+  }
+
+  .prediction-info {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+} 

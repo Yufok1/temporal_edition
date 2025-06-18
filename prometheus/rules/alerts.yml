@@ -1,0 +1,339 @@
+groups:
+  - name: temporal_editioning_alerts
+    rules:
+      # Alignment Score Alerts
+      - alert: LowAlignmentScore
+        expr: system_alignment_score < 0.8
+        for: 5m
+        labels:
+          severity: high
+          type: alignment
+        annotations:
+          summary: "System alignment score is too low"
+          description: "System {{ $labels.systemId }} has alignment score {{ $value }} (threshold: 0.8)"
+
+      # Stability Index Alerts
+      - alert: LowStabilityIndex
+        expr: system_stability_index < 0.7
+        for: 5m
+        labels:
+          severity: medium
+          type: stability
+        annotations:
+          summary: "System stability index is too low"
+          description: "System {{ $labels.systemId }} has stability index {{ $value }} (threshold: 0.7)"
+
+      # Error Rate Alerts
+      - alert: HighErrorRate
+        expr: system_performance_error_rate > 0.05
+        for: 5m
+        labels:
+          severity: high
+          type: performance
+        annotations:
+          summary: "System error rate is too high"
+          description: "System {{ $labels.systemId }} has error rate {{ $value }} (threshold: 0.05)"
+
+      # Response Time Alerts
+      - alert: HighResponseTime
+        expr: system_performance_response_time > 1000
+        for: 5m
+        labels:
+          severity: medium
+          type: performance
+        annotations:
+          summary: "System response time is too high"
+          description: "System {{ $labels.systemId }} has response time {{ $value }}ms (threshold: 1000ms)"
+
+      # Governance Violation Alerts
+      - alert: GovernanceViolation
+        expr: governance_violations_total > 0
+        for: 1m
+        labels:
+          severity: critical
+          type: governance
+        annotations:
+          summary: "Governance violations detected"
+          description: "System {{ $labels.systemId }} has {{ $value }} governance violations"
+
+      # Critical System State Alerts
+      - alert: SystemCritical
+        expr: system_alignment_score < 0.5 or system_stability_index < 0.4
+        for: 2m
+        labels:
+          severity: critical
+          type: system
+        annotations:
+          summary: "System is in critical state"
+          description: "System {{ $labels.systemId }} is in critical state (alignment: {{ $value }})"
+
+      # Compliance Score Alerts
+      - alert: LowComplianceScore
+        expr: governance_compliance_score < 0.7
+        for: 5m
+        labels:
+          severity: high
+          type: governance
+        annotations:
+          summary: "System compliance score is too low"
+          description: "System {{ $labels.systemId }} has compliance score {{ $value }} (threshold: 0.7)"
+
+      # Data Integrity Alerts
+      - alert: DataIntegrityViolation
+        expr: data_integrity_checks_failed > 0
+        for: 1m
+        labels:
+          severity: critical
+          type: data_integrity
+        annotations:
+          summary: "Data integrity violation detected"
+          description: "System {{ $labels.systemId }} has {{ $value }} data integrity violations"
+
+      # Resource Usage Alerts
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / process_virtual_memory_bytes > 0.85
+        for: 5m
+        labels:
+          severity: high
+          type: resource
+        annotations:
+          summary: "High memory usage detected"
+          description: "System {{ $labels.systemId }} memory usage is {{ $value | humanizePercentage }}"
+
+      - alert: HighCPUUsage
+        expr: rate(process_cpu_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: high
+          type: resource
+        annotations:
+          summary: "High CPU usage detected"
+          description: "System {{ $labels.systemId }} CPU usage is {{ $value | humanizePercentage }}"
+
+      # Queue Health Alerts
+      - alert: QueueBacklog
+        expr: job_queue_size > 1000
+        for: 5m
+        labels:
+          severity: medium
+          type: queue
+        annotations:
+          summary: "Job queue backlog detected"
+          description: "System {{ $labels.systemId }} has {{ $value }} jobs in queue"
+
+      - alert: QueueProcessingDelay
+        expr: job_processing_delay_seconds > 300
+        for: 5m
+        labels:
+          severity: high
+          type: queue
+        annotations:
+          summary: "Job processing delay detected"
+          description: "System {{ $labels.systemId }} has {{ $value }}s processing delay"
+
+      # Network Health Alerts
+      - alert: HighLatency
+        expr: network_latency_seconds > 0.5
+        for: 5m
+        labels:
+          severity: medium
+          type: network
+        annotations:
+          summary: "High network latency detected"
+          description: "System {{ $labels.systemId }} has {{ $value }}s latency"
+
+      - alert: ConnectionErrors
+        expr: rate(network_connection_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: high
+          type: network
+        annotations:
+          summary: "Network connection errors detected"
+          description: "System {{ $labels.systemId }} has {{ $value }} connection errors per second"
+
+      # System Component Alerts
+      - alert: ComponentFailure
+        expr: component_health_status == 0
+        for: 1m
+        labels:
+          severity: critical
+          type: component
+        annotations:
+          summary: "Component failure detected"
+          description: "Component {{ $labels.component }} in system {{ $labels.systemId }} has failed"
+
+      - alert: ComponentDegradation
+        expr: component_performance_score < 0.7
+        for: 5m
+        labels:
+          severity: medium
+          type: component
+        annotations:
+          summary: "Component performance degradation detected"
+          description: "Component {{ $labels.component }} in system {{ $labels.systemId }} has performance score {{ $value }}"
+
+  - name: system_health
+    rules:
+      - alert: HighErrorRate
+        expr: rsc_error_rate > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: High error rate detected
+          description: System error rate is above 10% for 5 minutes
+
+      - alert: SlowResponseTime
+        expr: histogram_quantile(0.95, sum(rate(rsc_response_time_seconds_bucket[5m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Slow response times detected
+          description: 95th percentile of response times is above 2 seconds
+
+      - alert: HighCPUUsage
+        expr: system_cpu_usage > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High CPU usage
+          description: CPU usage is above 80% for 5 minutes
+
+      - alert: HighMemoryUsage
+        expr: system_memory_usage_bytes / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High memory usage
+          description: Memory usage is above 85% for 5 minutes
+
+  - name: queue_health
+    rules:
+      - alert: LargeQueueSize
+        expr: queue_size > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Large queue size detected
+          description: Queue size is above 1000 items for 5 minutes
+
+      - alert: HighQueueFailureRate
+        expr: rate(queue_failed_jobs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: High queue failure rate
+          description: More than 10 failed jobs per minute for 5 minutes
+
+      - alert: SlowQueueProcessing
+        expr: histogram_quantile(0.95, sum(rate(queue_processing_time_seconds_bucket[5m])) by (le)) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Slow queue processing
+          description: 95th percentile of queue processing time is above 5 seconds
+
+  - name: data_integrity
+    rules:
+      - alert: DataValidationErrors
+        expr: rate(data_validation_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Data validation errors detected
+          description: Data validation errors are occurring
+
+      - alert: DataCorruptionDetected
+        expr: rate(data_corruption_detected_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Data corruption detected
+          description: Data corruption events are occurring
+
+      - alert: LowDataConsistency
+        expr: data_consistency_score < 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low data consistency
+          description: Data consistency score is below 0.9
+
+  - name: service_health
+    rules:
+      - alert: ServiceHealthDegraded
+        expr: service_health_score < 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Service health degraded
+          description: Service health score is below 0.8
+
+      - alert: DependencyHealthIssues
+        expr: service_dependency_health < 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Service dependency health issues
+          description: One or more service dependencies are unhealthy
+
+      - alert: HighServiceErrorRate
+        expr: rate(service_errors_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: High service error rate
+          description: More than 5 service errors per minute
+
+  - name: recursive_stability
+    rules:
+      - alert: LowStabilityScore
+        expr: rug_stability_score < 0.7
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Low system stability
+          description: System stability score is below 0.7 for 5 minutes
+
+      - alert: BoundaryViolations
+        expr: rate(reb_boundary_violations_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Recursive boundary violations detected
+          description: System is violating recursive boundaries
+
+      - alert: LowComprehensionLevel
+        expr: uics_comprehension_level < 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Low user interaction comprehension
+          description: System comprehension level is below 0.5 for 10 minutes
+
+  - name: auto_remediation
+    rules:
+      - alert: ExcessiveAutoRemediation
+        expr: rate(rsc_auto_remediation_total[1h]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Excessive auto-remediation actions
+          description: More than 10 auto-remediation actions per hour 

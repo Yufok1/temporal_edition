@@ -1,0 +1,340 @@
+.recommendation-display {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.recommendation-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+}
+
+.priority-filter,
+.timeframe-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.priority-filter select,
+.timeframe-filter select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 0.9rem;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.recommendation-card {
+  background-color: #fff;
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 15px;
+  transition: transform 0.2s ease;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-2px);
+}
+
+.recommendation-card .recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.type-icon {
+  font-size: 1.5rem;
+}
+
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.recommendation-card h4 {
+  margin: 10px 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.metric .label {
+  min-width: 80px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.metric .value {
+  font-weight: 500;
+  color: #333;
+}
+
+.group-impact {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.group-impact h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.impact-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.impact-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.impact-point .label {
+  min-width: 80px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.factors {
+  margin: 15px 0;
+}
+
+.factors h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.factor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.factor-name {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.factor-influence {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.factor-influence.positive {
+  color: #4caf50;
+}
+
+.factor-influence.negative {
+  color: #f44336;
+}
+
+.actions {
+  margin: 15px 0;
+}
+
+.actions h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.actions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.actions li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.actions li:last-child {
+  border-bottom: none;
+}
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.action-description {
+  color: #666;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.action-difficulty {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.action-details {
+  display: flex;
+  gap: 15px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.action-outcome {
+  flex: 1;
+}
+
+.action-time,
+.action-probability {
+  white-space: nowrap;
+}
+
+.steward-adaptation {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.steward-adaptation h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.adaptation-section {
+  margin: 10px 0;
+}
+
+.adaptation-section h6 {
+  margin: 0 0 5px 0;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.adaptation-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.adaptation-section li {
+  padding: 4px 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.timeframe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.timeframe .label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.timeframe .value {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .recommendation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendation-card {
+    margin-bottom: 15px;
+  }
+
+  .action-details {
+    flex-direction: column;
+    gap: 5px;
+  }
+} 

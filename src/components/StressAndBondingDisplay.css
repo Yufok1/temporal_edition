@@ -1,0 +1,142 @@
+.stress-bonding-display {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.stress-bonding-display h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.stress-bonding-display h4 {
+  color: #666;
+  margin: 15px 0;
+  font-size: 1.1em;
+}
+
+.stress-analysis,
+.bonding-analysis {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.stress-levels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stress-indicator {
+  position: relative;
+  background: #eee;
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stress-bar {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.stress-value {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.factors-grid,
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.factor,
+.metric {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.factor label,
+.metric label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.progress-bar {
+  background: #eee;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.mitigation-strategies,
+.bonding-recommendations {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.mitigation-strategies ul,
+.bonding-recommendations ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mitigation-strategies li,
+.bonding-recommendations li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #666;
+  font-size: 0.95em;
+}
+
+.mitigation-strategies li:last-child,
+.bonding-recommendations li:last-child {
+  border-bottom: none;
+}
+
+.trend-indicator {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 15px;
+  color: white;
+  font-size: 0.9em;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+  .stress-levels {
+    grid-template-columns: 1fr;
+  }
+
+  .factors-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+} 

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../error logs"
+		},
+		{
+			"path": "../../../SpliceWeb"
+		}
+	],
+	"settings": {
+		"terminal.integrated.sendKeybindingsToShell": true
+	}
+}

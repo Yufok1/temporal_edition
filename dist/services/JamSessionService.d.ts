@@ -1,0 +1,34 @@
+import { HarmonicSequence, SonicModulation, HarmonicFeedback, MusicalInteraction, StewardCapabilities, WhaleCapabilities, WhaleVocalization, StewardResponse, ProdigalSystem, JamSession } from '../types/musical';
+import { PoseidonSystem } from './PoseidonSystem';
+import { WhaleSignalProcessing } from './WhaleSignalProcessing';
+export declare class JamSessionService implements JamSession {
+    private poseidon;
+    private processor;
+    private stewardCapabilities;
+    private whaleCapabilities;
+    private currentSession;
+    private sessionHistory;
+    whaleVocalizations: WhaleVocalization[];
+    stewardResponses: StewardResponse[];
+    prodigalSystemsEngaged: ProdigalSystem[];
+    constructor(poseidon: PoseidonSystem, processor: WhaleSignalProcessing, stewardCapabilities: StewardCapabilities, whaleCapabilities: WhaleCapabilities);
+    initiateWhaleSequence(sequence: HarmonicSequence): void;
+    applyStewardModulation(modulation: SonicModulation): HarmonicFeedback;
+    concludeSession(): MusicalInteraction;
+    private validateWhaleSequence;
+    private createInitialModulation;
+    private calculateResultingHarmony;
+    private assessHarmonicFeedback;
+    private generateRhythmicPattern;
+    private enhanceEmotionalContent;
+    private calculateResonance;
+    private calculateEnvironmentalImpact;
+    private calculateEmotionalAlignment;
+    private calculateMusicalCoherence;
+    private calculateEcosystemResponse;
+    getSessionHistory(): MusicalInteraction[];
+    getCurrentSession(): MusicalInteraction | null;
+    startSession(): void;
+    endSession(): void;
+    interactWithProdigalSystem(): void;
+}

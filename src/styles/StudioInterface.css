@@ -1,0 +1,148 @@
+.studio-interface {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e0e0;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    margin: 2rem auto;
+}
+
+.studio-interface h1 {
+    color: #4ecca3;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+}
+
+.session-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.control-button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.control-button.start {
+    background: #4ecca3;
+    color: #1a1a2e;
+}
+
+.control-button.end {
+    background: #ff6b6b;
+    color: #1a1a2e;
+}
+
+.control-button.interact {
+    background: #ffd93d;
+    color: #1a1a2e;
+}
+
+.control-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.control-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.session-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.vocalization-display,
+.response-display,
+.feedback-display {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.vocalization-display:hover,
+.response-display:hover,
+.feedback-display:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.vocalization-display h2,
+.response-display h2,
+.feedback-display h2 {
+    color: #4ecca3;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.vocalization-details,
+.response-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.vocalization-details p,
+.response-details p {
+    margin: 0;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+}
+
+.feedback-text,
+.stability-text {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    margin: 0.5rem 0;
+}
+
+.stability-text {
+    color: #ffd93d;
+}
+
+/* Animation for active session */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.session-display {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .studio-interface {
+        padding: 1rem;
+    }
+
+    .session-display {
+        grid-template-columns: 1fr;
+    }
+
+    .control-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+} 

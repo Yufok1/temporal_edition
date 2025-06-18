@@ -1,0 +1,143 @@
+.audio-visualizer,
+.enhanced-visualizer {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+}
+
+.audio-visualizer canvas,
+.enhanced-visualizer canvas {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.audio-controls,
+.analysis-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  color: #3498db;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.control-group input[type="range"] {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb:hover {
+  background: #2ecc71;
+  transform: scale(1.1);
+}
+
+/* Enhanced visualizer specific styles */
+.enhanced-visualizer {
+  position: relative;
+}
+
+.enhanced-visualizer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(46, 204, 113, 0.1));
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.analysis-controls {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .audio-controls,
+  .analysis-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .audio-visualizer,
+  .enhanced-visualizer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-group label {
+    font-size: 0.8rem;
+  }
+
+  .control-group input[type="range"] {
+    height: 4px;
+  }
+
+  .control-group input[type="range"]::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.current-harmony {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.current-harmony h3 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.harmony-notes {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.note {
+  display: inline-block;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.note:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+} 

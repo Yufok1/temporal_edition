@@ -1,0 +1,83 @@
+.social-network-graph {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.social-network-graph h3 {
+  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 1.2em;
+}
+
+.graph-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.network-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.legend-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.legend-section h4 {
+  color: #666;
+  margin: 0 0 10px 0;
+  font-size: 1em;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .social-network-graph {
+    padding: 15px;
+  }
+
+  .graph-container {
+    height: 400px;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .legend-section {
+    min-width: 100%;
+  }
+} 

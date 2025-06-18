@@ -1,0 +1,259 @@
+.whale-disengagement {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.whale-disengagement h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.whale-disengagement h3 {
+    color: #666;
+    margin: 15px 0;
+    font-size: 1.1em;
+}
+
+.whale-disengagement h4 {
+    color: #888;
+    margin: 10px 0;
+    font-size: 1em;
+}
+
+.disengagement-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.disengagement-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.emotional-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.disengagement-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.signal-type,
+.confidence-level,
+.psychoanalytical-context,
+.recovery-metrics {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.signal-type h3,
+.confidence-level h3,
+.psychoanalytical-context h3,
+.recovery-metrics h3 {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 1rem;
+}
+
+.confidence-bar,
+.progress-bar {
+    background-color: #e0e0e0;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.confidence-fill,
+.progress-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.psychoanalytical-context {
+    grid-column: 1 / -1;
+}
+
+.emotional-state {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.state-indicator {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.emotional-details {
+    margin-top: 15px;
+}
+
+.secondary-emotions {
+    margin-bottom: 15px;
+}
+
+.emotion-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    color: white;
+    margin: 4px;
+    font-size: 0.9em;
+}
+
+.emotional-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.metric {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.metric label {
+    display: block;
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.progress-bar {
+    background: #eee;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.recommended-actions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recommended-actions li {
+    padding: 5px 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+}
+
+.recommended-actions li:last-child {
+    border-bottom: none;
+}
+
+.disengagement-actions {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.acknowledge-button,
+.reengage-button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.acknowledge-button:hover,
+.reengage-button:hover {
+    background-color: #1976D2;
+}
+
+.buffer-period {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.timer {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0;
+}
+
+.environmental-context {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+.environmental-context h3 {
+    margin: 0 0 15px 0;
+    color: #666;
+}
+
+.context-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.context-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.context-item span:first-child {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.context-item span:last-child {
+    color: #333;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .disengagement-details {
+        grid-template-columns: 1fr;
+    }
+
+    .context-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .psychoanalytical-context,
+    .recovery-metrics {
+        grid-column: auto;
+    }
+} 

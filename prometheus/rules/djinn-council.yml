@@ -1,0 +1,47 @@
+groups:
+  - name: djinn_council
+    rules:
+      - alert: LowSystemAlignment
+        expr: system_lawful_alignment < 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "System alignment below threshold"
+          description: "System alignment has been below 80% for 5 minutes"
+
+      - alert: HighEvolutionRate
+        expr: rate(system_evolution_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High system evolution rate"
+          description: "System evolution rate is above 10 changes per 5 minutes"
+
+      - alert: LowSystemStability
+        expr: system_stability < 0.9
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "System stability below threshold"
+          description: "System stability has been below 90% for 5 minutes"
+
+      - alert: LowPurposeAlignment
+        expr: system_purpose_alignment < 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Purpose alignment below threshold"
+          description: "System purpose alignment has been below 85% for 5 minutes"
+
+      - alert: RapidAlignmentChange
+        expr: abs(delta(system_lawful_alignment[5m])) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Rapid change in system alignment"
+          description: "System alignment has changed by more than 20% in 5 minutes" 

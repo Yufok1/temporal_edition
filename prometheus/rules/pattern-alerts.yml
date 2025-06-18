@@ -1,0 +1,132 @@
+groups:
+  - name: pattern_alerts
+    rules:
+      # Pattern Density Alerts
+      - alert: HighPatternDensity
+        expr: rate(djinn_pattern_density[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          pattern_type: density
+        annotations:
+          summary: "High pattern density detected"
+          description: "Pattern density has exceeded 80% for 5 minutes. This may indicate system stress or complex interactions."
+
+      - alert: LowPatternDensity
+        expr: rate(djinn_pattern_density[5m]) < 0.2
+        for: 5m
+        labels:
+          severity: warning
+          pattern_type: density
+        annotations:
+          summary: "Low pattern density detected"
+          description: "Pattern density has dropped below 20% for 5 minutes. This may indicate system underutilization or monitoring issues."
+
+      # Trend Deviation Alerts
+      - alert: TrendDeviation
+        expr: abs(djinn_trend_prediction - djinn_actual_value) > 2 * stddev(djinn_actual_value[1h])
+        for: 10m
+        labels:
+          severity: warning
+          pattern_type: trend
+        annotations:
+          summary: "Significant trend deviation detected"
+          description: "Actual values have deviated significantly from predicted trends for 10 minutes."
+
+      # Anomaly Detection Alerts
+      - alert: AnomalyCluster
+        expr: rate(djinn_anomaly_detection_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          pattern_type: anomaly
+        annotations:
+          summary: "Anomaly cluster detected"
+          description: "Multiple anomalies detected in a short time period. This may indicate system instability."
+
+      - alert: HighAnomalyConfidence
+        expr: djinn_anomaly_confidence > 0.9
+        for: 2m
+        labels:
+          severity: critical
+          pattern_type: anomaly
+        annotations:
+          summary: "High confidence anomaly detected"
+          description: "An anomaly with confidence > 90% has been detected. Immediate investigation required."
+
+      # Correlation Alerts
+      - alert: StrongCorrelationChange
+        expr: abs(djinn_correlation_strength - djinn_correlation_strength[1h]) > 0.3
+        for: 5m
+        labels:
+          severity: warning
+          pattern_type: correlation
+        annotations:
+          summary: "Significant correlation change detected"
+          description: "System correlations have changed significantly in the last hour."
+
+      # Seasonal Pattern Alerts
+      - alert: SeasonalPatternDeviation
+        expr: abs(djinn_seasonal_pattern - djinn_seasonal_pattern[1d]) > 0.5
+        for: 1h
+        labels:
+          severity: warning
+          pattern_type: seasonal
+        annotations:
+          summary: "Seasonal pattern deviation detected"
+          description: "Current seasonal pattern has deviated significantly from historical patterns."
+
+      # Pattern Confidence Alerts
+      - alert: LowPatternConfidence
+        expr: djinn_pattern_confidence < 0.5
+        for: 15m
+        labels:
+          severity: warning
+          pattern_type: confidence
+        annotations:
+          summary: "Low pattern confidence detected"
+          description: "Pattern detection confidence has dropped below 50% for 15 minutes."
+
+      # Impact Alerts
+      - alert: HighPatternImpact
+        expr: djinn_pattern_impact > 0.8
+        for: 5m
+        labels:
+          severity: critical
+          pattern_type: impact
+        annotations:
+          summary: "High pattern impact detected"
+          description: "Detected patterns are having a significant impact on system behavior."
+
+      # Cross-Correlation Alerts
+      - alert: CrossCorrelationAnomaly
+        expr: abs(djinn_cross_correlation) > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          pattern_type: cross_correlation
+        annotations:
+          summary: "Strong cross-correlation detected"
+          description: "Unusually strong cross-correlation between different system metrics detected."
+
+      # Recursive Model Alerts
+      - alert: RecursiveModelError
+        expr: djinn_recursive_model_error > 0.2
+        for: 10m
+        labels:
+          severity: warning
+          pattern_type: recursive
+        annotations:
+          summary: "High recursive model error"
+          description: "Recursive prediction model is showing significant error rates."
+
+      # HMM State Alerts
+      - alert: HMMStateTransition
+        expr: rate(djinn_hmm_state_transitions_total[5m]) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          pattern_type: hmm
+        annotations:
+          summary: "Frequent HMM state transitions"
+          description: "Hidden Markov Model is transitioning between states too frequently." 

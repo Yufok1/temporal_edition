@@ -1,0 +1,447 @@
+groups:
+  - name: recursive_monitoring
+    rules:
+      - alert: RecursiveDepthExceeded
+        expr: recursive_scan_depth > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_scanning
+        annotations:
+          summary: "Recursive depth threshold exceeded"
+          description: "Component {{ $labels.component }} has exceeded the recursive depth threshold of 10 for more than 5 minutes"
+
+      - alert: LowRecursiveCoherence
+        expr: recursive_coherence < 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_coherence
+        annotations:
+          summary: "Low recursive coherence detected"
+          description: "Component {{ $labels.component }} has coherence below 0.8 for more than 5 minutes"
+
+      - alert: SelfAwarenessDegradation
+        expr: self_awareness_level{metric="recognition"} < 0.7
+        for: 5m
+        labels:
+          severity: warning
+          component: self_awareness
+        annotations:
+          summary: "Self-awareness degradation detected"
+          description: "System self-awareness recognition level has dropped below 0.7 for more than 5 minutes"
+
+      - alert: HighInteractionErrorRate
+        expr: interaction_flow{type="errors"} > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: interaction_flow
+        annotations:
+          summary: "High interaction error rate detected"
+          description: "Interaction flow error rate has exceeded 10% for more than 5 minutes"
+
+      - alert: SystemStabilityDegradation
+        expr: system_stability < 0.9
+        for: 5m
+        labels:
+          severity: critical
+          component: system_stability
+        annotations:
+          summary: "System stability degradation detected"
+          description: "System stability has dropped below 0.9 for more than 5 minutes"
+
+      - alert: RecursiveScanFailure
+        expr: rate(recursive_scan_depth[5m]) == 0
+        for: 10m
+        labels:
+          severity: critical
+          component: recursive_scanning
+        annotations:
+          summary: "Recursive scanning has stopped"
+          description: "No recursive scanning activity detected for more than 10 minutes"
+
+      - alert: RecursiveScanRateAnomaly
+        expr: |
+          abs(
+            rate(recursive_scan_depth[5m])
+            -
+            avg_over_time(rate(recursive_scan_depth[5m])[1h:])
+          ) > 2 * stddev_over_time(rate(recursive_scan_depth[5m])[1h:])
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_scanning
+        annotations:
+          summary: "Anomalous recursive scan rate detected"
+          description: "Component {{ $labels.component }} scan rate has deviated significantly from its normal pattern"
+
+      - alert: RecursiveScanDurationSpike
+        expr: |
+          histogram_quantile(0.95, sum(rate(recursive_scan_duration_bucket[5m])) by (le, component))
+          >
+          histogram_quantile(0.95, sum(rate(recursive_scan_duration_bucket[1h])) by (le, component)) * 1.5
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_scanning
+        annotations:
+          summary: "Recursive scan duration spike detected"
+          description: "95th percentile scan duration for {{ $labels.component }} has increased by 50%"
+
+      - alert: SelfAwarenessAdaptationFailure
+        expr: |
+          rate(self_awareness_adaptation_errors_total[5m])
+          /
+          rate(self_awareness_adaptation_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: self_awareness
+        annotations:
+          summary: "High self-awareness adaptation failure rate"
+          description: "More than 10% of self-awareness adaptations are failing"
+
+      - alert: RecursiveCoherencePatternBreak
+        expr: |
+          sum(rate(recursive_coherence_breakdown_total[5m])) by (type)
+          >
+          sum(rate(recursive_coherence_breakdown_total[1h])) by (type) * 2
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_coherence
+        annotations:
+          summary: "Unusual recursive coherence pattern detected"
+          description: "Coherence breakdown rate has doubled for type {{ $labels.type }}"
+
+      - alert: SystemStabilityTrend
+        expr: |
+          predict_linear(system_stability[1h], 3600) < 0.8
+        for: 15m
+        labels:
+          severity: warning
+          component: system_stability
+        annotations:
+          summary: "System stability degradation trend detected"
+          description: "System stability is predicted to fall below 0.8 within the next hour"
+
+      - alert: RecursiveMemoryUsage
+        expr: |
+          recursive_memory_usage_bytes
+          /
+          recursive_memory_limit_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: recursive_scanning
+        annotations:
+          summary: "High recursive memory usage"
+          description: "Recursive scanning is using more than 80% of allocated memory"
+
+      - alert: RecursiveDeadlockDetection
+        expr: |
+          rate(recursive_scan_depth[5m]) == 0
+          and
+          recursive_scan_active > 0
+        for: 10m
+        labels:
+          severity: critical
+          component: recursive_scanning
+        annotations:
+          summary: "Potential recursive deadlock detected"
+          description: "Recursive scanning appears to be stuck with no progress for 10 minutes"
+
+      - alert: RecursivePatternAnomaly
+        expr: |
+          abs(
+            rate(recursive_pattern_recognition_total[5m])
+            -
+            avg_over_time(rate(recursive_pattern_recognition_total[5m])[1h:])
+          ) > 3 * stddev_over_time(rate(recursive_pattern_recognition_total[5m])[1h:])
+        for: 5m
+        labels:
+          severity: warning
+          component: pattern_recognition
+        annotations:
+          summary: "Anomalous pattern recognition detected"
+          description: "Pattern recognition rate has deviated significantly from normal patterns"
+
+      - alert: RecursiveStateTransitionAnomaly
+        expr: |
+          abs(
+            rate(recursive_state_transition_total[5m])
+            -
+            avg_over_time(rate(recursive_state_transition_total[5m])[1h:])
+          ) > 2.5 * stddev_over_time(rate(recursive_state_transition_total[5m])[1h:])
+        for: 5m
+        labels:
+          severity: warning
+          component: state_transition
+        annotations:
+          summary: "Anomalous state transition pattern detected"
+          description: "State transition rate has deviated significantly from normal patterns"
+
+      - alert: RecursiveAnomalyScoreThreshold
+        expr: |
+          sum(rate(recursive_anomaly_score[5m])) by (anomaly_type) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          component: anomaly_detection
+        annotations:
+          summary: "High anomaly score detected"
+          description: "Anomaly score has exceeded threshold for type {{ $labels.anomaly_type }}"
+
+      - alert: RecursivePatternComplexity
+        expr: |
+          rate(recursive_pattern_complexity[5m])
+          >
+          avg_over_time(rate(recursive_pattern_complexity[5m])[1h:]) * 1.5
+        for: 10m
+        labels:
+          severity: warning
+          component: pattern_recognition
+        annotations:
+          summary: "High pattern complexity detected"
+          description: "Pattern complexity has increased significantly above normal levels"
+
+      - alert: RecursiveStateEntropy
+        expr: |
+          rate(recursive_state_entropy[5m])
+          >
+          avg_over_time(rate(recursive_state_entropy[5m])[1h:]) * 2
+        for: 5m
+        labels:
+          severity: warning
+          component: state_analysis
+        annotations:
+          summary: "High state entropy detected"
+          description: "System state entropy has increased significantly, indicating potential instability"
+
+      - alert: RecursivePatternCorrelation
+        expr: |
+          abs(
+            rate(recursive_pattern_correlation[5m])
+            -
+            avg_over_time(rate(recursive_pattern_correlation[5m])[1h:])
+          ) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: pattern_analysis
+        annotations:
+          summary: "Pattern correlation anomaly detected"
+          description: "Pattern correlation has deviated significantly from expected values"
+
+      - alert: RecursiveStatePredictionError
+        expr: |
+          rate(recursive_state_prediction_error[5m])
+          >
+          avg_over_time(rate(recursive_state_prediction_error[5m])[1h:]) * 2
+        for: 5m
+        labels:
+          severity: warning
+          component: state_prediction
+        annotations:
+          summary: "High state prediction error detected"
+          description: "State prediction accuracy has degraded significantly"
+
+      # Advanced Statistical Analysis Rules
+      - name: RecursivePatternComplexityTrend
+        expr: |
+          abs(
+            rate(recursive_pattern_complexity_sum[1h]) / rate(recursive_pattern_complexity_count[1h])
+            -
+            avg_over_time(recursive_pattern_complexity_sum[24h] / recursive_pattern_complexity_count[24h])
+          ) > 0.5
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant deviation in pattern complexity trend"
+          description: "Pattern complexity has deviated significantly from the 24-hour average. Current value: {{ $value }}"
+
+      - name: RecursiveStateEntropyAnomaly
+        expr: |
+          abs(
+            rate(recursive_state_entropy_sum[1h]) / rate(recursive_state_entropy_count[1h])
+            -
+            avg_over_time(recursive_state_entropy_sum[24h] / recursive_state_entropy_count[24h])
+          ) > 0.3
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Abnormal state entropy detected"
+          description: "State entropy has deviated significantly from the 24-hour average. Current value: {{ $value }}"
+
+      - name: RecursivePatternCorrelationAnomaly
+        expr: |
+          abs(
+            rate(recursive_pattern_correlation_sum[1h]) / rate(recursive_pattern_correlation_count[1h])
+            -
+            avg_over_time(recursive_pattern_correlation_sum[24h] / recursive_pattern_correlation_count[24h])
+          ) > 0.4
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Abnormal pattern correlation detected"
+          description: "Pattern correlation has deviated significantly from the 24-hour average. Current value: {{ $value }}"
+
+      - name: RecursiveStatePredictionErrorTrend
+        expr: |
+          rate(recursive_state_prediction_error_sum[1h]) / rate(recursive_state_prediction_error_count[1h]) > 0.2
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High state prediction error rate"
+          description: "State prediction error rate is above threshold. Current value: {{ $value }}"
+
+      - name: RecursivePatternComplexitySpike
+        expr: |
+          rate(recursive_pattern_complexity_sum[5m]) / rate(recursive_pattern_complexity_count[5m])
+          > 2 * avg_over_time(recursive_pattern_complexity_sum[1h] / recursive_pattern_complexity_count[1h])
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sudden spike in pattern complexity"
+          description: "Pattern complexity has doubled in the last 5 minutes. Current value: {{ $value }}"
+
+      - name: RecursiveStateEntropySpike
+        expr: |
+          rate(recursive_state_entropy_sum[5m]) / rate(recursive_state_entropy_count[5m])
+          > 2 * avg_over_time(recursive_state_entropy_sum[1h] / recursive_state_entropy_count[1h])
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sudden spike in state entropy"
+          description: "State entropy has doubled in the last 5 minutes. Current value: {{ $value }}"
+
+      - name: RecursivePatternCorrelationBreakdown
+        expr: |
+          rate(recursive_pattern_correlation_sum[5m]) / rate(recursive_pattern_correlation_count[5m])
+          < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pattern correlation breakdown"
+          description: "Pattern correlation has dropped below threshold. Current value: {{ $value }}"
+
+      - name: RecursiveStatePredictionFailure
+        expr: |
+          rate(recursive_state_prediction_error_sum[5m]) / rate(recursive_state_prediction_error_count[5m])
+          > 0.5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "State prediction failure"
+          description: "State prediction error rate is critically high. Current value: {{ $value }}"
+
+      # Advanced Pattern Analysis Rules
+      - name: RecursivePatternComplexityDistribution
+        expr: |
+          abs(
+            histogram_quantile(0.95, sum(rate(recursive_pattern_complexity_bucket[1h])) by (le))
+            -
+            histogram_quantile(0.95, sum(rate(recursive_pattern_complexity_bucket[24h])) by (le))
+          ) > 0.3
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant change in pattern complexity distribution"
+          description: "Pattern complexity distribution has deviated significantly from the 24-hour baseline. Current value: {{ $value }}"
+
+      - name: RecursiveStateEntropyDistribution
+        expr: |
+          abs(
+            histogram_quantile(0.95, sum(rate(recursive_state_entropy_bucket[1h])) by (le))
+            -
+            histogram_quantile(0.95, sum(rate(recursive_state_entropy_bucket[24h])) by (le))
+          ) > 0.2
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant change in state entropy distribution"
+          description: "State entropy distribution has deviated significantly from the 24-hour baseline. Current value: {{ $value }}"
+
+      - name: RecursivePatternCorrelationMatrix
+        expr: |
+          abs(
+            rate(recursive_pattern_correlation_matrix_sum[1h]) / rate(recursive_pattern_correlation_matrix_count[1h])
+            -
+            avg_over_time(recursive_pattern_correlation_matrix_sum[24h] / recursive_pattern_correlation_matrix_count[24h])
+          ) > 0.4
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant change in pattern correlation matrix"
+          description: "Pattern correlation matrix has deviated significantly from the 24-hour average. Current value: {{ $value }}"
+
+      - name: RecursiveStatePredictionAccuracyDistribution
+        expr: |
+          abs(
+            histogram_quantile(0.95, sum(rate(recursive_state_prediction_accuracy_bucket[1h])) by (le))
+            -
+            histogram_quantile(0.95, sum(rate(recursive_state_prediction_accuracy_bucket[24h])) by (le))
+          ) > 0.2
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Significant change in state prediction accuracy distribution"
+          description: "State prediction accuracy distribution has deviated significantly from the 24-hour baseline. Current value: {{ $value }}"
+
+      # Critical Pattern Analysis Rules
+      - name: RecursivePatternComplexityDistributionSpike
+        expr: |
+          histogram_quantile(0.95, sum(rate(recursive_pattern_complexity_bucket[5m])) by (le))
+          > 2 * histogram_quantile(0.95, sum(rate(recursive_pattern_complexity_bucket[1h])) by (le))
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sudden spike in pattern complexity distribution"
+          description: "Pattern complexity distribution has doubled in the last 5 minutes. Current value: {{ $value }}"
+
+      - name: RecursiveStateEntropyDistributionSpike
+        expr: |
+          histogram_quantile(0.95, sum(rate(recursive_state_entropy_bucket[5m])) by (le))
+          > 2 * histogram_quantile(0.95, sum(rate(recursive_state_entropy_bucket[1h])) by (le))
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Sudden spike in state entropy distribution"
+          description: "State entropy distribution has doubled in the last 5 minutes. Current value: {{ $value }}"
+
+      - name: RecursivePatternCorrelationMatrixBreakdown
+        expr: |
+          rate(recursive_pattern_correlation_matrix_sum[5m]) / rate(recursive_pattern_correlation_matrix_count[5m])
+          < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pattern correlation matrix breakdown"
+          description: "Pattern correlation matrix has dropped below threshold. Current value: {{ $value }}"
+
+      - name: RecursiveStatePredictionAccuracyFailure
+        expr: |
+          histogram_quantile(0.95, sum(rate(recursive_state_prediction_accuracy_bucket[5m])) by (le))
+          < 0.5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "State prediction accuracy failure"
+          description: "State prediction accuracy has dropped below threshold. Current value: {{ $value }}" 
