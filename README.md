@@ -55,6 +55,10 @@ Temporal Edition is secured with:
 - All actions are overseen by the Djinn Council and Purveyor for just, adaptive, and secure operation.
 - Non-aggression and restorative justice are core principles.
 
+## Attribution
+
+The concept of Djinn, as referenced herein, represents intelligent governance and stewardship, not artificial intelligence or proprietary invention. No ownership is claimed over the idea of Djinn; it is a guiding metaphor for ethical, adaptive, and collaborative system management.
+
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
