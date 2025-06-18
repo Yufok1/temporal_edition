@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"       # Set to your ecosystem: npm, yarn, pip, cargo, maven, etc.
+    directory: "/"                 # Location of your manifest (package.json, requirements.txt, etc.)
+    schedule:
+      interval: "weekly"           # Options: "daily", "weekly", "monthly"
+    open-pull-requests-limit: 5    # (Optional) Limit for simultaneous PRs
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "security"
+    reviewers:
+      - "Yufok1"
