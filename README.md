@@ -23,8 +23,8 @@ Temporal Edition is a specialized, auditable kernel component designed for secur
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourorg/temporal-edition.git
-cd temporal-edition
+git clone https://github.com/Yufok1/temporal_edition.git
+cd temporal_edition
 npm install
 ```
 
