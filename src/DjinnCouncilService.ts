@@ -1589,7 +1589,7 @@ export class DjinnCouncilService {
     private analyzeCorrelation(metrics: SystemMetrics[]): CorrelationAnalysisResult {
         const values = metrics.map(m => m.value);
         const correlation = this.calculateCorrelation(values);
-        const pValue = 1.0; // TODO: Refactor p-value calculation
+        const pValue = this.calculatePValue(correlation, values.length);
         const significance = pValue < 0.05 ? 'significant' : 'not significant';
         
         return {
@@ -1598,6 +1598,40 @@ export class DjinnCouncilService {
             significance,
             severity: this.determineSeverity(Math.abs(correlation))
         };
+    }
+
+    private calculatePValue(correlation: number, sampleSize: number): number {
+        // Calculate p-value for correlation using t-distribution
+        if (sampleSize <= 2) return 1.0;
+        
+        const degreesOfFreedom = sampleSize - 2;
+        const tStatistic = correlation * Math.sqrt(degreesOfFreedom / (1 - correlation * correlation));
+        
+        // Simplified p-value calculation using t-distribution approximation
+        const pValue = 2 * (1 - this.tDistributionCDF(Math.abs(tStatistic), degreesOfFreedom));
+        return Math.max(0, Math.min(1, pValue));
+    }
+
+    private tDistributionCDF(t: number, df: number): number {
+        // Simplified t-distribution CDF approximation
+        const x = df / (df + t * t);
+        return 1 - 0.5 * this.betaFunction(0.5, df / 2) * this.incompleteBeta(x, 0.5, df / 2);
+    }
+
+    private betaFunction(a: number, b: number): number {
+        return (this.gamma(a) * this.gamma(b)) / this.gamma(a + b);
+    }
+
+    private gamma(z: number): number {
+        // Stirling's approximation for gamma function
+        return Math.sqrt(2 * Math.PI / z) * Math.pow(z / Math.E, z);
+    }
+
+    private incompleteBeta(x: number, a: number, b: number): number {
+        // Simplified incomplete beta function
+        if (x === 0) return 0;
+        if (x === 1) return 1;
+        return Math.pow(x, a) * Math.pow(1 - x, b) / (a * this.betaFunction(a, b));
     }
 
     private findClusters(metrics: SystemMetrics[]): { points: SystemMetrics[]; distance: number }[] {
@@ -1624,13 +1658,38 @@ export class DjinnCouncilService {
         
         for (let i = 0; i < metrics.length; i++) {
             for (let j = i + 1; j < metrics.length; j++) {
-                const distance = 0; // TODO: Refactor metric distance calculation
+                const distance = this.calculateMetricDistance(metrics[i], metrics[j]);
                 distances[i][j] = distance;
                 distances[j][i] = distance;
             }
         }
         
         return distances;
+    }
+
+    private calculateMetricDistance(metric1: SystemMetrics, metric2: SystemMetrics): number {
+        // Calculate Euclidean distance between metrics
+        const dimensions = [
+            { val1: metric1.value, val2: metric2.value, weight: 1.0 },
+            { val1: metric1.latency || 0, val2: metric2.latency || 0, weight: 0.3 },
+            { val1: metric1.resourceUsage || 0, val2: metric2.resourceUsage || 0, weight: 0.5 },
+            { val1: metric1.errorRate || 0, val2: metric2.errorRate || 0, weight: 0.8 },
+            { val1: metric1.anomalyDeviation || 0, val2: metric2.anomalyDeviation || 0, weight: 0.6 }
+        ];
+
+        const squaredDiffs = dimensions.map(dim => 
+            Math.pow((dim.val1 - dim.val2) * dim.weight, 2)
+        );
+
+        return Math.sqrt(squaredDiffs.reduce((sum, diff) => sum + diff, 0));
+    }
+
+    private calculateClusterDistance(metric: SystemMetrics, neighbors: SystemMetrics[]): number {
+        let totalDistance = 0;
+        for (const neighbor of neighbors) {
+            totalDistance += this.calculateMetricDistance(metric, neighbor);
+        }
+        return neighbors.length > 0 ? totalDistance / neighbors.length : 0;
     }
 
     private findNeighbors(metric: SystemMetrics, metrics: SystemMetrics[], distances: number[][]): SystemMetrics[] {
@@ -1644,14 +1703,6 @@ export class DjinnCouncilService {
         }
         
         return neighbors;
-    }
-
-    private calculateClusterDistance(metric: SystemMetrics, neighbors: SystemMetrics[]): number {
-        let totalDistance = 0;
-        for (const neighbor of neighbors) {
-            totalDistance += 0; // TODO: Refactor metric distance calculation
-        }
-        return totalDistance / neighbors.length;
     }
 
     public invokeDjinnCouncil(): string {
