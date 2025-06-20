@@ -470,4 +470,4 @@ const AdminDashboard: React.FC<DashboardComponentProps> = () => (
     </div>
 );
 
-export default CryptoWebInterface;
+export { CryptoWebInterface as default };
