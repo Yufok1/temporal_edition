@@ -126,4 +126,15 @@ export class MonitoringService {
         this.whaleSignals = [];
         this.temporalData = [];
     }
+
+    public updateSystemHealth(systemId: string, healthy: boolean): void {
+        const healthValue = healthy ? 1 : 0;
+        metricsService.recordGauge(`system_health_${systemId}`, healthValue);
+        console.log(`🔧 System health updated: ${systemId} = ${healthy ? 'healthy' : 'unhealthy'}`);
+    }
+
+    public updateSystemStability(systemId: string, stability: number): void {
+        metricsService.recordGauge(`system_stability_${systemId}`, stability);
+        console.log(`📊 System stability updated: ${systemId} = ${(stability * 100).toFixed(1)}%`);
+    }
 } 

@@ -23,10 +23,12 @@ export class EnvironmentalDataIntegrator {
         this.currentData = {
             temperature: 20,
             salinity: 35,
-            pressure: 1,
-            current: 0.5,
+            currentSpeed: 0.5,
             visibility: 15,
-            lightLevel: 0.7
+            lightLevel: 0.7,
+            depth: 50,
+            turbulence: 0.2,
+            oxygenLevel: 8.5
         };
     }
 
@@ -43,7 +45,7 @@ export class EnvironmentalDataIntegrator {
     }
 
     public getCurrent(): number {
-        return this.currentData.current;
+        return this.currentData.currentSpeed;
     }
 
     public getVisibility(): number {
@@ -67,9 +69,16 @@ export class EnvironmentalDataIntegrator {
             },
             socialContext: {
                 groupSize: 1,
-                groupComposition: 'unknown',
+                groupCohesion: 0.8,
                 interactionIntensity: 0.5,
-                socialHierarchy: 'unknown'
+                socialHierarchy: 0.5,
+                proximityToGroup: 50,
+                socialBonds: [
+                    {
+                        strength: 0.7,
+                        type: 'familial'
+                    }
+                ]
             }
         };
 
@@ -85,10 +94,10 @@ export class EnvironmentalDataIntegrator {
     }
 
     public getEnvironmentalScore(): number {
-        const { temperature, current, visibility } = this.currentData;
+        const { temperature, currentSpeed, visibility } = this.currentData;
         
         const temperatureScore = this.calculateTemperatureScore(temperature);
-        const currentScore = this.calculateCurrentScore(current);
+        const currentScore = this.calculateCurrentScore(currentSpeed);
         const visibilityScore = this.calculateVisibilityScore(visibility);
 
         return (temperatureScore + currentScore + visibilityScore) / 3;

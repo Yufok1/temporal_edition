@@ -1,3 +1,5 @@
+export {}; // Module declaration for TypeScript isolatedModules
+
 // Copyright 2024 The Temporal Editioner Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");

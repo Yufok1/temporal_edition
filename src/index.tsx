@@ -1,3 +1,11 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+export {}; // Module declaration for TypeScript isolatedModules
+
 // Copyright 2024 The Temporal Editioner Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +20,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // 
-
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

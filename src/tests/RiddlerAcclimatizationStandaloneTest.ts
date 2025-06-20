@@ -16,7 +16,7 @@
 import { RiddlerExplorerService, Steward } from '../services/RiddlerExplorerService';
 
 // Test steward (human)
-const humanSteward: Steward = { id: 'human2', type: 'human', name: 'Bob', status: 'pending', lastRecognized: null };
+const humanSteward: Steward = { id: 'human2', type: 'human', name: 'Bob', status: 'pending', lastRecognized: null, peckingTier: 4 };
 
 // Instantiate RiddlerExplorerService
 const riddler = new RiddlerExplorerService();

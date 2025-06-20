@@ -50,9 +50,9 @@ export const WhaleDisengagement: React.FC<Props> = ({
   } | null>(null);
   const [environmentalContext, setEnvironmentalContext] = useState<EnvironmentalContext>({
     waterConditions: {
-      temperature: 20,
-      salinity: 35,
-      pressure: 1,
+      temperature: 25,
+      salinity: 36,
+      pressure: 1.2
     },
     socialContext: {
       groupSize: 3,

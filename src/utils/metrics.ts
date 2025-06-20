@@ -200,7 +200,7 @@ export class MetricsService {
         this.gauges.set(key, value);
     }
 
-    private recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
+    public recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
         const key = this.getMetricKey(name, labels);
         if (!this.histograms.has(key)) {
             this.histograms.set(key, []);

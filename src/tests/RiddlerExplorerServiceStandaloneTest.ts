@@ -25,9 +25,9 @@ class MockMonitoringService {
 }
 
 // Test stewards
-const humanSteward: Steward = { id: 'human1', type: 'human', name: 'Alice', status: 'pending', lastRecognized: null };
-const aiSteward: Steward = { id: 'ai1', type: 'ai', name: 'DjinnAI', status: 'pending', lastRecognized: null };
-const whaleSteward: Steward = { id: 'whale1', type: 'whale', name: 'WhaleSong', status: 'pending', lastRecognized: null };
+const humanSteward: Steward = { id: 'human1', type: 'human', name: 'Alice', status: 'pending', lastRecognized: null, peckingTier: 4 };
+const aiSteward: Steward = { id: 'ai1', type: 'ai', name: 'DjinnAI', status: 'pending', lastRecognized: null, peckingTier: 4 };
+const whaleSteward: Steward = { id: 'whale1', type: 'whale', name: 'WhaleSong', status: 'pending', lastRecognized: null, peckingTier: 1 };
 
 // Instantiate RiddlerExplorerService
 const riddler = new RiddlerExplorerService();

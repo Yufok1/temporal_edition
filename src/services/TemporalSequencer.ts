@@ -14,8 +14,16 @@
 // 
 
 import { EventEmitter } from 'events';
-import { Logger } from 'winston';
 import { createLogger } from '../utils/logger';
+import { metricsService } from '../utils/metrics';
+
+// Browser-safe logger interface  
+interface Logger {
+    error: (message: string, metadata?: any) => void;
+    warn: (message: string, metadata?: any) => void;
+    info: (message: string, metadata?: any) => void;
+    debug: (message: string, metadata?: any) => void;
+}
 
 export enum AlignmentStage {
     INITIALIZATION = 'INITIALIZATION',

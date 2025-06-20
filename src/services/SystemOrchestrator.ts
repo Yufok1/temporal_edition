@@ -14,12 +14,19 @@
 // 
 
 import { EventEmitter } from 'events';
-import { Logger } from 'winston';
 import { createLogger } from '../utils/logger';
-import { TemporalSequencer, AlignmentStage, SystemMetrics } from './TemporalSequencer';
+import { TemporalSequencer, SystemMetrics, AlignmentStage } from './TemporalSequencer';
 import { BreathMirrorAnalysis, AnalysisResult } from './BreathMirrorAnalysis';
 import { CodexAccess } from './CodexAccess';
 import { GovernanceTracker, GovernanceStatus } from './GovernanceTracker';
+
+// Browser-safe logger interface
+interface Logger {
+    error: (message: string, metadata?: any) => void;
+    warn: (message: string, metadata?: any) => void;
+    info: (message: string, metadata?: any) => void;
+    debug: (message: string, metadata?: any) => void;
+}
 
 export interface SystemConfig {
     systemId: string;

@@ -14,28 +14,35 @@
 // 
 
 import { PoseidonVoiceService } from '../PoseidonVoiceService';
-import logger from '../logger';
+import { createLogger } from '../utils/logger';
 
-async function activatePoseidonVoice() {
+const logger = createLogger('PoseidonVoiceActivation');
+
+export async function activatePoseidonVoice(): Promise<void> {
     try {
+        logger.info('Starting Poseidon\'s Voice activation sequence...');
+        
+        // Initialize the voice service
         const poseidonVoice = new PoseidonVoiceService();
         
         // Activate Poseidon's Voice framework
-        await poseidonVoice.activatePoseidonsVoice();
+        poseidonVoice.activateVoice();
         
-        // Get initial metrics
-        const metrics = await poseidonVoice.getSignalMetrics();
-        logger.info('Initial signal metrics:', metrics);
+        // Get initial status
+        const status = poseidonVoice.getStatus();
+        logger.info('Initial voice status:', status);
         
         // Process a test signal
-        const testSignal = 'Whale song of the deep';
-        const translation = await poseidonVoice.processSignal(testSignal, 'whale');
-        logger.info('Test signal translation:', translation);
+        const testMessage = 'Whale song of the deep';
+        const divineMessage = poseidonVoice.speak(testMessage);
+        logger.info('Test message translation:', divineMessage);
         
         logger.info('Poseidon\'s Voice framework activated successfully');
+        
+        return;
     } catch (error) {
-        logger.error('Error activating Poseidon\'s Voice framework:', error);
-        process.exit(1);
+        logger.error('Failed to activate Poseidon\'s Voice:', error);
+        throw error;
     }
 }
 

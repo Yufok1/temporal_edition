@@ -16,7 +16,7 @@
 import { 
   WhaleEmotion, 
   EmotionalAnalysis, 
-  EmotionalContext,
+  WhaleEmotionalContext,
   EmotionalScore,
   EnvironmentalContext
 } from '../types/whale';
@@ -89,7 +89,7 @@ export class EmotionalPatternAnalysisService {
   private detectCurrentPattern(analysis: EmotionalAnalysis): EmotionalPattern {
     const recentEmotions = this.patternHistory
       .slice(-5)
-      .map(a => a.currentState.primaryEmotion);
+      .map(a => a.primaryEmotion as WhaleEmotion);
 
     const pattern = this.identifyPatternType(recentEmotions);
     const confidence = this.calculatePatternConfidence(pattern, recentEmotions);
@@ -108,8 +108,8 @@ export class EmotionalPatternAnalysisService {
 
   private analyzeTrends(): EmotionalTrend[] {
     const trends: EmotionalTrend[] = [];
-    const emotionIntensities = this.patternHistory.map(a => a.currentState.intensity);
-    const emotionStabilities = this.patternHistory.map(a => a.stabilityMetrics.consistency);
+    const emotionIntensities = this.patternHistory.map(a => a.intensity);
+    const emotionStabilities = this.patternHistory.map(a => a.confidence);
 
     // Analyze intensity trend
     const intensityTrend = this.calculateTrendMetrics(emotionIntensities);
@@ -142,7 +142,7 @@ export class EmotionalPatternAnalysisService {
   } {
     const recentEmotions = this.patternHistory
       .slice(-10)
-      .map(a => a.currentState.primaryEmotion);
+      .map(a => a.primaryEmotion as WhaleEmotion);
 
     const transitionProbabilities = this.calculateTransitionProbabilities(recentEmotions);
     const nextEmotion = this.predictNextEmotion(transitionProbabilities);
