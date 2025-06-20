@@ -82,6 +82,7 @@ export class OBOLOperationsDash {
     private alerts: OBOLAlert[] = [];
     private beaconAPI: string;
     private websocketConnection: WebSocket | null = null;
+    private demoMode: boolean = true; // DEMO MODE FLAG
     
     // Quantum monitoring parameters - ENHANCED FOR DIVINE OPERATIONS
     private readonly QUANTUM_SYNC_INTERVAL = 12000; // 12 seconds (1 slot)
@@ -150,6 +151,25 @@ export class OBOLOperationsDash {
 
     // 🌞 Solar-powered validator sync
     private async syncNetworkState(): Promise<void> {
+        // In DEMO mode, don't make real API calls
+        if (this.isDemoMode()) {
+            // Update demo metrics periodically
+            this.networkMetrics.currentSlot++;
+            this.networkMetrics.currentEpoch = Math.floor(this.networkMetrics.currentSlot / 32);
+            
+            // Simulate network progress
+            if (this.networkMetrics.currentSlot % 32 === 0) {
+                this.networkMetrics.finalizedEpoch = this.networkMetrics.currentEpoch - 2;
+            }
+            
+            // Simulate participation fluctuation
+            this.networkMetrics.participationRate = 98 + Math.random() * 2;
+            this.networkMetrics.networkEffectiveness = 97 + Math.random() * 3;
+            
+            return;
+        }
+        
+        // PRODUCTION CODE - only runs if not in demo mode
         try {
             // Get current beacon state
             const headResponse = await fetch(`${this.beaconAPI}/eth/v1/beacon/headers/head`);
@@ -682,5 +702,9 @@ export class OBOLOperationsDash {
         });
         
         console.log('📊 Demo data initialized');
+    }
+
+    private isDemoMode(): boolean {
+        return this.demoMode; // Use the class property
     }
 }
