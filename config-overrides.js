@@ -25,11 +25,16 @@ module.exports = function override(config, env) {
         "url": require.resolve("url/")
     };
 
-    // Add alias to use browser version of metrics
+    // Add alias to use browser version of metrics and logger
     config.resolve.alias = {
         ...config.resolve.alias,
         './utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts'),
         '../utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts'),
+        './logger': path.resolve(__dirname, 'src/utils/logger.browser.ts'),
+        '../logger': path.resolve(__dirname, 'src/utils/logger.browser.ts'),
+        './utils/logger': path.resolve(__dirname, 'src/utils/logger.browser.ts'),
+        '../utils/logger': path.resolve(__dirname, 'src/utils/logger.browser.ts'),
+        'winston': path.resolve(__dirname, 'src/utils/logger.browser.ts'),
         'prom-client': false  // Prevent prom-client from being bundled
     };
 
@@ -42,6 +47,12 @@ module.exports = function override(config, env) {
         }),
         new webpack.IgnorePlugin({
             resourceRegExp: /^prom-client$/
+        }),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^winston$/
+        }),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^@colors\/colors$/
         })
     ];
 
@@ -62,6 +73,12 @@ module.exports = function override(config, env) {
     config.ignoreWarnings = [
         {
             module: /prom-client/
+        },
+        {
+            module: /winston/
+        },
+        {
+            module: /@colors\/colors/
         }
     ];
 
