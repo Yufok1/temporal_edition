@@ -94,6 +94,7 @@ export class PortfolioAnalyzer {
     private performanceHistory: PerformanceSnapshot[] = [];
     private alerts: TradingAlert[] = [];
     private assets: Map<string, Asset> = new Map();
+    private prices: Map<string, { usd: number; change24h: number }> = new Map();
     
     // External integrations
     private psdnTracker: PSDNFlowTracker;
@@ -170,78 +171,59 @@ export class PortfolioAnalyzer {
 
     // ⚡ Quantum price feed system
     private startQuantumPriceFeeds(): void {
-        setInterval(async () => {
-            await this.updateAllPrices();
+        console.log('💰 Starting quantum price feeds...');
+        
+        // DEMO MODE: Using simulated price data
+        console.log('🔧 Running in DEMO mode - Using simulated price feeds');
+        console.log('💡 To enable real API calls, configure a proxy or use server-side implementation');
+        
+        // Initialize with demo prices
+        this.initializeDemoPrices();
+        
+        // Update prices periodically with simulated fluctuations
+        setInterval(() => {
+            this.updateDemoPrices();
         }, this.QUANTUM_PRICE_INTERVAL);
-
-        // Initial price fetch
-        this.updateAllPrices();
     }
-
-    private async updateAllPrices(): Promise<void> {
-        try {
-            const assetIds = Array.from(this.assets.values())
-                .filter(asset => asset.coingeckoId)
-                .map(asset => asset.coingeckoId!);
-
-            // Batch API calls for solar efficiency
-            const batches = this.chunkArray(assetIds, this.SOLAR_BATCH_SIZE);
+    
+    private initializeDemoPrices(): void {
+        // Set realistic demo prices
+        this.prices.set('PSDN', { usd: 0.042, change24h: 5.2 });
+        this.prices.set('ETH', { usd: 2250.50, change24h: -1.8 });
+        this.prices.set('stETH', { usd: 2248.75, change24h: -1.7 });
+        this.prices.set('BTC', { usd: 42000, change24h: 2.3 });
+        this.prices.set('USDC', { usd: 1.0001, change24h: 0.01 });
+        
+        console.log('💰 Demo prices initialized');
+    }
+    
+    private updateDemoPrices(): void {
+        // Simulate realistic price movements
+        this.prices.forEach((price: { usd: number; change24h: number }, symbol: string) => {
+            const volatility = symbol === 'USDC' ? 0.0001 : (symbol === 'PSDN' ? 0.05 : 0.02);
+            const change = (Math.random() - 0.5) * volatility;
+            const newPrice = price.usd * (1 + change);
+            const newChange24h = price.change24h + (Math.random() - 0.5) * 2;
             
-            for (const batch of batches) {
-                await this.fetchPriceBatch(batch);
-                // Small delay between batches for rate limiting
-                await new Promise(resolve => setTimeout(resolve, 200));
+            this.prices.set(symbol, {
+                usd: newPrice,
+                change24h: Math.max(-20, Math.min(20, newChange24h))
+            });
+            
+            // Update price history
+            if (!this.priceHistory.has(symbol)) {
+                this.priceHistory.set(symbol, []);
             }
-
-            // Integrate PSDN price from tracker
-            this.integratePSDNPrice();
-
-        } catch (error) {
-            console.error('Price update error:', error);
-        }
-    }
-
-    private async fetchPriceBatch(coingeckoIds: string[]): Promise<void> {
-        try {
-            const response = await fetch(
-                `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoIds.join(',')}&vs_currencies=usd&include_24hr_change=true`
-            );
-            const data = await response.json();
-
-            for (const [id, priceData] of Object.entries(data)) {
-                const asset = Array.from(this.assets.values()).find(a => a.coingeckoId === id);
-                if (asset && typeof priceData === 'object' && priceData !== null) {
-                    const price = (priceData as any).usd;
-                    if (typeof price === 'number') {
-                        this.updateAssetPrice(asset.symbol, price);
-                    }
-                }
+            const history = this.priceHistory.get(symbol)!;
+            history.push(newPrice);
+            
+            // Keep last 1000 price points
+            if (history.length > 1000) {
+                this.priceHistory.set(symbol, history.slice(-1000));
             }
-
-        } catch (error) {
-            console.error('Batch price fetch error:', error);
-        }
-    }
-
-    private integratePSDNPrice(): void {
-        const psdnMetrics = this.psdnTracker.getCurrentMetrics();
-        if (psdnMetrics.priceUSD > 0) {
-            this.updateAssetPrice('PSDN', psdnMetrics.priceUSD);
-        }
-    }
-
-    private updateAssetPrice(symbol: string, price: number): void {
-        if (!this.priceHistory.has(symbol)) {
-            this.priceHistory.set(symbol, []);
-        }
+        });
         
-        const history = this.priceHistory.get(symbol)!;
-        history.push(price);
-        
-        // Keep last 1000 price points for solar efficiency
-        if (history.length > 1000) {
-            this.priceHistory.set(symbol, history.slice(-1000));
-        }
+        console.log('💰 Demo prices updated');
     }
 
     // 🌞 Solar-powered portfolio management
@@ -616,8 +598,8 @@ export class PortfolioAnalyzer {
     }
 
     public getCurrentPrice(symbol: string): number {
-        const history = this.priceHistory.get(symbol);
-        return history && history.length > 0 ? history[history.length - 1] : 0;
+        const priceData = this.prices.get(symbol);
+        return priceData ? priceData.usd : 0;
     }
 
     public getPriceHistory(symbol: string, limit: number = 100): number[] {

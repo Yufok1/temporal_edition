@@ -94,7 +94,7 @@ export class OBOLOperationsDash {
     constructor(beaconNodeURL: string = 'http://localhost:5052') {
         this.beaconAPI = beaconNodeURL;
         this.networkMetrics = this.initializeNetworkMetrics();
-        this.setupQuantumMonitoring();
+        this.setupDistributedMonitoring();
         this.startSolarSync();
         console.log('⚰️ OBOL Operations Dashboard initialized - HADES CURRENCY MONITORING ACTIVE');
     }
@@ -116,30 +116,36 @@ export class OBOLOperationsDash {
         };
     }
 
-    // ⚡ Quantum beacon chain connection
-    private setupQuantumMonitoring(): void {
-        try {
-            const wsURL = this.beaconAPI.replace('http', 'ws') + '/eth/v1/events?topics=head,finalized_checkpoint,voluntary_exit,attester_slashing,proposer_slashing';
-            this.websocketConnection = new WebSocket(wsURL);
-
-            this.websocketConnection.onopen = () => {
-                console.log('🔶 OBOL Dashboard: Quantum beacon connection established');
-                this.syncNetworkState();
-            };
-
-            this.websocketConnection.onmessage = (event) => {
-                this.processBeaconEvent(JSON.parse(event.data));
-            };
-
-            this.websocketConnection.onerror = (error) => {
-                console.error('⚡ Beacon connection error:', error);
-                this.fallbackToPolling();
-            };
-
-        } catch (error) {
-            console.warn('WebSocket unavailable, using HTTP polling');
+    private setupDistributedMonitoring(): void {
+        console.log('🌐 OBOL Operations: Initializing distributed validator monitoring...');
+        
+        // DEMO MODE: WebSocket connections disabled
+        console.log('🔧 Running in DEMO mode - WebSocket/API connections disabled');
+        console.log('� To enable real connections, update with your beacon node URL');
+        
+        // Initialize with demo data
+        this.initializeDemoData();
+        
+        // Fallback to polling mode
+        this.fallbackToPolling();
+        
+        /* PRODUCTION CODE - Uncomment and configure:
+        this.websocketConnection = new WebSocket('wss://your-beacon-node.com/ws');
+        
+        this.websocketConnection.onopen = () => {
+            console.log('🔌 Connected to distributed validator network');
+            this.subscribeToValidatorUpdates();
+        };
+        
+        this.websocketConnection.onerror = (error) => {
+            console.error('WebSocket error:', error);
             this.fallbackToPolling();
-        }
+        };
+        
+        this.websocketConnection.onmessage = (event) => {
+            this.processDistributedUpdate(JSON.parse(event.data));
+        };
+        */
     }
 
     // 🌞 Solar-powered validator sync
@@ -640,5 +646,41 @@ export class OBOLOperationsDash {
                 console.error('Polling error:', error);
             }
         }, this.QUANTUM_SYNC_INTERVAL * 2); // Slower polling
+    }
+
+    private initializeDemoData(): void {
+        // Initialize with realistic demo data
+        this.networkMetrics = {
+            currentEpoch: 250000,
+            currentSlot: 8000000,
+            finalizedEpoch: 249968,
+            participationRate: 99.5,
+            networkUptime: 99.9,
+            averageValidatorBalance: BigInt('32100000000000000000'), // 32.1 ETH
+            totalStaked: BigInt('13440000000000000000000000'), // 13.44M ETH
+            slashingEvents: 0,
+            networkEffectiveness: 98.5,
+            soulTransitEvents: 42,
+            cosmicDisruptions: 0,
+            underworldStability: 98.5
+        };
+        
+        // Add some demo clusters
+        this.clusters.set('demo-cluster-1', {
+            clusterId: 'demo-cluster-1',
+            clusterName: 'Demo Cluster 1',
+            operators: ['op1', 'op2', 'op3', 'op4'],
+            validators: [],
+            totalStaked: BigInt('320000000000000000000'), // 320 ETH
+            totalRewards: BigInt('10000000000000000000'), // 10 ETH
+            avgPerformance: 99.2,
+            riskScore: 0.05,
+            status: 'healthy',
+            lastSync: Date.now(),
+            divineOversight: false,
+            cosmicBalanceScore: 95
+        });
+        
+        console.log('📊 Demo data initialized');
     }
 }

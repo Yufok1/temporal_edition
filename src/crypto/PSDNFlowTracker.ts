@@ -101,29 +101,32 @@ export class PSDNFlowTracker {
 
     // ⚡ Quantum-speed real-time connection
     private setupRealtimeFeeds(): void {
-        // WebSocket connection to blockchain node
-        try {
-            this.websocketConnection = new WebSocket('wss://mainnet.infura.io/ws/v3/YOUR_PROJECT_ID');
-            
-            this.websocketConnection.onopen = () => {
-                console.log('🔌 PSDN Flow Tracker: Quantum connection established');
-                this.subscribeToTransactions();
-                this.subscribeToPriceFeeds();
-            };
-
-            this.websocketConnection.onmessage = (event) => {
-                this.processRealtimeData(JSON.parse(event.data));
-            };
-
-            this.websocketConnection.onerror = (error) => {
-                console.error('⚡ Quantum connection error:', error);
-                this.handleConnectionError();
-            };
-
-        } catch (error) {
-            console.warn('WebSocket not available, using polling fallback');
-            this.startPollingMode();
-        }
+        console.log('⚡ Quantum connection initiated - Monitoring PSDN flows...');
+        
+        // DEMO MODE: WebSocket connections disabled
+        console.log('🔧 Running in DEMO mode - WebSocket connections disabled');
+        console.log('💡 To enable real connections, update with your Infura project ID');
+        
+        // Fallback to polling mode immediately
+        this.fallbackToPolling();
+        
+        /* PRODUCTION CODE - Uncomment and add your Infura project ID:
+        this.websocketConnection = new WebSocket('wss://mainnet.infura.io/ws/v3/YOUR_PROJECT_ID');
+        
+        this.websocketConnection.onopen = () => {
+            console.log('⚡ Quantum connection established!');
+            this.subscribeToWhaleMovements();
+        };
+        
+        this.websocketConnection.onerror = (error) => {
+            console.error('⚡ Quantum connection error:', error);
+            this.handleConnectionError();
+        };
+        
+        this.websocketConnection.onmessage = (event) => {
+            this.processQuantumData(JSON.parse(event.data));
+        };
+        */
     }
 
     private subscribeToTransactions(): void {
@@ -541,5 +544,9 @@ export class PSDNFlowTracker {
         setTimeout(() => {
             this.setupRealtimeFeeds(); // Attempt reconnection
         }, 5000);
+    }
+
+    private fallbackToPolling(): void {
+        this.startPollingMode();
     }
 }

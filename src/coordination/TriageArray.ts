@@ -550,7 +550,7 @@ export class TriageArray {
             kleeneEfficiencies.reduce((sum, eff) => sum + eff, 0) / kleeneEfficiencies.length : 1.0;
         
         // Divine alignment
-        this.coordinationMetrics.divineAlignment = this.cosmicMonitor ? 
+        this.coordinationMetrics.divineAlignment = this.cosmicMonitor && this.cosmicMonitor.getCosmicBalance ? 
             this.cosmicMonitor.getCosmicBalance().equilibriumScore / 100 : 1.0;
         
         // Resource utilization
