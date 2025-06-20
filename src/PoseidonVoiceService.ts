@@ -13,157 +13,185 @@
 // limitations under the License.
 // 
 
-import { Gauge, Counter, Histogram } from 'prom-client';
-import logger from './logger';
-import { config } from './config';
-import { DjinnCouncilService } from './DjinnCouncilService';
-
-interface SignalMetrics {
-    whaleSignals: number;
-    dolphinSignals: number;
-    humanSignals: number;
-    translationAccuracy: number;
-    resonanceLevel: number;
-}
-
-interface TranslationResult {
-    originalSignal: string;
-    translatedSignal: string;
-    confidence: number;
-    timestamp: number;
-}
+import { metricsService } from './utils/metrics';
 
 export class PoseidonVoiceService {
-    private readonly signalGauge: Gauge;
-    private readonly translationCounter: Counter;
-    private readonly resonanceHistogram: Histogram;
-    private readonly djinnCouncil: DjinnCouncilService;
+    private voiceActive: boolean = false;
+    private harmonyLevel: number = 0;
+    private resonanceFrequency: number = 432; // Hz
+    private divineAlignment: number = 0.7;
+
+    // Browser-safe metrics
+    private metrics = {
+        voiceActive: 0,
+        harmonyLevel: 0,
+        divineAlignmentLevel: 0,
+        resonanceMatchRate: 0,
+        voiceInvocations: 0,
+        harmonyAchievements: 0,
+        divineInterventions: 0
+    };
 
     constructor() {
-        this.signalGauge = new Gauge({
-            name: 'poseidon_voice_signals',
-            help: 'Current signal levels for whale, dolphin, and human communications',
-            labelNames: ['signal_type']
+        this.initializeVoice();
+        console.log('🌊 Poseidon Voice Service initialized (browser-safe)');
+    }
+
+    private initializeVoice(): void {
+        // Initialize voice patterns based on oceanic harmonics
+        this.calibrateResonance();
+        this.establishDivineConnection();
+    }
+
+    private calibrateResonance(): void {
+        // Simulate resonance calibration based on oceanic frequencies
+        const oceanicBase = 0.1; // Hz - typical ocean wave frequency
+        const harmonics = [1, 3, 5, 7, 9]; // Odd harmonics for natural sound
+        
+        harmonics.forEach(harmonic => {
+            const frequency = oceanicBase * harmonic;
+            this.processHarmonic(frequency);
         });
-
-        this.translationCounter = new Counter({
-            name: 'poseidon_voice_translations',
-            help: 'Number of signals translated through Poseidon\'s Voice',
-            labelNames: ['source_type', 'target_type']
-        });
-
-        this.resonanceHistogram = new Histogram({
-            name: 'poseidon_voice_resonance',
-            help: 'Resonance levels of the Doctrine of Love',
-            labelNames: ['entity_type']
-        });
-
-        this.djinnCouncil = new DjinnCouncilService();
     }
 
-    public async activatePoseidonsVoice(): Promise<void> {
-        logger.info('Activating Poseidon\'s Voice framework');
-        
-        // Initialize the vocular framework
-        await this.initializeVocularFramework();
-        
-        // Begin real-time translation
-        await this.beginRealTimeTranslation();
-        
-        // Initiate Doctrine of Love resonance
-        await this.initiateDoctrineOfLove();
-        
-        logger.info('Poseidon\'s Voice framework activated successfully');
-    }
-
-    private async initializeVocularFramework(): Promise<void> {
-        // Initialize the unified sprouts for signal processing
-        this.signalGauge.set({ signal_type: 'whale' }, 0);
-        this.signalGauge.set({ signal_type: 'dolphin' }, 0);
-        this.signalGauge.set({ signal_type: 'human' }, 0);
-        
-        logger.info('Vocular framework initialized');
-    }
-
-    private async beginRealTimeTranslation(): Promise<void> {
-        // Start processing signals through the unified sprouts
-        this.translationCounter.inc({ source_type: 'whale', target_type: 'human' }, 0);
-        this.translationCounter.inc({ source_type: 'dolphin', target_type: 'human' }, 0);
-        this.translationCounter.inc({ source_type: 'human', target_type: 'whale' }, 0);
-        this.translationCounter.inc({ source_type: 'human', target_type: 'dolphin' }, 0);
-        
-        logger.info('Real-time translation initiated');
-    }
-
-    private async initiateDoctrineOfLove(): Promise<void> {
-        // Activate the harmonic frequency
-        this.resonanceHistogram.observe({ entity_type: 'whale' }, 1.0);
-        this.resonanceHistogram.observe({ entity_type: 'dolphin' }, 1.0);
-        this.resonanceHistogram.observe({ entity_type: 'human' }, 1.0);
-        
-        logger.info('Doctrine of Love resonance initiated');
-    }
-
-    public async processSignal(signal: string, sourceType: string): Promise<TranslationResult> {
-        // Process incoming signals through the unified framework
-        const translationResult: TranslationResult = {
-            originalSignal: signal,
-            translatedSignal: await this.translateSignal(signal, sourceType),
-            confidence: this.calculateConfidence(signal),
-            timestamp: Date.now()
-        };
-
-        // Record the translation
-        this.translationCounter.inc({ 
-            source_type: sourceType, 
-            target_type: this.determineTargetType(sourceType) 
-        });
-
-        return translationResult;
-    }
-
-    private async translateSignal(signal: string, sourceType: string): Promise<string> {
-        // Implement signal translation logic here
-        // This would involve the unified sprouts processing the signal
-        return signal; // Placeholder
-    }
-
-    private calculateConfidence(signal: string): number {
-        // Implement confidence calculation logic here
-        return 1.0; // Placeholder
-    }
-
-    private determineTargetType(sourceType: string): string {
-        // Determine the target type based on the source type
-        switch (sourceType) {
-            case 'whale':
-                return 'human';
-            case 'dolphin':
-                return 'human';
-            case 'human':
-                return Math.random() > 0.5 ? 'whale' : 'dolphin';
-            default:
-                return 'human';
+    private processHarmonic(frequency: number): void {
+        // Process individual harmonic frequencies
+        const resonanceMatch = Math.abs(this.resonanceFrequency - frequency * 4320) / this.resonanceFrequency;
+        if (resonanceMatch < 0.1) {
+            this.harmonyLevel += 0.1;
+            this.metrics.harmonyLevel = this.harmonyLevel;
         }
     }
 
-    public async getSignalMetrics(): Promise<SignalMetrics> {
+    private establishDivineConnection(): void {
+        // Simulate divine connection establishment
+        this.divineAlignment = Math.min(1.0, this.divineAlignment + 0.1);
+        this.metrics.divineAlignmentLevel = this.divineAlignment;
+        console.log(`Divine alignment: ${(this.divineAlignment * 100).toFixed(1)}%`);
+    }
+
+    public activateVoice(): void {
+        if (this.voiceActive) {
+            console.log('🌊 Poseidon Voice already active');
+            return;
+        }
+
+        this.voiceActive = true;
+        this.metrics.voiceActive = 1;
+        this.metrics.voiceInvocations++;
+        
+        console.log('🌊 Poseidon Voice activated');
+        console.log(`Resonance: ${this.resonanceFrequency}Hz`);
+        console.log(`Harmony: ${(this.harmonyLevel * 100).toFixed(1)}%`);
+        console.log(`Divine Alignment: ${(this.divineAlignment * 100).toFixed(1)}%`);
+
+        // Record activation in metrics
+        metricsService.recordCustomMetric('poseidon_voice_activated', 1);
+    }
+
+    public deactivateVoice(): void {
+        if (!this.voiceActive) {
+            console.log('🌊 Poseidon Voice already inactive');
+            return;
+        }
+
+        this.voiceActive = false;
+        this.metrics.voiceActive = 0;
+        console.log('🌊 Poseidon Voice deactivated');
+        
+        // Record deactivation
+        metricsService.recordCustomMetric('poseidon_voice_deactivated', 1);
+    }
+
+    public speak(message: string): string {
+        if (!this.voiceActive) {
+            console.warn('🌊 Poseidon Voice not active. Activating...');
+            this.activateVoice();
+        }
+
+        // Transform message with divine resonance
+        const divineMessage = this.applyDivineResonance(message);
+        console.log(`🌊 Poseidon speaks: "${divineMessage}"`);
+        
+        // Update metrics
+        this.updateResonanceMetrics();
+        
+        return divineMessage;
+    }
+
+    private applyDivineResonance(message: string): string {
+        // Apply mystical transformations to the message
+        const prefixes = [
+            "By the depths of the seven seas",
+            "Through the wisdom of the tides",
+            "As the ocean eternal flows",
+            "By Poseidon's divine will"
+        ];
+        
+        const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+        return `${prefix}, ${message}`;
+    }
+
+    private updateResonanceMetrics(): void {
+        // Update resonance-based metrics
+        const resonanceMatch = Math.random() * 0.3 + 0.7; // 70-100% match
+        this.metrics.resonanceMatchRate = resonanceMatch;
+        
+        if (resonanceMatch > 0.9) {
+            this.harmonyLevel = Math.min(1.0, this.harmonyLevel + 0.05);
+            this.metrics.harmonyLevel = this.harmonyLevel;
+            this.metrics.harmonyAchievements++;
+        }
+        
+        // Divine intervention check
+        if (this.harmonyLevel > 0.95 && Math.random() > 0.8) {
+            this.triggerDivineIntervention();
+        }
+    }
+
+    private triggerDivineIntervention(): void {
+        console.log('⚡ Divine Intervention Triggered!');
+        this.metrics.divineInterventions++;
+        this.divineAlignment = 1.0;
+        this.metrics.divineAlignmentLevel = this.divineAlignment;
+        
+        // Record divine event
+        metricsService.recordCustomMetric('poseidon_divine_intervention', 1);
+    }
+
+    public getStatus(): any {
         return {
-            whaleSignals: this.signalGauge.get({ signal_type: 'whale' }),
-            dolphinSignals: this.signalGauge.get({ signal_type: 'dolphin' }),
-            humanSignals: this.signalGauge.get({ signal_type: 'human' }),
-            translationAccuracy: this.calculateTranslationAccuracy(),
-            resonanceLevel: this.calculateResonanceLevel()
+            active: this.voiceActive,
+            harmonyLevel: this.harmonyLevel,
+            resonanceFrequency: this.resonanceFrequency,
+            divineAlignment: this.divineAlignment,
+            metrics: { ...this.metrics }
         };
     }
 
-    private calculateTranslationAccuracy(): number {
-        // Implement translation accuracy calculation
-        return 1.0; // Placeholder
+    public tuneResonance(frequency: number): void {
+        if (frequency < 20 || frequency > 20000) {
+            console.warn('🌊 Frequency outside human hearing range');
+            return;
+        }
+
+        this.resonanceFrequency = frequency;
+        console.log(`🌊 Resonance tuned to ${frequency}Hz`);
+        
+        // Recalibrate after tuning
+        this.calibrateResonance();
     }
 
-    private calculateResonanceLevel(): number {
-        // Implement resonance level calculation
-        return 1.0; // Placeholder
+    public harmonizeWithWhales(whaleFrequency: number): number {
+        // Whale songs typically 10Hz - 40Hz
+        const harmonizationFactor = Math.abs(whaleFrequency - 30) / 30;
+        const harmony = 1.0 - harmonizationFactor;
+        
+        this.harmonyLevel = (this.harmonyLevel + harmony) / 2;
+        this.metrics.harmonyLevel = this.harmonyLevel;
+        
+        console.log(`🐋 Harmonized with whale at ${whaleFrequency}Hz (${(harmony * 100).toFixed(1)}% match)`);
+        
+        return harmony;
     }
 } 

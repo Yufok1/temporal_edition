@@ -13,76 +13,69 @@
 // limitations under the License.
 // 
 
-import { Counter, Histogram, Gauge } from 'prom-client';
 import Queue from 'bull';
 import { NotificationPriority } from './notification_types';
+import { metricsService } from './utils/metrics';
 
 export class QueueMetricsService {
-    private readonly jobCompletedCounter: Counter;
-    private readonly jobFailedCounter: Counter;
-    private readonly jobProcessingTime: Histogram;
-    private readonly queueSizeGauge: Gauge;
-    private readonly retryCounter: Counter;
-    private readonly errorCounter: Counter;
+    // Browser-safe metrics storage
+    private metrics = {
+        jobsCompleted: new Map<string, number>(),
+        jobsFailed: new Map<string, number>(),
+        jobProcessingTimes: new Map<string, number[]>(),
+        queueSize: 0,
+        retries: new Map<string, number>(),
+        errors: 0
+    };
 
     constructor() {
-        // Initialize Prometheus metrics
-        this.jobCompletedCounter = new Counter({
-            name: 'email_jobs_completed_total',
-            help: 'Total number of completed email jobs',
-            labelNames: ['priority']
-        });
-
-        this.jobFailedCounter = new Counter({
-            name: 'email_jobs_failed_total',
-            help: 'Total number of failed email jobs',
-            labelNames: ['priority', 'error_type']
-        });
-
-        this.jobProcessingTime = new Histogram({
-            name: 'email_job_processing_seconds',
-            help: 'Time spent processing email jobs',
-            labelNames: ['priority'],
-            buckets: [0.1, 0.5, 1, 2, 5, 10, 30]
-        });
-
-        this.queueSizeGauge = new Gauge({
-            name: 'email_queue_size',
-            help: 'Current size of the email queue'
-        });
-
-        this.retryCounter = new Counter({
-            name: 'email_job_retries_total',
-            help: 'Total number of job retries',
-            labelNames: ['priority']
-        });
-
-        this.errorCounter = new Counter({
-            name: 'email_queue_errors_total',
-            help: 'Total number of queue errors'
-        });
+        console.log('📊 Queue Metrics Service initialized (browser-safe)');
     }
 
     recordJobCompleted(job: Queue.Job, processingTime: number): void {
         const priority = job.data.priority as NotificationPriority;
-        this.jobCompletedCounter.inc({ priority });
-        this.jobProcessingTime.observe({ priority }, processingTime / 1000); // Convert to seconds
+        const key = `priority_${priority}`;
+        
+        // Update completion count
+        const current = this.metrics.jobsCompleted.get(key) || 0;
+        this.metrics.jobsCompleted.set(key, current + 1);
+        
+        // Record processing time
+        if (!this.metrics.jobProcessingTimes.has(key)) {
+            this.metrics.jobProcessingTimes.set(key, []);
+        }
+        const times = this.metrics.jobProcessingTimes.get(key)!;
+        times.push(processingTime / 1000); // Convert to seconds
+        
+        // Keep only last 100 measurements
+        if (times.length > 100) {
+            times.shift();
+        }
+        
+        // Update browser-safe metrics
+        metricsService.recordCounter('email_jobs_completed', { priority });
+        metricsService.recordHistogram('email_job_processing_seconds', processingTime / 1000, { priority });
     }
 
     recordJobFailed(job: Queue.Job, error: Error): void {
         const priority = job.data.priority as NotificationPriority;
-        this.jobFailedCounter.inc({ 
-            priority,
-            error_type: error.name || 'UnknownError'
-        });
+        const errorType = error.name || 'UnknownError';
+        const key = `${priority}_${errorType}`;
+        
+        const current = this.metrics.jobsFailed.get(key) || 0;
+        this.metrics.jobsFailed.set(key, current + 1);
+        
+        metricsService.recordCounter('email_jobs_failed', { priority, error_type: errorType });
     }
 
     recordJobAdded(priority: NotificationPriority): void {
-        this.jobCompletedCounter.inc({ priority });
+        // This seems to be a typo in the original - should probably not increment completed counter
+        metricsService.recordCounter('email_jobs_added', { priority });
     }
 
     updateQueueSize(size: number): void {
-        this.queueSizeGauge.set(size);
+        this.metrics.queueSize = size;
+        metricsService.recordGauge('email_queue_size', size);
     }
 
     recordRetryAttempt(
@@ -91,7 +84,11 @@ export class QueueMetricsService {
         delay: number,
         error: Error
     ): void {
-        this.retryCounter.inc({ priority });
+        const key = `priority_${priority}`;
+        const current = this.metrics.retries.get(key) || 0;
+        this.metrics.retries.set(key, current + 1);
+        
+        metricsService.recordCounter('email_job_retries', { priority });
     }
 
     recordRetryExhausted(
@@ -99,17 +96,39 @@ export class QueueMetricsService {
         priority: NotificationPriority,
         error: Error
     ): void {
-        this.jobFailedCounter.inc({
-            priority,
-            error_type: 'RetryExhausted'
-        });
+        const errorType = 'RetryExhausted';
+        const key = `${priority}_${errorType}`;
+        
+        const current = this.metrics.jobsFailed.get(key) || 0;
+        this.metrics.jobsFailed.set(key, current + 1);
+        
+        metricsService.recordCounter('email_jobs_failed', { priority, error_type: errorType });
     }
 
     recordQueueError(error: Error): void {
-        this.errorCounter.inc();
+        this.metrics.errors++;
+        metricsService.recordCounter('email_queue_errors');
     }
 
-    getMetrics(): string {
-        return this.jobCompletedCounter.registry.metrics();
+    getMetrics(): any {
+        const processingStats = new Map<string, any>();
+        
+        this.metrics.jobProcessingTimes.forEach((times, priority) => {
+            if (times.length > 0) {
+                const avg = times.reduce((a, b) => a + b, 0) / times.length;
+                const min = Math.min(...times);
+                const max = Math.max(...times);
+                processingStats.set(priority, { avg, min, max, count: times.length });
+            }
+        });
+        
+        return {
+            jobsCompleted: Object.fromEntries(this.metrics.jobsCompleted),
+            jobsFailed: Object.fromEntries(this.metrics.jobsFailed),
+            processingStats: Object.fromEntries(processingStats),
+            queueSize: this.metrics.queueSize,
+            retries: Object.fromEntries(this.metrics.retries),
+            totalErrors: this.metrics.errors
+        };
     }
 } 

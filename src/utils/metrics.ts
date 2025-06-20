@@ -17,12 +17,12 @@ import { SystemMetrics } from '../services/TemporalSequencer';
 import { AnalysisResult } from '../services/BreathMirrorAnalysis';
 import { GovernanceStatus } from '../services/GovernanceTracker';
 
-// Browser-safe metrics implementation
+// Browser-safe metrics service that replaces prom-client
 export class MetricsService {
-    private metrics: Map<string, any> = new Map();
     private counters: Map<string, number> = new Map();
     private gauges: Map<string, number> = new Map();
     private histograms: Map<string, number[]> = new Map();
+    private customMetrics: Record<string, { count: number; total: number; lastValue: number; lastUpdated: number }> = {};
 
     constructor() {
         console.log('📊 Metrics service initialized (browser-safe mode)');
@@ -88,17 +88,71 @@ export class MetricsService {
         return JSON.stringify(result, null, 2);
     }
 
-    // Whale communication metrics
-    public recordWhaleSignal(eventType: 'transmitted' | 'received' | 'processed', success: boolean): void {
-        this.incrementCounter('whale_signals_total', 1, { type: eventType, status: success ? 'success' : 'failure' });
+    recordWhaleSignal(type: 'received' | 'transmitted', success: boolean, metadata?: any): void {
+        const key = `whale_signal_${type}_${success ? 'success' : 'failure'}`;
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + 1);
+        
+        console.log(`🐋 Whale signal ${type}: ${success ? '✓' : '✗'}`);
     }
 
-    public recordSessionDuration(durationMs: number): void {
-        this.recordHistogram('whale_session_duration_ms', durationMs);
+    recordSessionDuration(duration: number): void {
+        const key = 'session_duration_ms';
+        if (!this.histograms.has(key)) {
+            this.histograms.set(key, []);
+        }
+        const values = this.histograms.get(key)!;
+        values.push(duration);
+        
+        // Keep only last 50 sessions
+        if (values.length > 50) {
+            values.shift();
+        }
+        
+        console.log(`📊 Session duration: ${(duration / 1000).toFixed(1)}s`);
     }
 
-    public updateConnectionStatus(connected: boolean): void {
-        this.setGauge('whale_connection_active', connected ? 1 : 0);
+    updateConnectionStatus(connected: boolean): void {
+        this.gauges.set('connection_status', connected ? 1 : 0);
+        console.log(`🔌 Connection status: ${connected ? 'Connected' : 'Disconnected'}`);
+    }
+
+    recordDjinnActivity(djinnName: string, activityType: string): void {
+        const key = `djinn_${djinnName}_${activityType}`;
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + 1);
+        
+        console.log(`🧞 Djinn activity: ${djinnName} - ${activityType}`);
+    }
+
+    recordLearningPattern(pattern: string, alignment: number): void {
+        const key = `learning_pattern_${pattern}`;
+        this.gauges.set(key, alignment);
+        
+        console.log(`🎓 Learning pattern: ${pattern} (${(alignment * 100).toFixed(1)}% aligned)`);
+    }
+
+    recordCryptoFlow(currency: 'PSDN' | 'OBOL', amount: number, flowType: 'in' | 'out'): void {
+        const key = `crypto_flow_${currency}_${flowType}`;
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + amount);
+        
+        const gaugeKey = `crypto_balance_${currency}`;
+        const currentBalance = this.gauges.get(gaugeKey) || 0;
+        const newBalance = flowType === 'in' ? currentBalance + amount : currentBalance - amount;
+        this.gauges.set(gaugeKey, newBalance);
+        
+        console.log(`💰 ${currency} ${flowType}: ${amount} (balance: ${newBalance})`);
+    }
+
+    recordCosmicEvent(eventType: string, severity: number): void {
+        const key = `cosmic_event_${eventType}`;
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + 1);
+        
+        this.gauges.set(`cosmic_severity_${eventType}`, severity);
+        
+        console.log(`✨ Cosmic event: ${eventType} (severity: ${severity})`);
     }
 
     // Riddler service metrics
@@ -114,8 +168,20 @@ export class MetricsService {
     }
 
     // Temporal metrics
-    public recordTemporalShift(shiftType: string, latencyMs: number): void {
-        this.recordHistogram('temporal_shift_latency_ms', latencyMs, { type: shiftType });
+    public recordTemporalShift(type: string, magnitude: number): void {
+        const key = `temporal_shift_${type}`;
+        if (!this.histograms.has(key)) {
+            this.histograms.set(key, []);
+        }
+        const values = this.histograms.get(key)!;
+        values.push(magnitude);
+        
+        // Keep only last 100 values
+        if (values.length > 100) {
+            values.shift();
+        }
+        
+        console.log(`⏱️ Temporal shift recorded: ${type} = ${magnitude}ms`);
     }
 
     public updateTimelineIntegrity(score: number): void {
@@ -138,16 +204,66 @@ export class MetricsService {
         const key = this.getMetricKey(name, labels);
         const values = this.histograms.get(key) || [];
         values.push(value);
-        this.histograms.set(key, values);
+        
+        // Keep only last 1000 values
+        if (values.length > 1000) {
+            values.shift();
+        }
     }
 
     private getMetricKey(name: string, labels?: Record<string, string>): string {
-        if (!labels) return name;
+        if (!labels || Object.keys(labels).length === 0) {
+            return name;
+        }
         const labelStr = Object.entries(labels)
-            .sort(([a], [b]) => a.localeCompare(b))
             .map(([k, v]) => `${k}="${v}"`)
             .join(',');
         return `${name}{${labelStr}}`;
+    }
+
+    recordCustomMetric(name: string, value: number): void {
+        // Record custom metric in browser-safe way
+        const key = `custom_${name}`;
+        if (!this.customMetrics[key]) {
+            this.customMetrics[key] = {
+                count: 0,
+                total: 0,
+                lastValue: 0,
+                lastUpdated: Date.now()
+            };
+        }
+        
+        this.customMetrics[key].count++;
+        this.customMetrics[key].total += value;
+        this.customMetrics[key].lastValue = value;
+        this.customMetrics[key].lastUpdated = Date.now();
+        
+        console.log(`📊 Custom metric recorded: ${name} = ${value}`);
+    }
+
+    recordCounter(name: string, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + 1);
+    }
+
+    recordGauge(name: string, value: number, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        this.gauges.set(key, value);
+    }
+
+    recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        if (!this.histograms.has(key)) {
+            this.histograms.set(key, []);
+        }
+        const values = this.histograms.get(key)!;
+        values.push(value);
+        
+        // Keep only last 1000 values
+        if (values.length > 1000) {
+            values.shift();
+        }
     }
 }
 
