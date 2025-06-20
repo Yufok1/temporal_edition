@@ -29,7 +29,8 @@ module.exports = function override(config, env) {
     config.resolve.alias = {
         ...config.resolve.alias,
         './utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts'),
-        '../utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts')
+        '../utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts'),
+        'prom-client': false  // Prevent prom-client from being bundled
     };
 
     // Add plugins
@@ -38,8 +39,24 @@ module.exports = function override(config, env) {
         new webpack.ProvidePlugin({
             process: 'process/browser',
             Buffer: ['buffer', 'Buffer']
+        }),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^prom-client$/
         })
     ];
+
+    // Add rule to exclude server-side files
+    config.module.rules.push({
+        test: /\.(ts|tsx)$/,
+        exclude: [
+            /src\/app\.ts$/,
+            /src\/server\.ts$/,
+            /src\/metrics\/(system-metrics|queue-metrics)\.ts$/
+        ],
+        use: {
+            loader: 'null-loader'
+        }
+    });
 
     // Ignore certain warnings
     config.ignoreWarnings = [
