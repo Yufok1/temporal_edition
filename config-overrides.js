@@ -2,6 +2,7 @@
 // Handles Node.js polyfills for crypto and monitoring modules
 
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = function override(config, env) {
     // Add fallbacks for Node.js modules
@@ -22,6 +23,13 @@ module.exports = function override(config, env) {
         "https": require.resolve("https-browserify"),
         "zlib": require.resolve("browserify-zlib"),
         "url": require.resolve("url/")
+    };
+
+    // Add alias to use browser version of metrics
+    config.resolve.alias = {
+        ...config.resolve.alias,
+        './utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts'),
+        '../utils/metrics': path.resolve(__dirname, 'src/utils/metrics.browser.ts')
     };
 
     // Add plugins

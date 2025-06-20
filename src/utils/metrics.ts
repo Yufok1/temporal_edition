@@ -13,105 +13,43 @@
 // limitations under the License.
 // 
 
-import { Registry, Counter, Gauge, Histogram } from 'prom-client';
 import { SystemMetrics } from '../services/TemporalSequencer';
 import { AnalysisResult } from '../services/BreathMirrorAnalysis';
 import { GovernanceStatus } from '../services/GovernanceTracker';
 
+// Browser-safe metrics implementation
 export class MetricsService {
-    private registry: Registry;
-    private alignmentScore: Gauge;
-    private stabilityIndex: Gauge;
-    private responseTime: Histogram;
-    private throughput: Counter;
-    private errorRate: Gauge;
-    private complianceScore: Gauge;
-    private violations: Counter;
-    private remediationCount: Counter;
+    private metrics: Map<string, any> = new Map();
+    private counters: Map<string, number> = new Map();
+    private gauges: Map<string, number> = new Map();
+    private histograms: Map<string, number[]> = new Map();
 
     constructor() {
-        this.registry = new Registry();
-
-        this.alignmentScore = new Gauge({
-            name: 'solar_alignment_score',
-            help: 'System alignment score',
-            labelNames: ['systemId']
-        });
-
-        this.stabilityIndex = new Gauge({
-            name: 'solar_system_stability',
-            help: 'System stability index',
-            labelNames: ['systemId']
-        });
-
-        this.responseTime = new Histogram({
-            name: 'system_performance_response_time',
-            help: 'System response time in milliseconds',
-            labelNames: ['systemId', 'operation'],
-            buckets: [10, 50, 100, 200, 500, 1000, 2000, 5000]
-        });
-
-        this.throughput = new Counter({
-            name: 'system_performance_throughput',
-            help: 'System throughput in operations per second',
-            labelNames: ['systemId', 'operation']
-        });
-
-        this.errorRate = new Gauge({
-            name: 'system_performance_error_rate',
-            help: 'System error rate',
-            labelNames: ['systemId', 'errorType']
-        });
-
-        this.complianceScore = new Gauge({
-            name: 'system_compliance_score',
-            help: 'System compliance score',
-            labelNames: ['systemId']
-        });
-
-        this.violations = new Counter({
-            name: 'system_governance_violations',
-            help: 'Count of governance violations',
-            labelNames: ['systemId', 'severity']
-        });
-
-        this.remediationCount = new Counter({
-            name: 'system_remediation_count',
-            help: 'Count of remediation actions taken',
-            labelNames: ['systemId', 'actionType']
-        });
-
-        this.registry.registerMetric(this.alignmentScore);
-        this.registry.registerMetric(this.stabilityIndex);
-        this.registry.registerMetric(this.responseTime);
-        this.registry.registerMetric(this.throughput);
-        this.registry.registerMetric(this.errorRate);
-        this.registry.registerMetric(this.complianceScore);
-        this.registry.registerMetric(this.violations);
-        this.registry.registerMetric(this.remediationCount);
+        console.log('📊 Metrics service initialized (browser-safe mode)');
     }
 
     public registerSystem(systemId: string): void {
-        this.alignmentScore.set({ systemId }, 1.0);
-        this.stabilityIndex.set({ systemId }, 1.0);
-        this.complianceScore.set({ systemId }, 1.0);
+        console.log(`System registered: ${systemId}`);
+        this.setGauge('solar_alignment_score', 1.0, { systemId });
+        this.setGauge('solar_system_stability', 1.0, { systemId });
+        this.setGauge('system_compliance_score', 1.0, { systemId });
     }
 
     public updateSystemMetrics(systemId: string, metrics: SystemMetrics): void {
-        this.alignmentScore.set({ systemId }, metrics.alignmentScore);
-        this.stabilityIndex.set({ systemId }, metrics.stabilityIndex);
-        this.responseTime.observe({ systemId, operation: 'default' }, metrics.performanceMetrics.responseTime);
-        this.throughput.inc({ systemId, operation: 'default' }, metrics.performanceMetrics.throughput);
-        this.errorRate.set({ systemId, errorType: 'total' }, metrics.performanceMetrics.errorRate);
+        this.setGauge('solar_alignment_score', metrics.alignmentScore, { systemId });
+        this.setGauge('solar_system_stability', metrics.stabilityIndex, { systemId });
+        this.recordHistogram('system_performance_response_time', metrics.performanceMetrics.responseTime, { systemId, operation: 'default' });
+        this.incrementCounter('system_performance_throughput', metrics.performanceMetrics.throughput, { systemId, operation: 'default' });
+        this.setGauge('system_performance_error_rate', metrics.performanceMetrics.errorRate, { systemId, errorType: 'total' });
     }
 
     public updateAnalysisResult(systemId: string, result: AnalysisResult): void {
-        this.alignmentScore.set({ systemId }, result.metrics.alignmentScore);
-        this.stabilityIndex.set({ systemId }, result.metrics.stabilityIndex);
+        this.setGauge('solar_alignment_score', result.metrics.alignmentScore, { systemId });
+        this.setGauge('solar_system_stability', result.metrics.stabilityIndex, { systemId });
     }
 
     public updateGovernanceStatus(systemId: string, status: GovernanceStatus): void {
-        this.complianceScore.set({ systemId }, status.complianceScore);
+        this.setGauge('system_compliance_score', status.complianceScore, { systemId });
 
         // Count violations by severity
         const violationsBySeverity = status.violations.reduce((acc, violation) => {
@@ -120,16 +58,96 @@ export class MetricsService {
         }, {} as Record<string, number>);
 
         Object.entries(violationsBySeverity).forEach(([severity, count]) => {
-            this.violations.inc({ systemId, severity }, count);
+            this.incrementCounter('system_governance_violations', count, { systemId, severity });
         });
     }
 
     public incrementRemediationCount(systemId: string, actionType: string): void {
-        this.remediationCount.inc({ systemId, actionType });
+        this.incrementCounter('system_remediation_count', 1, { systemId, actionType });
     }
 
-    public getMetrics(): Promise<string> {
-        return this.registry.metrics();
+    public async getMetrics(): Promise<string> {
+        const result = {
+            counters: Object.fromEntries(this.counters),
+            gauges: Object.fromEntries(this.gauges),
+            histograms: Object.fromEntries(
+                Array.from(this.histograms.entries()).map(([key, values]) => [
+                    key,
+                    {
+                        count: values.length,
+                        sum: values.reduce((a, b) => a + b, 0),
+                        avg: values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0,
+                        min: values.length > 0 ? Math.min(...values) : 0,
+                        max: values.length > 0 ? Math.max(...values) : 0
+                    }
+                ])
+            ),
+            timestamp: Date.now()
+        };
+        
+        return JSON.stringify(result, null, 2);
+    }
+
+    // Whale communication metrics
+    public recordWhaleSignal(eventType: 'transmitted' | 'received' | 'processed', success: boolean): void {
+        this.incrementCounter('whale_signals_total', 1, { type: eventType, status: success ? 'success' : 'failure' });
+    }
+
+    public recordSessionDuration(durationMs: number): void {
+        this.recordHistogram('whale_session_duration_ms', durationMs);
+    }
+
+    public updateConnectionStatus(connected: boolean): void {
+        this.setGauge('whale_connection_active', connected ? 1 : 0);
+    }
+
+    // Riddler service metrics
+    public recordRiddlerAccess(granted: boolean, stewardId: string): void {
+        this.incrementCounter('riddler_access_attempts', 1, { 
+            status: granted ? 'granted' : 'denied',
+            steward: stewardId 
+        });
+    }
+
+    public updateActiveQuarantines(count: number): void {
+        this.setGauge('riddler_active_quarantines', count);
+    }
+
+    // Temporal metrics
+    public recordTemporalShift(shiftType: string, latencyMs: number): void {
+        this.recordHistogram('temporal_shift_latency_ms', latencyMs, { type: shiftType });
+    }
+
+    public updateTimelineIntegrity(score: number): void {
+        this.setGauge('timeline_integrity_score', score);
+    }
+
+    // Private helper methods
+    private incrementCounter(name: string, value: number = 1, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        const current = this.counters.get(key) || 0;
+        this.counters.set(key, current + value);
+    }
+
+    private setGauge(name: string, value: number, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        this.gauges.set(key, value);
+    }
+
+    private recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
+        const key = this.getMetricKey(name, labels);
+        const values = this.histograms.get(key) || [];
+        values.push(value);
+        this.histograms.set(key, values);
+    }
+
+    private getMetricKey(name: string, labels?: Record<string, string>): string {
+        if (!labels) return name;
+        const labelStr = Object.entries(labels)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([k, v]) => `${k}="${v}"`)
+            .join(',');
+        return `${name}{${labelStr}}`;
     }
 }
 
