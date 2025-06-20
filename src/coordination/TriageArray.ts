@@ -737,7 +737,9 @@ export class TriageArray {
     private shouldProcessInPhase(request: AIRequest, phase: BreathPhase): boolean {
         // Emergency overrides
         if (request.priority === 'breath_critical') return true;
-        if (request.priority === 'divine_urgent' && this.cosmicMonitor?.getDivineAlerts().length > 0) return true;
+        
+        const divineAlerts = this.cosmicMonitor?.getDivineAlerts() || [];
+        if (request.priority === 'divine_urgent' && divineAlerts.length > 0) return true;
         
         // Phase-specific logic
         switch (phase) {
