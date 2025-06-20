@@ -288,7 +288,7 @@ const App: React.FC = () => {
     // Core Services (initialized once)
     const services = useMemo(() => {
         const monitoring = new MonitoringService();
-        const watchtower = new MarineBiologyWatchtower(monitoring);
+        const watchtower = new MarineBiologyWatchtower();
         const riddler = new EnhancedRiddlerService(watchtower);
         const djinnCouncil = new DjinnCouncilService();
         const audio = new DjinnAudioService(monitoring);
@@ -299,14 +299,14 @@ const App: React.FC = () => {
         const obolDash = new OBOLOperationsDash();
         const portfolioAnalyzer = new PortfolioAnalyzer(psdnTracker, obolDash);
         const cosmicMonitor = new CosmicBalanceMonitor(psdnTracker, obolDash);
-        const wealthKnowledge = new WealthKnowledgeLogger();
+        const wealthKnowledge = new WealthKnowledgeLogger(psdnTracker, obolDash, portfolioAnalyzer);
         
         // Coordination Systems
         const triageCoordinator = new TriageCoordinator(
             watchtower,
             djinnCouncil,
-            wealthKnowledge,
-            cosmicMonitor
+            cosmicMonitor,
+            wealthKnowledge
         );
         const bilateralLearning = new BilateralLearningEngine(
             triageCoordinator,
@@ -383,9 +383,6 @@ const App: React.FC = () => {
         setIsAuthenticated(true);
         handleSessionStart();
         
-        // Start cosmic monitoring
-        services.cosmicMonitor.startMonitoring();
-        
         console.log(`🔓 Steward ${authenticatedStewardId} authenticated at Tier ${tier}`);
     };
     
@@ -394,9 +391,6 @@ const App: React.FC = () => {
         setIsAuthenticated(false);
         setStewardId('');
         setStewardTier(5);
-        
-        // Stop cosmic monitoring
-        services.cosmicMonitor.stopMonitoring();
     };
     
     // If not authenticated, show gate
@@ -425,6 +419,15 @@ const App: React.FC = () => {
                         
                         <Route path="/whale" element={
                             <SecureWhaleInterface
+                                riddler={services.riddler}
+                                steward={services.riddler.getSteward(stewardId) || {
+                                    id: stewardId,
+                                    type: 'human',
+                                    name: `Steward ${stewardId}`,
+                                    status: 'approved',
+                                    lastRecognized: Date.now(),
+                                    peckingTier: stewardTier
+                                } as any}
                                 onSessionStart={handleSessionStart}
                                 onSessionEnd={handleSessionEnd}
                             />
