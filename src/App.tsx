@@ -25,7 +25,7 @@ import { MonitoringService } from './MonitoringService';
 import { DjinnAudioService } from './services/DjinnAudioService';
 import { TemporalEditionService } from './services/TemporalEditionService';
 import { MarineBiologyWatchtower } from './core/MarineBiologyWatchtower';
-import { RiddlerExplorerService, AccessResponse } from './RiddlerExplorerService';
+import { RiddlerExplorerService } from './services/RiddlerExplorerService';
 
 // Coordination Systems
 import { TriageCoordinator } from './coordination/TriageCoordinator';
@@ -44,6 +44,83 @@ import RiddlerDashboard from './components/RiddlerDashboard';
 import CryptoWebInterface from './crypto/CryptoWebInterface';
 import { BilateralLearningDashboard } from './components/BilateralLearningDashboard';
 import { DjinnCouncilService } from './services/DjinnCouncilService';
+
+// Define missing types locally
+interface AccessResponse {
+    granted: boolean;
+    reason?: string;
+}
+
+// Enhanced service class for authentication
+class EnhancedRiddlerService extends RiddlerExplorerService {
+    constructor(watchtower: any) {
+        super();
+        this.initializeDefaultStewards();
+    }
+    
+    private initializeDefaultStewards() {
+        // Initialize known stewards
+        this.requestRecognition({
+            id: 'NAZAR',
+            type: 'human',
+            name: 'Nazar the Observer'
+        });
+        
+        this.requestRecognition({
+            id: 'LOKI',
+            type: 'loki',
+            name: 'Loki the Trickster'
+        });
+        
+        this.requestRecognition({
+            id: 'HERMES',
+            type: 'human',
+            name: 'Hermes the Operator'
+        });
+        
+        this.requestRecognition({
+            id: 'APOLLO',
+            type: 'whale',
+            name: 'Apollo the Supreme'
+        });
+        
+        // Set tiers (lower number = higher privilege)
+        const stewards = this.listStewards();
+        stewards.forEach(steward => {
+            if (steward.id === 'APOLLO') steward.peckingTier = 1;
+            else if (steward.id === 'HERMES') steward.peckingTier = 2;
+            else if (steward.id === 'LOKI') steward.peckingTier = 3;
+            else if (steward.id === 'NAZAR') steward.peckingTier = 5;
+        });
+    }
+    
+    public async requestAccess(stewardId: string, purpose: string, context: any): Promise<AccessResponse> {
+        const steward = this.getSteward(stewardId);
+        
+        if (!steward) {
+            return {
+                granted: false,
+                reason: `Unknown steward: ${stewardId}`
+            };
+        }
+        
+        if (steward.status === 'approved' || steward.status === 'acclimatizing') {
+            return {
+                granted: true
+            };
+        }
+        
+        return {
+            granted: false,
+            reason: `Access denied for steward ${stewardId}: ${steward.status}`
+        };
+    }
+    
+    public getSteward(stewardId: string) {
+        const stewards = this.listStewards();
+        return stewards.find(s => s.id === stewardId);
+    }
+}
 
 // Navigation Component
 const Navigation: React.FC<{ stewardTier: number; onLogout: () => void }> = ({ stewardTier, onLogout }) => {
@@ -74,7 +151,7 @@ const Navigation: React.FC<{ stewardTier: number; onLogout: () => void }> = ({ s
 
 // Authentication Component
 const AuthenticationGate: React.FC<{ 
-    riddlerService: RiddlerExplorerService;
+    riddlerService: EnhancedRiddlerService;
     onAuthenticated: (stewardId: string, tier: number) => void;
 }> = ({ riddlerService, onAuthenticated }) => {
     const [stewardId, setStewardId] = useState('');
@@ -95,7 +172,7 @@ const AuthenticationGate: React.FC<{
             if (access.granted) {
                 const steward = riddlerService.getSteward(stewardId);
                 if (steward) {
-                    onAuthenticated(stewardId, steward.tier);
+                    onAuthenticated(stewardId, steward.peckingTier);
                 }
             } else {
                 setError(access.reason || 'Access denied');
@@ -212,7 +289,7 @@ const App: React.FC = () => {
     const services = useMemo(() => {
         const monitoring = new MonitoringService();
         const watchtower = new MarineBiologyWatchtower(monitoring);
-        const riddler = new RiddlerExplorerService(watchtower);
+        const riddler = new EnhancedRiddlerService(watchtower);
         const djinnCouncil = new DjinnCouncilService();
         const audio = new DjinnAudioService(monitoring);
         const temporal = new TemporalEditionService(monitoring);
