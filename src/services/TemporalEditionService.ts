@@ -30,28 +30,34 @@ export interface TemporalData {
 
 export class TemporalEditionService extends EventEmitter {
   private monitoringService: MonitoringService;
-  private riddler: RiddlerExplorerService;
+  private riddler?: RiddlerExplorerService;
   private isInitialized: boolean = false;
   private reportSchedule: NodeJS.Timeout | null = null;
-  private steward: Steward;
+  private steward?: Steward;
 
-  constructor(monitoringService: MonitoringService, riddler: RiddlerExplorerService, steward: Steward) {
+  constructor(monitoringService: MonitoringService, riddler?: RiddlerExplorerService, steward?: Steward) {
     super();
     this.monitoringService = monitoringService;
     this.riddler = riddler;
     this.steward = steward;
-    // Request recognition on construction
-    this.riddler.requestRecognition({
-      id: steward.id,
-      type: steward.type,
-      name: steward.name
-    });
+    
+    // Only request recognition if riddler and steward are provided
+    if (this.riddler && this.steward) {
+      this.riddler.requestRecognition({
+        id: this.steward.id,
+        type: this.steward.type,
+        name: this.steward.name
+      });
+    }
   }
 
   async initialize(): Promise<void> {
     try {
       logger.info('Initializing Temporal Edition Service...');
-      await this.monitoringService.initialize();
+      // MonitoringService might not have initialize method in browser
+      if ('initialize' in this.monitoringService && typeof this.monitoringService.initialize === 'function') {
+        await this.monitoringService.initialize();
+      }
       this.setupReportScheduling();
       this.isInitialized = true;
       logger.info('Temporal Edition Service initialized successfully');
@@ -74,14 +80,20 @@ export class TemporalEditionService extends EventEmitter {
     }, timeUntilMidnight);
   }
 
-  async generateAndExportReports(): Promise<void> {
+  async generateAndExportReports(): Promise<TemporalData | void> {
+    if (!this.riddler || !this.steward) {
+      logger.warn('Riddler or steward not initialized');
+      return;
+    }
     if (!this.riddler.checkpoint(this.steward.id, 'generateAndExportReports')) {
       logger.warn('Riddler denied report generation for steward:', this.steward.id);
       return;
     }
     try {
       logger.info('Generating temporal reports...');
-      const metrics = await this.monitoringService.getSystemMetrics();
+      const metrics = this.monitoringService.getMetrics ? 
+        await this.monitoringService.getMetrics() : 
+        { cpu: 0, memory: 0, cycleTime: 0 };
       const reportData = {
         timestamp: Date.now(),
         metrics,
@@ -89,6 +101,7 @@ export class TemporalEditionService extends EventEmitter {
       };
       await this.exportReports(reportData);
       logger.info('Reports generated and exported successfully');
+      return reportData; // Return the data for App.tsx
     } catch (error) {
       logger.error('Failed to generate reports:', error);
       throw error;
@@ -100,6 +113,10 @@ export class TemporalEditionService extends EventEmitter {
   }
 
   private async exportReports(data: TemporalData): Promise<void> {
+    if (!this.riddler || !this.steward) {
+      logger.warn('Riddler or steward not initialized');
+      return;
+    }
     if (!this.riddler.checkpoint(this.steward.id, 'exportReports', data)) {
       logger.warn('Riddler denied report export for steward:', this.steward.id);
       return;
