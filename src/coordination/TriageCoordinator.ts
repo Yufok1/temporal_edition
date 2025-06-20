@@ -7,6 +7,7 @@ import { MarineBiologyWatchtower, Observer, NazarEvent } from '../core/MarineBio
 import { DjinnCouncilService } from '../services/DjinnCouncilService';
 import { CosmicBalanceMonitor } from '../crypto/CosmicBalanceMonitor';
 import { WealthKnowledgeLogger } from '../crypto/WealthKnowledgeLogger';
+import { RemediationService } from '../services/RemediationService';
 
 export interface NazarTriageRequest {
     observerId: string;
@@ -36,13 +37,14 @@ export class TriageCoordinator {
     private triageArray: TriageArray;
     private watchtower: MarineBiologyWatchtower;
     private djinnCouncil: DjinnCouncilService;
+    private remediationService: RemediationService;
     private nazarRequestMap: Map<string, string> = new Map(); // maps nazar events to triage requests
     private djinnGuidanceLog: DjinnTriageGuidance[] = [];
     private utilityMetrics: TriageUtilityMetrics;
     
     // Breath synchronization
+    private breathPhaseListeners: Map<string, (phase: string) => void> = new Map();
     private currentBreathPhase: string = 'inhale';
-    private breathListeners: Map<string, (phase: string) => void> = new Map();
     
     constructor(
         watchtower: MarineBiologyWatchtower,
@@ -52,9 +54,8 @@ export class TriageCoordinator {
     ) {
         this.watchtower = watchtower;
         this.djinnCouncil = djinnCouncil;
-        
-        // Initialize the triage array
         this.triageArray = new TriageArray(watchtower, wealthKnowledge, cosmicMonitor);
+        this.remediationService = new RemediationService();
         
         this.utilityMetrics = {
             nazarRequests: 0,
@@ -86,15 +87,21 @@ export class TriageCoordinator {
     }
 
     private notifyBreathListeners(phase: string): void {
-        this.breathListeners.forEach(listener => listener(phase));
+        this.breathPhaseListeners.forEach(listener => listener(phase));
     }
 
     public onBreathPhase(id: string, callback: (phase: string) => void): void {
-        this.breathListeners.set(id, callback);
+        this.breathPhaseListeners.set(id, callback);
+        // Immediately call with current phase
+        callback(this.currentBreathPhase);
     }
 
-    public removeBreathListener(id: string): void {
-        this.breathListeners.delete(id);
+    public offBreathPhase(id: string): void {
+        this.breathPhaseListeners.delete(id);
+    }
+
+    public getCurrentBreathPhase(): string {
+        return this.currentBreathPhase;
     }
 
     // 🗼 NAZAR INTEGRATION
@@ -159,43 +166,20 @@ export class TriageCoordinator {
     }
 
     public async requestDjinnGuidance(topic: string, context: any): Promise<DjinnTriageGuidance> {
-        this.utilityMetrics.djinnGuidance++;
-        
-        // Analyze the request pattern
-        const kleenePattern = this.analyzeRequestPattern(topic);
-        const breathAlignment = this.determineOptimalBreath(topic);
-        
-        // Submit to triage
-        const triageRequest = this.triageArray.submitRequest({
-            sourceSystem: 'cosmic_monitor',
-            requestType: 'divine_intervention',
-            content: {
-                djinnTopic: topic,
-                context,
-                seekingWisdom: true
-            },
-            priority: 'divine_urgent',
-            kleenePattern,
-            breathAlignment,
-            estimatedProcessingTime: 200,
-            requiredResources: ['djinn_wisdom', 'cosmic_alignment'],
-            dependencies: []
-        });
-
-        // Generate guidance based on triage analysis
+        // Generate djinn-inspired guidance based on current state
         const currentMetrics = this.triageArray.getCoordinationMetrics();
-        const kleeneAnalysis = this.triageArray.getKleeneAnalysis();
+        const kleenePattern = this.analyzeRequestPattern(topic);
         
         const guidance: DjinnTriageGuidance = {
             pattern: kleenePattern,
             wisdom: this.generateDjinnWisdom(topic, currentMetrics),
-            breathAlignment: `Optimal during ${breathAlignment} phase`,
+            breathAlignment: this.currentBreathPhase,
             cosmicResonance: currentMetrics.divineAlignment,
             recommendedAction: 'immediate_execute'
         };
 
         this.djinnGuidanceLog.push(guidance);
-        console.log(`🎭 Djinn guidance generated: ${topic} | Pattern: ${kleenePattern} | Resonance: ${(guidance.cosmicResonance * 100).toFixed(1)}%`);
+        console.log(`🎭 Djinn guidance: ${topic} | Breath: ${this.currentBreathPhase} | Resonance: ${(guidance.cosmicResonance * 100).toFixed(1)}%`);
         
         return guidance;
     }
@@ -348,7 +332,7 @@ export class TriageCoordinator {
 
     // 🛑 SHUTDOWN
     public shutdown(): void {
-        this.breathListeners.clear();
+        this.breathPhaseListeners.clear();
         this.triageArray.shutdown();
         console.log('🎭 Triage Coordinator shutdown - Nazar & Djinn utilities disconnected');
     }

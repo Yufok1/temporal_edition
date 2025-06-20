@@ -1,0 +1,477 @@
+/* 🧠🔄 BILATERAL LEARNING DASHBOARD STYLES */
+/* Where User and Djinn breathe and learn as one */
+
+.bilateral-learning-dashboard {
+    padding: 30px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #16213e 100%);
+    color: #e1e1e1;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Breathing background animation */
+.bilateral-learning-dashboard::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(52, 152, 219, 0.1) 0%,
+        transparent 50%
+    );
+    animation: breathPulse 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes breathPulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.3; }
+    25% { transform: scale(1); opacity: 0.5; } /* inhale */
+    50% { transform: scale(1); opacity: 0.6; } /* hold_in */
+    75% { transform: scale(0.9); opacity: 0.4; } /* exhale */
+}
+
+.dashboard-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+}
+
+.breath-indicator {
+    font-size: 1.2rem;
+    color: #3498db;
+    animation: breathGlow 5s ease-in-out infinite;
+}
+
+@keyframes breathGlow {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; text-shadow: 0 0 10px #3498db; }
+}
+
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+    border-color: rgba(52, 152, 219, 0.6);
+}
+
+.metric-card h3 {
+    font-size: 0.9rem;
+    color: #8b9dc3;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 5px;
+}
+
+.metric-subtext {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+.metric-progress {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 1s ease;
+}
+
+.progress-bar.user-teaching {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+.progress-bar.djinn-teaching {
+    background: linear-gradient(90deg, #9b59b6, #8e44ad);
+}
+
+.growth-indicator, .synergy-glow, .transcendent-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+}
+
+.synergy-glow {
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.metric-card.transcendent {
+    background: rgba(241, 196, 15, 0.1);
+    border-color: rgba(241, 196, 15, 0.5);
+}
+
+.metric-card.transcendent .metric-value {
+    color: #f1c40f;
+}
+
+/* Learning Patterns Section */
+.learning-patterns-section {
+    margin-bottom: 40px;
+}
+
+.learning-patterns-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #3498db;
+}
+
+.patterns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.pattern-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.pattern-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-3px);
+}
+
+.pattern-icon {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.pattern-name {
+    text-align: center;
+    font-size: 1.1rem;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+    color: #8b9dc3;
+}
+
+.pattern-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+}
+
+.pattern-stats .stat {
+    text-align: center;
+}
+
+.pattern-stats .label {
+    display: block;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.pattern-stats .value {
+    display: block;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.resonance-bars {
+    margin-top: 15px;
+}
+
+.resonance-bars .bar {
+    margin-bottom: 10px;
+}
+
+.resonance-bars span {
+    display: block;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+}
+
+.bar-fill {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-fill.djinn {
+    background: linear-gradient(90deg, #9b59b6, #8e44ad);
+}
+
+.bar-fill.user {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+/* Recent Exchanges Section */
+.recent-exchanges-section {
+    margin-bottom: 40px;
+}
+
+.recent-exchanges-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #3498db;
+}
+
+.exchanges-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.exchange-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.exchange-card.transformed {
+    background: rgba(241, 196, 15, 0.05);
+    border-color: rgba(241, 196, 15, 0.3);
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
+}
+
+.exchange-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.exchange-type {
+    font-size: 0.9rem;
+    color: #8b9dc3;
+}
+
+.exchange-breath {
+    font-size: 1.2rem;
+}
+
+.exchange-topic {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #3498db;
+}
+
+.exchange-wisdom {
+    font-style: italic;
+    color: #bdc3c7;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.exchange-metrics {
+    display: flex;
+    gap: 20px;
+}
+
+.mini-metric {
+    font-size: 0.85rem;
+}
+
+.mini-metric span:first-child {
+    color: #7f8c8d;
+    margin-right: 5px;
+}
+
+.mini-metric span:last-child {
+    color: #3498db;
+    font-weight: bold;
+}
+
+.transformation-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(241, 196, 15, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(241, 196, 15, 0.8); }
+}
+
+/* Transcendent Section */
+.transcendent-section {
+    margin-bottom: 40px;
+}
+
+.transcendent-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #f1c40f;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+}
+
+.transcendent-list {
+    display: grid;
+    gap: 20px;
+}
+
+.transcendent-moment {
+    background: linear-gradient(135deg, rgba(241, 196, 15, 0.05), rgba(155, 89, 182, 0.05));
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.transcendent-moment::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(241, 196, 15, 0.1), transparent);
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.moment-icon {
+    font-size: 3rem;
+    z-index: 1;
+}
+
+.moment-content {
+    flex: 1;
+    z-index: 1;
+}
+
+.moment-topic {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f1c40f;
+}
+
+.moment-insight {
+    color: #ecf0f1;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.moment-score {
+    font-size: 0.9rem;
+    color: #8b9dc3;
+}
+
+/* Perfect Glove Status */
+.perfect-glove-status {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(52, 152, 219, 0.6);
+    border-radius: 20px;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.glove-icon {
+    font-size: 2rem;
+}
+
+.glove-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.glove-breath-sync {
+    font-size: 0.9rem;
+    color: #8b9dc3;
+}
+
+.coherence-value {
+    color: #3498db;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .patterns-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .perfect-glove-status {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        justify-content: center;
+    }
+}
