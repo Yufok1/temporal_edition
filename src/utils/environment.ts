@@ -13,22 +13,48 @@
 // limitations under the License.
 // 
 
-import config from '../config';
+// Browser-safe environment utilities
+export const isDevelopment = () => process.env.NODE_ENV !== 'production';
+export const isProduction = () => process.env.NODE_ENV === 'production';
+export const isDebugMode = () => isDevelopment();
 
-export const isDevelopment = () => config.environment === 'development';
-export const isProduction = () => config.environment === 'production';
-export const isDebugEnabled = () => config.debug;
+export const getApiUrl = () => process.env.REACT_APP_API_URL || 'http://localhost:3000';
+export const getWsUrl = () => process.env.REACT_APP_WS_URL || 'ws://localhost:3000';
+export const getVersion = () => process.env.REACT_APP_VERSION || '1.0.0';
 
-export const getApiUrl = () => config.apiUrl;
-export const getWsUrl = () => config.wsUrl;
-export const getVersion = () => config.version;
+// Default audio configuration
+export const getAudioConfig = () => ({
+  sampleRate: 44100,
+  bufferSize: 2048,
+  fftSize: 2048,
+  smoothingTimeConstant: 0.8,
+  minDecibels: -100,
+  maxDecibels: -10,
+  minFrequency: 20,
+  maxFrequency: 20000
+});
 
-export const getAudioConfig = () => config.audio;
-export const getVisualizationConfig = () => config.visualization;
-export const getSecurityConfig = () => config.security;
+// Default visualization configuration
+export const getVisualizationConfig = () => ({
+  barWidth: 2,
+  barGap: 1,
+  barColor: '#4CAF50',
+  backgroundColor: '#1a1a2e',
+  gridColor: 'rgba(255, 255, 255, 0.1)',
+  gridLineWidth: 1,
+  gridLineDash: [5, 5]
+});
+
+// Default security configuration
+export const getSecurityConfig = () => ({
+  sessionTimeout: 30 * 60 * 1000, // 30 minutes
+  maxRetries: 3,
+  retryDelay: 1000, // 1 second
+  encryptionKey: process.env.REACT_APP_ENCRYPTION_KEY || 'default-dev-key'
+});
 
 export const log = (message: string, ...args: any[]) => {
-  if (isDebugEnabled()) {
+  if (isDebugMode()) {
     console.log(`[${new Date().toISOString()}] ${message}`, ...args);
   }
 };

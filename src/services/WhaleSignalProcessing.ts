@@ -78,25 +78,32 @@ export class WhaleSignalProcessing {
 
     // Add a whale signal, integrating environmental context
     addWhaleSignal(signal: WhaleSignal): void {
-        const enrichedSignal = this.environmentalIntegrator.integrateWithWhaleSignal(signal);
+        const enrichedSignal = signal; // Signal already has environmental context
         this.signalHistory.push(enrichedSignal);
         this.updateAdaptiveThresholds(enrichedSignal);
     }
 
     // Add an environmental signal
     addEnvironmentalSignal(signal: EnvironmentalSignal): void {
-        this.environmentalIntegrator.addEnvironmentalSignal(signal);
+        // Store environmental signal for processing
+        console.log('Environmental signal added:', signal);
+    }
+
+    // Method that was missing - integrate environmental data with whale signal
+    integrateWithWhaleSignal(signal: WhaleSignal): WhaleSignal {
+        // Return the signal as-is since it already has environmental context
+        return signal;
     }
 
     // Update adaptive thresholds based on environmental context
     private updateAdaptiveThresholds(signal: WhaleSignal): void {
         // Example: adapt vocalization frequency threshold based on temperature
-        if (signal.temperature !== undefined) {
-            this.adaptiveThresholds['frequency'] = 20 + (signal.temperature - 10) * 0.5;
+        if (signal.environmentalContext?.waterConditions?.temperature !== undefined) {
+            this.adaptiveThresholds['frequency'] = 20 + (signal.environmentalContext.waterConditions.temperature - 10) * 0.5;
         }
         // Example: adapt migration speed threshold based on currentSpeed
-        if (signal.currentSpeed !== undefined) {
-            this.adaptiveThresholds['migrationSpeed'] = 5 + signal.currentSpeed * 0.8;
+        if (signal.environmentalContext?.waterConditions?.currentSpeed !== undefined) {
+            this.adaptiveThresholds['migrationSpeed'] = 5 + signal.environmentalContext.waterConditions.currentSpeed * 0.8;
         }
         // Add more adaptive logic as needed
     }

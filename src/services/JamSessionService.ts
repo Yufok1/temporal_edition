@@ -67,7 +67,7 @@ export class JamSessionService implements JamSession {
             stewardModulation: this.createInitialModulation(sequence),
             resultingHarmony: this.calculateResultingHarmony(sequence),
             feedback: this.assessHarmonicFeedback(sequence),
-            environmentalChanges: this.poseidon.getCurrentEnvironmentalData()
+            environmentalChanges: this.convertToEnvironmentalContext(this.poseidon.getCurrentEnvironmentalData())
         };
     }
 
@@ -101,7 +101,7 @@ export class JamSessionService implements JamSession {
         this.sessionHistory.push(this.currentSession);
 
         // Calculate final environmental impact
-        const finalEnvironmentalChanges = this.poseidon.getCurrentEnvironmentalData();
+        const finalEnvironmentalChanges = this.convertToEnvironmentalContext(this.poseidon.getCurrentEnvironmentalData());
         this.currentSession.environmentalChanges = finalEnvironmentalChanges;
 
         const completedSession = this.currentSession;
@@ -169,7 +169,8 @@ export class JamSessionService implements JamSession {
     }
 
     private assessHarmonicFeedback(sequence: HarmonicSequence): HarmonicFeedback {
-        const environmentalContext = this.poseidon.getCurrentEnvironmentalData();
+        const environmentalSignal = this.poseidon.getCurrentEnvironmentalData();
+        const environmentalContext = this.convertToEnvironmentalContext(environmentalSignal);
         
         return {
             resonance: this.calculateResonance(sequence.frequencies, sequence.amplitude),
@@ -296,5 +297,17 @@ export class JamSessionService implements JamSession {
         } else {
             console.log("No whale vocalizations to process.");
         }
+    }
+
+    private convertToEnvironmentalContext(signal: any): EnvironmentalContext {
+        // Convert EnvironmentalSignal to EnvironmentalContext format
+        return {
+            depth: signal.depth || 50,
+            temperature: signal.temperature || 20,
+            currentSpeed: signal.currentSpeed || 0.5,
+            pressure: signal.pressure || 1,
+            salinity: signal.salinity || 35,
+            marineLifePresence: 0.7 // Default value
+        };
     }
 } 
