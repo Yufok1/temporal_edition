@@ -38,6 +38,26 @@ interface StewardComparisonProps {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
+// Define proper interfaces for learning paths
+interface LearningPath {
+    name: string;
+    priority: 'high' | 'medium' | 'low';
+    description: string;
+    metric?: string;
+    currentValue?: number;
+    targetValue?: number;
+    improvement?: number;
+    unit?: string;
+}
+
+interface StewardMetric {
+    name: string;
+    value: number;
+    targetValue: number;
+    improvement: number;
+    unit: string;
+}
+
 export const StewardComparison: React.FC<StewardComparisonProps> = ({
     stewardMetrics,
     groupMetrics,
@@ -86,34 +106,63 @@ export const StewardComparison: React.FC<StewardComparisonProps> = ({
         ];
     };
 
-    const getLearningPaths = () => {
-        const paths: Array<{
-            metric: string;
-            currentValue: number;
-            targetValue: number;
-            improvement: number;
-            unit: string;
-        }> = [];
-        const metrics = getComparisonData();
-
-        metrics.forEach(metric => {
-            const difference = metric.steward - metric.group;
-            if (difference < -10) {
-                paths.push({
-                    name: metric.name,
-                    priority: 'high',
-                    description: `Focus on improving ${metric.name.toLowerCase()} through targeted exercises and practice.`
-                });
-            } else if (difference < 0) {
-                paths.push({
-                    name: metric.name,
-                    priority: 'medium',
-                    description: `Continue developing ${metric.name.toLowerCase()} with regular practice.`
-                });
+    // Update the generateLearningPaths function
+    const generateLearningPaths = (currentMetrics: StewardMetric[], targetMetrics: StewardMetric[]): LearningPath[] => {
+        const paths: LearningPath[] = [];
+        
+        currentMetrics.forEach((metric, index) => {
+            const target = targetMetrics[index];
+            if (target) {
+                const difference = target.value - metric.value;
+                
+                if (difference < -10) {
+                    paths.push({
+                        name: metric.name,
+                        priority: 'high',
+                        description: `Focus on improving ${metric.name.toLowerCase()} through targeted exercises and practice.`,
+                        metric: metric.name,
+                        currentValue: metric.value,
+                        targetValue: target.value,
+                        improvement: difference,
+                        unit: metric.unit
+                    });
+                } else if (difference < 0) {
+                    paths.push({
+                        name: metric.name,
+                        priority: 'medium', 
+                        description: `Continue developing ${metric.name.toLowerCase()} with regular practice.`,
+                        metric: metric.name,
+                        currentValue: metric.value,
+                        targetValue: target.value,
+                        improvement: difference,
+                        unit: metric.unit
+                    });
+                }
             }
         });
-
+        
         return paths;
+    };
+
+    const getLearningPaths = (): LearningPath[] => {
+        const comparisonData = getComparisonData();
+        const currentMetrics: StewardMetric[] = comparisonData.map(item => ({
+            name: item.name,
+            value: item.steward,
+            targetValue: item.group,
+            improvement: item.group - item.steward,
+            unit: '%'
+        }));
+        
+        const targetMetrics: StewardMetric[] = comparisonData.map(item => ({
+            name: item.name,
+            value: item.group,
+            targetValue: item.group + 10, // Target 10% above group average
+            improvement: 10,
+            unit: '%'
+        }));
+        
+        return generateLearningPaths(currentMetrics, targetMetrics);
     };
 
     const renderComparisonChart = () => {
