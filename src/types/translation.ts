@@ -50,8 +50,18 @@ export interface VocabularyEntry {
         environmental: string[];
         social: string[];
         emotional: string[];
+        behavioral?: string[];
+        seasonal?: string[];
     };
     confidence: number;
+    sentiment?: {
+        baseScore: number;
+        modifiers: {
+            environmental: number;
+            social: number;
+            emotional: number;
+        };
+    };
 }
 
 export type WhaleCallType = 
@@ -59,9 +69,13 @@ export type WhaleCallType =
     | 'whale_call_warning'
     | 'whale_call_spiritual'
     | 'whale_call_encouragement'
-    | 'whale_call_farewell'
+    | 'whale_call_mating'
+    | 'whale_call_migratory'
     | 'whale_call_teaching'
     | 'whale_call_learning'
+    | 'whale_call_playful'
+    | 'whale_call_distress'
+    | 'whale_call_curiosity'
     | 'whale_call_social';
 
 export type VocabularyMapping = Record<WhaleCallType, Record<SupportedLanguage, VocabularyEntry>>;
@@ -87,6 +101,8 @@ export interface TranslationResult {
         environmental: string[];
         social: string[];
         emotional: string[];
+        behavioral?: string[];
+        seasonal?: string[];
     };
     sentiment: SentimentScore;
     timestamp: Date;
