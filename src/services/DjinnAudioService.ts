@@ -14,7 +14,7 @@
 // 
 
 import { EventEmitter } from 'events';
-import logger from '../logger';
+import logger from '../utils/logger';
 import { MonitoringService } from '../MonitoringService';
 import { AudioProcessorService, AudioAnalysis } from './AudioProcessorService';
 

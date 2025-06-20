@@ -13,39 +13,118 @@
 // limitations under the License.
 // 
 
-import winston from 'winston';
+// Browser-safe logger implementation
+class BrowserLogger {
+    private logLevel: string;
+    private logs: Array<{ level: string; message: string; timestamp: string; metadata?: any }> = [];
 
-export const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    ),
-    transports: [
-        new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.simple()
-            )
-        }),
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log' })
-    ]
-});
+    constructor() {
+        this.logLevel = 'info';
+        console.log('🔍 Browser logger initialized');
+    }
 
+    private shouldLog(level: string): boolean {
+        const levels = ['error', 'warn', 'info', 'debug'];
+        const currentLevelIndex = levels.indexOf(this.logLevel);
+        const messageLevelIndex = levels.indexOf(level);
+        return messageLevelIndex <= currentLevelIndex;
+    }
+
+    private formatMessage(level: string, message: string, metadata?: any): string {
+        const timestamp = new Date().toISOString();
+        let formatted = `[${timestamp}] [${level.toUpperCase()}] ${message}`;
+        if (metadata && Object.keys(metadata).length > 0) {
+            formatted += ` ${JSON.stringify(metadata)}`;
+        }
+        return formatted;
+    }
+
+    private log(level: string, message: string, metadata?: any): void {
+        if (!this.shouldLog(level)) return;
+
+        const logEntry = {
+            level,
+            message,
+            timestamp: new Date().toISOString(),
+            metadata
+        };
+
+        // Store in memory (limited to last 1000 entries)
+        this.logs.push(logEntry);
+        if (this.logs.length > 1000) {
+            this.logs.shift();
+        }
+
+        const formatted = this.formatMessage(level, message, metadata);
+
+        // Use appropriate console method
+        switch (level) {
+            case 'error':
+                console.error(formatted);
+                break;
+            case 'warn':
+                console.warn(formatted);
+                break;
+            case 'info':
+                console.info(formatted);
+                break;
+            case 'debug':
+                console.log(formatted);
+                break;
+            default:
+                console.log(formatted);
+        }
+    }
+
+    error(message: string, metadata?: any): void {
+        this.log('error', message, metadata);
+    }
+
+    warn(message: string, metadata?: any): void {
+        this.log('warn', message, metadata);
+    }
+
+    info(message: string, metadata?: any): void {
+        this.log('info', message, metadata);
+    }
+
+    debug(message: string, metadata?: any): void {
+        this.log('debug', message, metadata);
+    }
+
+    setLevel(level: string): void {
+        this.logLevel = level;
+    }
+
+    getLogs(): Array<any> {
+        return [...this.logs];
+    }
+
+    clearLogs(): void {
+        this.logs = [];
+    }
+}
+
+// Create singleton instance
+const browserLogger = new BrowserLogger();
+
+// Export as default
+export default browserLogger;
+
+// Export named for compatibility
+export const logger = browserLogger;
+
+// Export factory function for labeled loggers
 export function createLogger(label: string) {
-    return winston.createLogger({
-        level: 'info',
-        format: winston.format.combine(
-            winston.format.label({ label }),
-            winston.format.timestamp(),
-            winston.format.printf(({ level, message, label, timestamp }) => {
-                return `${timestamp} [${label}] ${level}: ${message}`;
-            })
-        ),
-        transports: [
-            new winston.transports.Console(),
-            new winston.transports.File({ filename: `${label.toLowerCase()}.log` })
-        ]
-    });
+    // Return a wrapper that adds label to all messages
+    return {
+        error: (message: string, metadata?: any) => 
+            browserLogger.error(`[${label}] ${message}`, metadata),
+        warn: (message: string, metadata?: any) => 
+            browserLogger.warn(`[${label}] ${message}`, metadata),
+        info: (message: string, metadata?: any) => 
+            browserLogger.info(`[${label}] ${message}`, metadata),
+        debug: (message: string, metadata?: any) => 
+            browserLogger.debug(`[${label}] ${message}`, metadata)
+    };
 } 

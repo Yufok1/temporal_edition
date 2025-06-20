@@ -13,7 +13,7 @@
 // limitations under the License.
 // 
 
-import logger from '../logger';
+import logger from '../utils/logger';
 
 interface AudioEffect {
   type: string;

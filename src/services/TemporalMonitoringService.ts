@@ -14,7 +14,7 @@
 // 
 
 import { EventEmitter } from 'events';
-import logger from '../logger';
+import logger from '../utils/logger';
 import { metricsService } from '../utils/metrics';
 import { SystemMetrics } from '../services/TemporalSequencer';
 import { AnalysisResult } from '../types';
