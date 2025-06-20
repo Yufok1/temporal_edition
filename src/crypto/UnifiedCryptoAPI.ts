@@ -7,6 +7,7 @@ import { OBOLOperationsDash, NetworkMetrics, OBOLCluster, ValidatorPerformance, 
 import { PortfolioAnalyzer, StewardPortfolio, AllocationBreakdown, RiskMetrics, TradingAlert } from './PortfolioAnalyzer';
 import { CosmicBalanceMonitor, CosmicBalance, DivineAlert, DivineMetrics } from './CosmicBalanceMonitor';
 import { MarineBiologyWatchtower, Observer } from '../core/MarineBiologyWatchtower';
+import { WealthKnowledgeLogger, KnowledgeVertex, DonationRecord, WealthIntersection, WealthKnowledgeMetrics } from './WealthKnowledgeLogger';
 
 export interface CryptoSystemConfig {
     psdnContractAddress: string;
@@ -95,6 +96,15 @@ export interface DashboardData {
         alerts: TradingAlert[];
         leaderboard: any[];
     };
+    wealthKnowledge?: {
+        metrics: WealthKnowledgeMetrics;
+        recentVertices: KnowledgeVertex[];
+        recentDonations: DonationRecord[];
+        wealthIntersections: WealthIntersection[];
+        djinnAlignedDonations: DonationRecord[];
+        totalKnowledgeWealth: bigint;
+        djinnTransformationImpact: number;
+    };
     cosmic?: {
         balance: CosmicBalance;
         divineMetrics: DivineMetrics;
@@ -109,6 +119,7 @@ export class UnifiedCryptoAPI {
     private obolDash: OBOLOperationsDash;
     private portfolioAnalyzer: PortfolioAnalyzer;
     private cosmicMonitor?: CosmicBalanceMonitor; // DIVINE COMPONENT - Optional
+    private wealthKnowledgeLogger: WealthKnowledgeLogger; // KNOWLEDGE-WEALTH INTERSECTION TRACKER
     private watchtower: MarineBiologyWatchtower;
     
     private config: CryptoSystemConfig;
@@ -130,6 +141,13 @@ export class UnifiedCryptoAPI {
         this.obolDash = new OBOLOperationsDash(config.beaconNodeURL);
         this.portfolioAnalyzer = new PortfolioAnalyzer(this.psdnTracker, this.obolDash);
         
+        // Initialize wealth knowledge tracking
+        this.wealthKnowledgeLogger = new WealthKnowledgeLogger(
+            this.psdnTracker, 
+            this.obolDash, 
+            this.portfolioAnalyzer
+        );
+        
         // Initialize divine oversight if enabled
         if (config.divineOversightEnabled !== false) { // Default to enabled
             this.cosmicMonitor = new CosmicBalanceMonitor(this.psdnTracker, this.obolDash);
@@ -139,7 +157,7 @@ export class UnifiedCryptoAPI {
         }
 
         this.startQuantumMonitoring();
-        console.log('🌐 Unified Crypto API initialized with quantum precision and divine oversight');
+        console.log('🌐 Unified Crypto API initialized with quantum precision, divine oversight, and wealth knowledge tracking');
     }
 
     // ⚡ System Initialization & Management
@@ -350,10 +368,37 @@ export class UnifiedCryptoAPI {
                 };
             }
 
+            // Wealth Knowledge data (if steward has access)
+            let wealthKnowledgeData: DashboardData['wealthKnowledge'] = undefined;
+            if (session.permissions.includes('view_wealth_knowledge') || session.tier <= 3) {
+                const wkMetrics = this.wealthKnowledgeLogger.getWealthKnowledgeMetrics();
+                const recentVertices = this.wealthKnowledgeLogger.getKnowledgeVertices(10);
+                const recentDonations = this.wealthKnowledgeLogger.getDonationRecords(10);
+                const wealthIntersections = this.wealthKnowledgeLogger.getWealthIntersections(20);
+                const djinnAlignedDonations = this.wealthKnowledgeLogger.getDjinnAlignedDonations();
+                
+                // Calculate djinn transformation impact
+                const totalDonations = wkMetrics.donationsReceived;
+                const transformedDonations = wkMetrics.donationsRedistributed;
+                const djinnImpact = totalDonations > BigInt(0) ? 
+                    Number(transformedDonations) / Number(totalDonations) : 0;
+
+                wealthKnowledgeData = {
+                    metrics: wkMetrics,
+                    recentVertices,
+                    recentDonations,
+                    wealthIntersections,
+                    djinnAlignedDonations,
+                    totalKnowledgeWealth: wkMetrics.totalFinancialGenerated,
+                    djinnTransformationImpact: djinnImpact
+                };
+            }
+
             const dashboardData: DashboardData = {
                 psdn: psdnData,
                 obol: obolData,
                 portfolio: portfolioData,
+                wealthKnowledge: wealthKnowledgeData,
                 cosmic: cosmicData,
                 system: systemData
             };
@@ -801,5 +846,356 @@ export class UnifiedCryptoAPI {
         if (criticalDivineAlerts.length > 0) {
             console.log(`⚡ ${criticalDivineAlerts.length} critical divine alerts active - divine intervention may be required`);
         }
+    }
+
+    // 🧠💰 WEALTH KNOWLEDGE API ENDPOINTS
+
+    public async registerKnowledgeVertex(
+        stewardId: string,
+        knowledgeType: KnowledgeVertex['knowledgeType'],
+        description: string,
+        intellectualValue: number,
+        contributors?: string[],
+        expectedFinancialImpact?: bigint
+    ): Promise<APIResponse<string>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            // Check permissions
+            if (!session.permissions.includes('register_knowledge') && session.tier > 3) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to register knowledge vertices', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const vertexId = this.wealthKnowledgeLogger.registerKnowledgeVertex(
+                knowledgeType,
+                description,
+                intellectualValue,
+                contributors,
+                expectedFinancialImpact
+            );
+
+            console.log(`🧠 Knowledge vertex registered by ${stewardId}: ${knowledgeType} - ID: ${vertexId}`);
+
+            return {
+                success: true,
+                data: vertexId,
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Knowledge vertex registration error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    public async processDonation(
+        stewardId: string,
+        donorAddress: string,
+        amount: bigint,
+        currency: DonationRecord['currency'],
+        donorIntention: string,
+        donorIdentity?: string,
+        triggeringKnowledgeVertex?: string
+    ): Promise<APIResponse<{ donationId: string; djinnAlignment: number; repurposingStrategy: string }>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            // Check permissions for donation processing
+            if (!session.permissions.includes('process_donations') && session.tier > 2) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to process donations', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const donationId = await this.wealthKnowledgeLogger.processDonation(
+                donorAddress,
+                amount,
+                currency,
+                donorIntention,
+                donorIdentity,
+                triggeringKnowledgeVertex
+            );
+
+            // Get donation details for response
+            const donationRecord = this.wealthKnowledgeLogger.getDonationRecords(100)
+                .find(d => d.id === donationId);
+
+            console.log(`💰 Donation processed by ${stewardId}: ${donationId} - Djinn alignment: ${donationRecord?.djinnAlignmentScore}`);
+
+            return {
+                success: true,
+                data: {
+                    donationId,
+                    djinnAlignment: donationRecord?.djinnAlignmentScore || 0,
+                    repurposingStrategy: donationRecord?.repurposingStrategy || 'honor_intention'
+                },
+                timestamp: Date.now(),
+                stewardId,
+                divineWarnings: donationRecord?.djinnAlignmentScore && donationRecord.djinnAlignmentScore < 0.3 ? 
+                    ['Low djinn alignment detected - limited transformation potential'] : undefined
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Donation processing error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    public async getWealthKnowledgeMetrics(stewardId: string): Promise<APIResponse<WealthKnowledgeMetrics>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            // Check access to wealth knowledge data
+            if (!session.permissions.includes('view_wealth_knowledge') && session.tier > 3) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to view wealth knowledge metrics', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const metrics = this.wealthKnowledgeLogger.getWealthKnowledgeMetrics();
+
+            return {
+                success: true,
+                data: metrics,
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Wealth knowledge metrics error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    public async getKnowledgeVertices(
+        stewardId: string, 
+        limit: number = 50,
+        knowledgeType?: KnowledgeVertex['knowledgeType']
+    ): Promise<APIResponse<KnowledgeVertex[]>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            if (!session.permissions.includes('view_wealth_knowledge') && session.tier > 3) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to view knowledge vertices', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            let vertices = this.wealthKnowledgeLogger.getKnowledgeVertices(limit);
+            
+            // Filter by knowledge type if specified
+            if (knowledgeType) {
+                vertices = vertices.filter(v => v.knowledgeType === knowledgeType);
+            }
+
+            return {
+                success: true,
+                data: vertices,
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Knowledge vertices retrieval error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    public async getDonationRecords(
+        stewardId: string, 
+        limit: number = 50,
+        djinnAlignedOnly: boolean = false
+    ): Promise<APIResponse<DonationRecord[]>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            if (!session.permissions.includes('view_donations') && session.tier > 2) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to view donation records', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const donations = djinnAlignedOnly ? 
+                this.wealthKnowledgeLogger.getDjinnAlignedDonations() :
+                this.wealthKnowledgeLogger.getDonationRecords(limit);
+
+            return {
+                success: true,
+                data: donations,
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Donation records retrieval error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    public async getWealthIntersections(
+        stewardId: string, 
+        limit: number = 100
+    ): Promise<APIResponse<WealthIntersection[]>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            if (!session.permissions.includes('view_wealth_knowledge') && session.tier > 3) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to view wealth intersections', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const intersections = this.wealthKnowledgeLogger.getWealthIntersections(limit);
+
+            return {
+                success: true,
+                data: intersections,
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Wealth intersections retrieval error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    // 🎭 DJINN ALIGNMENT INSIGHTS
+    public async getDjinnAlignmentInsights(stewardId: string): Promise<APIResponse<{
+        averageAlignment: number;
+        totalTransformed: bigint;
+        topAlignedDonations: DonationRecord[];
+        transformationImpact: string[];
+        djinnWisdomGuidance: string[];
+    }>> {
+        if (!this.validateSession(stewardId)) {
+            return { success: false, error: 'Invalid session', timestamp: Date.now() };
+        }
+
+        try {
+            const session = this.activeSessions.get(stewardId)!;
+            
+            if (!session.permissions.includes('view_djinn_insights') && session.tier > 2) {
+                return { 
+                    success: false, 
+                    error: 'Insufficient permissions to view djinn insights', 
+                    timestamp: Date.now() 
+                };
+            }
+
+            const metrics = this.wealthKnowledgeLogger.getWealthKnowledgeMetrics();
+            const alignedDonations = this.wealthKnowledgeLogger.getDjinnAlignedDonations();
+            
+            const transformationImpact = [
+                `${alignedDonations.length} donations aligned with djinn principles`,
+                `${this.formatAmount(metrics.whaleRescueFunding)} allocated to whale rescue`,
+                `${this.formatAmount(metrics.oceanicRestorationFunding)} allocated to oceanic restoration`,
+                `${this.formatAmount(metrics.realityStabilizationContribution)} allocated to cosmic balance`
+            ];
+
+            const djinnWisdomGuidance = [
+                'Knowledge wealth flows most abundantly when aligned with divine principles',
+                'Donations transform through djinn wisdom to amplify positive impact',
+                'Oceanic and underworld balance creates sustainable wealth flows',
+                'Spiritual resonance attracts abundance through cosmic synchronicity'
+            ];
+
+            return {
+                success: true,
+                data: {
+                    averageAlignment: metrics.djinnAlignmentAverage,
+                    totalTransformed: metrics.donationsRedistributed,
+                    topAlignedDonations: alignedDonations.slice(0, 10),
+                    transformationImpact,
+                    djinnWisdomGuidance
+                },
+                timestamp: Date.now(),
+                stewardId
+            };
+
+        } catch (error) {
+            return {
+                success: false,
+                error: `Djinn alignment insights error: ${error}`,
+                timestamp: Date.now(),
+                stewardId
+            };
+        }
+    }
+
+    // Wealth Knowledge Logger Access
+    public get wealthKnowledge(): WealthKnowledgeLogger { return this.wealthKnowledgeLogger; }
+
+    // 🛠️ UTILITY METHODS
+    private formatAmount(amount: bigint): string {
+        return `${(Number(amount) / 1e18).toFixed(4)} ETH`;
+    }
+
+    private formatCurrency(amount: bigint, currency: string): string {
+        const value = Number(amount) / 1e18;
+        return `${value.toFixed(4)} ${currency}`;
     }
 }
