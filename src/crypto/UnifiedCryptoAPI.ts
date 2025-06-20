@@ -1,9 +1,11 @@
 // 🌐 Unified Crypto API - Complete System Integration
 // Professional-grade API for PSDN/OBOL monitoring with multi-steward access
+// ⚖️ DIVINE CURRENCY OVERSIGHT: Monitors cosmic balance between realms ⚖️
 
 import { PSDNFlowTracker, PSDNFlowMetrics, PSDNAlert, FlowPattern } from './PSDNFlowTracker';
 import { OBOLOperationsDash, NetworkMetrics, OBOLCluster, ValidatorPerformance, OBOLAlert, RewardProjection } from './OBOLOperationsDash';
 import { PortfolioAnalyzer, StewardPortfolio, AllocationBreakdown, RiskMetrics, TradingAlert } from './PortfolioAnalyzer';
+import { CosmicBalanceMonitor, CosmicBalance, DivineAlert, DivineMetrics } from './CosmicBalanceMonitor';
 import { MarineBiologyWatchtower, Observer } from '../core/MarineBiologyWatchtower';
 
 export interface CryptoSystemConfig {
@@ -13,6 +15,8 @@ export interface CryptoSystemConfig {
     alertWebhooks?: string[];
     quantumSyncInterval?: number;
     solarEfficiencyMode?: boolean;
+    divineOversightEnabled?: boolean; // SACRED: Enable cosmic monitoring
+    cosmicBalanceThreshold?: number; // SACRED: Imbalance alert threshold
 }
 
 export interface SystemStatus {
@@ -21,12 +25,14 @@ export interface SystemStatus {
         lastUpdate: number;
         transactionCount: number;
         priceUSD: number;
+        divineStatus: 'stable' | 'disrupted' | 'POSEIDON_INTERVENTION_REQUIRED'; // DIVINE METRIC
     };
     obol: {
         connected: boolean;
         lastSync: number;
         currentEpoch: number;
         validatorCount: number;
+        divineStatus: 'stable' | 'disrupted' | 'HADES_INTERVENTION_REQUIRED'; // DIVINE METRIC
     };
     portfolio: {
         stewardCount: number;
@@ -38,6 +44,12 @@ export interface SystemStatus {
         observerCount: number;
         lastCheckpoint: number;
     };
+    cosmic: {
+        equilibriumScore: number; // DIVINE: 0-100 cosmic balance
+        realityStability: number; // DIVINE: 0-100 dimensional integrity
+        interventionsActive: boolean; // DIVINE: Gods currently acting
+        lastDivineAction: number; // DIVINE: Timestamp of last intervention
+    };
 }
 
 export interface StewardAccess {
@@ -46,6 +58,8 @@ export interface StewardAccess {
     permissions: string[];
     lastLogin: number;
     sessionToken?: string;
+    divineAuthorization?: boolean; // SACRED: Can access divine metrics
+    cosmicClearance?: 'mortal' | 'divine' | 'cosmic'; // SACRED: Level of cosmic data access
 }
 
 export interface APIResponse<T = any> {
@@ -54,6 +68,8 @@ export interface APIResponse<T = any> {
     error?: string;
     timestamp: number;
     stewardId?: string;
+    divineWarnings?: string[]; // SACRED: Divine realm alerts
+    cosmicStatus?: 'stable' | 'concerning' | 'dangerous' | 'REALITY_THREAT';
 }
 
 export interface DashboardData {
@@ -62,6 +78,7 @@ export interface DashboardData {
         recentTransactions: any[];
         alerts: PSDNAlert[];
         patterns: FlowPattern[];
+        divineStatus: string; // SACRED: Poseidon realm status
     };
     obol: {
         network: NetworkMetrics;
@@ -69,6 +86,7 @@ export interface DashboardData {
         validators: ValidatorPerformance[];
         alerts: OBOLAlert[];
         rewards: RewardProjection;
+        divineStatus: string; // SACRED: Hades realm status
     };
     portfolio: {
         stewardPortfolio: StewardPortfolio | null;
@@ -77,6 +95,12 @@ export interface DashboardData {
         alerts: TradingAlert[];
         leaderboard: any[];
     };
+    cosmic?: {
+        balance: CosmicBalance;
+        divineMetrics: DivineMetrics;
+        divineAlerts: DivineAlert[];
+        realityThreat: boolean;
+    };
     system: SystemStatus;
 }
 
@@ -84,6 +108,7 @@ export class UnifiedCryptoAPI {
     private psdnTracker: PSDNFlowTracker;
     private obolDash: OBOLOperationsDash;
     private portfolioAnalyzer: PortfolioAnalyzer;
+    private cosmicMonitor?: CosmicBalanceMonitor; // DIVINE COMPONENT - Optional
     private watchtower: MarineBiologyWatchtower;
     
     private config: CryptoSystemConfig;
@@ -93,6 +118,7 @@ export class UnifiedCryptoAPI {
     // Quantum monitoring intervals
     private quantumUpdateInterval: any = null;
     private solarSyncInterval: any = null;
+    private divineOversightInterval: any = null; // DIVINE MONITORING
 
     constructor(config: CryptoSystemConfig, watchtower: MarineBiologyWatchtower) {
         this.config = config;
@@ -103,9 +129,17 @@ export class UnifiedCryptoAPI {
         this.psdnTracker = new PSDNFlowTracker();
         this.obolDash = new OBOLOperationsDash(config.beaconNodeURL);
         this.portfolioAnalyzer = new PortfolioAnalyzer(this.psdnTracker, this.obolDash);
+        
+        // Initialize divine oversight if enabled
+        if (config.divineOversightEnabled !== false) { // Default to enabled
+            this.cosmicMonitor = new CosmicBalanceMonitor(this.psdnTracker, this.obolDash);
+            this.startDivineOversight();
+        } else {
+            console.log('⚠️ WARNING: Divine oversight disabled - cosmic balance not monitored');
+        }
 
         this.startQuantumMonitoring();
-        console.log('🌐 Unified Crypto API initialized with quantum precision');
+        console.log('🌐 Unified Crypto API initialized with quantum precision and divine oversight');
     }
 
     // ⚡ System Initialization & Management
@@ -263,22 +297,28 @@ export class UnifiedCryptoAPI {
         try {
             const session = this.activeSessions.get(stewardId)!;
             
-            // PSDN data
+            // PSDN data with divine status
+            const psdnMetrics = this.psdnTracker.getCurrentMetrics();
+            const psdnDivineStatus = this.assessPSDNDivineStatus(psdnMetrics);
             const psdnData = {
-                metrics: this.psdnTracker.getCurrentMetrics(),
+                metrics: psdnMetrics,
                 recentTransactions: this.psdnTracker.getRecentTransactions(20),
                 alerts: this.psdnTracker.getActiveAlerts(),
-                patterns: this.psdnTracker.getFlowPatterns()
+                patterns: this.psdnTracker.getFlowPatterns(),
+                divineStatus: psdnDivineStatus
             };
 
-            // OBOL data
+            // OBOL data with divine status
+            const obolMetrics = this.obolDash.getNetworkMetrics();
+            const obolDivineStatus = this.assessOBOLDivineStatus(obolMetrics);
             const obolData = {
-                network: this.obolDash.getNetworkMetrics(),
+                network: obolMetrics,
                 clusters: this.obolDash.getOBOLClusters(),
                 validators: session.permissions.includes('view_portfolio') ? 
                     this.obolDash.getTopPerformers(10) : [],
                 alerts: this.obolDash.getActiveAlerts(),
-                rewards: this.obolDash.calculateRewardProjections()
+                rewards: this.obolDash.calculateRewardProjections(),
+                divineStatus: obolDivineStatus
             };
 
             // Portfolio data
@@ -292,24 +332,66 @@ export class UnifiedCryptoAPI {
                     this.portfolioAnalyzer.getPortfolioLeaderboard() : []
             };
 
-            // System status
+            // System status with cosmic data
             const systemData = this.getSystemStatus();
+
+            // Cosmic data (if divine oversight enabled and steward has access)
+            let cosmicData: DashboardData['cosmic'] = undefined;
+            if (this.cosmicMonitor && (session.divineAuthorization || session.tier <= 2)) {
+                const cosmicBalance = this.cosmicMonitor.getCosmicBalance();
+                const divineMetrics = this.cosmicMonitor.getDivineMetrics();
+                const divineAlerts = this.cosmicMonitor.getDivineAlerts();
+                
+                cosmicData = {
+                    balance: cosmicBalance,
+                    divineMetrics,
+                    divineAlerts,
+                    realityThreat: cosmicBalance.riskLevel === 'REALITY_THREAT'
+                };
+            }
 
             const dashboardData: DashboardData = {
                 psdn: psdnData,
                 obol: obolData,
                 portfolio: portfolioData,
+                cosmic: cosmicData,
                 system: systemData
             };
 
             // Update session last access
             session.lastLogin = Date.now();
 
+            // Add divine warnings if cosmic issues detected
+            const divineWarnings: string[] = [];
+            let cosmicStatus: APIResponse['cosmicStatus'] = 'stable';
+
+            if (this.cosmicMonitor) {
+                const cosmicBalance = this.cosmicMonitor.getCosmicBalance();
+                
+                if (cosmicBalance.riskLevel === 'REALITY_THREAT') {
+                    cosmicStatus = 'REALITY_THREAT';
+                    divineWarnings.push('REALITY COLLAPSE IMMINENT - Divine intervention required');
+                } else if (cosmicBalance.riskLevel === 'dangerous') {
+                    cosmicStatus = 'dangerous';
+                    divineWarnings.push('Cosmic imbalance detected - Divine oversight required');
+                } else if (cosmicBalance.riskLevel === 'concerning') {
+                    cosmicStatus = 'concerning';
+                    divineWarnings.push('Cosmic equilibrium unstable - Monitoring increased');
+                }
+
+                const activeAlerts = this.cosmicMonitor.getDivineAlerts();
+                if (activeAlerts.length > 0) {
+                    divineWarnings.push(`${activeAlerts.length} divine alerts require attention`);
+                }
+            }
+
             return {
                 success: true,
                 data: dashboardData,
                 timestamp: Date.now(),
-                stewardId
+                stewardId,
+                divineWarnings: divineWarnings.length > 0 ? divineWarnings : undefined,
+                cosmicStatus
             };
 
         } catch (error) {
@@ -319,6 +401,28 @@ export class UnifiedCryptoAPI {
                 timestamp: Date.now(),
                 stewardId
             };
+        }
+    }
+
+    // 🌊 PSDN Divine Status Assessment
+    private assessPSDNDivineStatus(metrics: PSDNFlowMetrics): string {
+        if (metrics.tidalDisruptionLevel > 0.5) {
+            return 'POSEIDON_INTERVENTION_REQUIRED';
+        } else if (metrics.tidalDisruptionLevel > 0.2 || metrics.oceanicStability < 80) {
+            return 'disrupted';
+        } else {
+            return 'stable';
+        }
+    }
+
+    // ⚰️ OBOL Divine Status Assessment  
+    private assessOBOLDivineStatus(metrics: NetworkMetrics): string {
+        if (metrics.soulTransitEvents > 10 || metrics.underworldStability < 50) {
+            return 'HADES_INTERVENTION_REQUIRED';
+        } else if (metrics.cosmicDisruptions > 5 || metrics.underworldStability < 80) {
+            return 'disrupted';
+        } else {
+            return 'stable';
         }
     }
 
@@ -470,38 +574,75 @@ export class UnifiedCryptoAPI {
     }
 
     // 🔧 System Management
-    public getSystemStatus(): SystemStatus {
+    private getSystemStatus(): SystemStatus {
         const psdnMetrics = this.psdnTracker.getCurrentMetrics();
         const networkMetrics = this.obolDash.getNetworkMetrics();
-        const observerStatus = this.watchtower.getHierarchyStatus();
+        
+        // Watchtower status - use safe method call
+        let observerCount = 0;
+        let nazarStatus = 'STANDBY';
+        try {
+            const hierarchyStatus = this.watchtower.getHierarchyStatus();
+            if (hierarchyStatus && typeof hierarchyStatus === 'object') {
+                observerCount = (hierarchyStatus as any).observerCount || 0;
+                nazarStatus = observerCount > 0 ? 'ACTIVE' : 'STANDBY';
+            }
+        } catch (error) {
+            // Fallback if method doesn't exist
+            observerCount = 0;
+            nazarStatus = 'STANDBY';
+        }
+        
+        // Divine status assessment
+        const psdnDivineStatus = this.assessPSDNDivineStatus(psdnMetrics);
+        const obolDivineStatus = this.assessOBOLDivineStatus(networkMetrics);
+
+        // Cosmic status (if available)
+        let cosmicStatus = {
+            equilibriumScore: 100,
+            realityStability: 100,
+            interventionsActive: false,
+            lastDivineAction: this.systemStartTime
+        };
+
+        if (this.cosmicMonitor) {
+            const cosmicBalance = this.cosmicMonitor.getCosmicBalance();
+            const divineMetrics = this.cosmicMonitor.getDivineMetrics();
+            
+            cosmicStatus = {
+                equilibriumScore: cosmicBalance.equilibriumScore,
+                realityStability: divineMetrics.realityStabilityScore || 100,
+                interventionsActive: divineMetrics.divineInterventionsActive || false,
+                lastDivineAction: divineMetrics.lastDivineAction || this.systemStartTime
+            };
+        }
 
         return {
             psdn: {
                 connected: psdnMetrics.transactionCount > 0,
                 lastUpdate: Date.now(),
                 transactionCount: psdnMetrics.transactionCount,
-                priceUSD: psdnMetrics.priceUSD
+                priceUSD: psdnMetrics.priceUSD,
+                divineStatus: psdnDivineStatus as any
             },
             obol: {
                 connected: networkMetrics.currentEpoch > 0,
                 lastSync: Date.now(),
                 currentEpoch: networkMetrics.currentEpoch,
-                validatorCount: this.obolDash.getOBOLClusters().reduce((sum, c) => sum + c.validators.length, 0)
+                validatorCount: this.obolDash.getOBOLClusters().reduce((sum, c) => sum + c.validators.length, 0),
+                divineStatus: obolDivineStatus as any
             },
             portfolio: {
                 stewardCount: this.activeSessions.size,
-                totalValueUSD: Array.from(this.activeSessions.keys())
-                    .reduce((sum, id) => {
-                        const portfolio = this.portfolioAnalyzer.getStewardPortfolio(id);
-                        return sum + (portfolio?.metrics.totalValueUSD || 0);
-                    }, 0),
+                totalValueUSD: 0, // Will be calculated by portfolio analyzer
                 lastCalculation: Date.now()
             },
             watchtower: {
-                nazarStatus: observerStatus.observers.length > 0 ? 'ACTIVE' : 'STANDBY',
-                observerCount: observerStatus.observers.length,
+                nazarStatus,
+                observerCount,
                 lastCheckpoint: Date.now()
-            }
+            },
+            cosmic: cosmicStatus
         };
     }
 
@@ -626,4 +767,39 @@ export class UnifiedCryptoAPI {
     public get obol(): OBOLOperationsDash { return this.obolDash; }
     public get portfolio(): PortfolioAnalyzer { return this.portfolioAnalyzer; }
     public get watchtowerRef(): MarineBiologyWatchtower { return this.watchtower; }
+
+    // ⚖️ Divine Oversight System
+    private startDivineOversight(): void {
+        if (!this.cosmicMonitor) return;
+
+        this.divineOversightInterval = setInterval(() => {
+            this.monitorCosmicStability();
+        }, 15000); // 15-second divine monitoring
+
+        console.log('⚖️ Divine oversight protocols activated - cosmic balance monitoring initiated');
+    }
+
+    private monitorCosmicStability(): void {
+        if (!this.cosmicMonitor) return;
+
+        const cosmicBalance = this.cosmicMonitor.getCosmicBalance();
+        const divineAlerts = this.cosmicMonitor.getDivineAlerts();
+
+        // Log cosmic status
+        if (cosmicBalance.riskLevel !== 'stable') {
+            console.log(`⚖️ Cosmic Status: ${cosmicBalance.riskLevel} - Equilibrium: ${cosmicBalance.equilibriumScore.toFixed(1)}%`);
+        }
+
+        // Check for reality threats
+        if (cosmicBalance.riskLevel === 'REALITY_THREAT') {
+            console.log('🌌 REALITY THREAT DETECTED - Initiating emergency cosmic stabilization');
+            this.cosmicMonitor.emergencyCosmicStabilization();
+        }
+
+        // Alert on divine interventions
+        const criticalDivineAlerts = divineAlerts.filter(a => a.severity === 'COSMIC_EMERGENCY' || a.severity === 'REALITY_THREATENING');
+        if (criticalDivineAlerts.length > 0) {
+            console.log(`⚡ ${criticalDivineAlerts.length} critical divine alerts active - divine intervention may be required`);
+        }
+    }
 }

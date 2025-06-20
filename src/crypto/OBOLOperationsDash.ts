@@ -1,5 +1,7 @@
 // 🔶 OBOL Operations Dashboard - Distributed Validator Monitoring
 // Solar-powered multi-validator cluster oversight with quantum precision
+// ⚰️ DIVINE CURRENCY WARNING: OBOL is the sacred currency of HADES ⚰️
+// Misallocation of underworld currency may disrupt cosmic balance
 
 export interface ValidatorPerformance {
     validatorIndex: number;
@@ -14,6 +16,8 @@ export interface ValidatorPerformance {
     penaltiesIncurred: bigint;
     lastActive: number; // timestamp
     slashingRisk: number; // 0-1 scale
+    soulTransitRisk: number; // 0-1 scale - DIVINE METRIC
+    cosmicDisruptionLevel: number; // 0-1 scale - DIVINE METRIC
 }
 
 export interface OBOLCluster {
@@ -25,8 +29,10 @@ export interface OBOLCluster {
     totalRewards: bigint;
     avgPerformance: number;
     riskScore: number;
-    status: 'healthy' | 'warning' | 'critical' | 'offline';
+    status: 'healthy' | 'warning' | 'critical' | 'offline' | 'DIVINE_INTERVENTION_REQUIRED';
     lastSync: number;
+    divineOversight: boolean; // HADES authority monitoring
+    cosmicBalanceScore: number; // Underworld currency equilibrium
 }
 
 export interface NetworkMetrics {
@@ -39,6 +45,9 @@ export interface NetworkMetrics {
     totalStaked: bigint;
     slashingEvents: number;
     networkEffectiveness: number;
+    soulTransitEvents: number; // DIVINE METRIC
+    cosmicDisruptions: number; // DIVINE METRIC
+    underworldStability: number; // 0-100 scale
 }
 
 export interface OBOLAlert {
@@ -46,11 +55,13 @@ export interface OBOLAlert {
     timestamp: number;
     clusterId: string;
     validatorIndex?: number;
-    type: 'missed_attestation' | 'missed_proposal' | 'slashing_risk' | 'low_balance' | 'offline' | 'poor_performance';
-    severity: 'info' | 'warning' | 'critical';
+    type: 'missed_attestation' | 'missed_proposal' | 'slashing_risk' | 'low_balance' | 'offline' | 'poor_performance' | 'SOUL_TRANSIT_INTERRUPTED' | 'COSMIC_IMBALANCE' | 'DIVINE_INTERVENTION_REQUIRED';
+    severity: 'info' | 'warning' | 'critical' | 'DIVINE';
     message: string;
     autoResolve: boolean;
     acknowledged: boolean;
+    divineEscalation: boolean; // Auto-notify divine councils
+    cosmicConsequences: string[]; // Potential realm disruptions
 }
 
 export interface RewardProjection {
@@ -60,6 +71,8 @@ export interface RewardProjection {
     annual: bigint;
     apr: number; // Annual Percentage Rate
     confidence: number;
+    divineApproval: boolean; // HADES blessing status
+    cosmicRisk: number; // Risk of disrupting underworld economy
 }
 
 export class OBOLOperationsDash {
@@ -70,17 +83,20 @@ export class OBOLOperationsDash {
     private beaconAPI: string;
     private websocketConnection: WebSocket | null = null;
     
-    // Quantum monitoring parameters
+    // Quantum monitoring parameters - ENHANCED FOR DIVINE OPERATIONS
     private readonly QUANTUM_SYNC_INTERVAL = 12000; // 12 seconds (1 slot)
     private readonly SOLAR_EFFICIENCY_BATCH = 50; // validators per batch
     private readonly PERFORMANCE_WINDOW = 225; // ~1 hour (225 slots)
-    private readonly RISK_THRESHOLD = 0.7;
+    private readonly DIVINE_RISK_THRESHOLD = 0.3; // SACRED: Much stricter for HADES currency
+    private readonly COSMIC_DISRUPTION_THRESHOLD = 0.1; // SACRED: Any disruption is serious
+    private readonly SOUL_TRANSIT_ALERT_THRESHOLD = 0.05; // SACRED: Extremely sensitive
 
     constructor(beaconNodeURL: string = 'http://localhost:5052') {
         this.beaconAPI = beaconNodeURL;
         this.networkMetrics = this.initializeNetworkMetrics();
         this.setupQuantumMonitoring();
         this.startSolarSync();
+        console.log('⚰️ OBOL Operations Dashboard initialized - HADES CURRENCY MONITORING ACTIVE');
     }
 
     private initializeNetworkMetrics(): NetworkMetrics {
@@ -93,7 +109,10 @@ export class OBOLOperationsDash {
             averageValidatorBalance: BigInt(32000000000000000000), // 32 ETH
             totalStaked: BigInt(0),
             slashingEvents: 0,
-            networkEffectiveness: 100
+            networkEffectiveness: 100,
+            soulTransitEvents: 0, // DIVINE METRIC
+            cosmicDisruptions: 0, // DIVINE METRIC
+            underworldStability: 100 // DIVINE METRIC
         };
     }
 
@@ -189,7 +208,9 @@ export class OBOLOperationsDash {
                 rewardsEarned: BigInt(0),
                 penaltiesIncurred: BigInt(0),
                 lastActive: Date.now(),
-                slashingRisk: 0
+                slashingRisk: 0,
+                soulTransitRisk: 0,
+                cosmicDisruptionLevel: 0
             };
 
             // Calculate performance metrics
@@ -275,7 +296,9 @@ export class OBOLOperationsDash {
             avgPerformance: 0,
             riskScore: 0,
             status: 'healthy',
-            lastSync: Date.now()
+            lastSync: Date.now(),
+            divineOversight: false,
+            cosmicBalanceScore: 0
         };
 
         this.clusters.set(clusterId, cluster);
@@ -354,7 +377,7 @@ export class OBOLOperationsDash {
         }
 
         // High slashing risk
-        if (validator.slashingRisk > this.RISK_THRESHOLD) {
+        if (validator.slashingRisk > this.DIVINE_RISK_THRESHOLD) {
             this.createAlert(
                 'slashing_risk',
                 'critical',
@@ -426,7 +449,9 @@ export class OBOLOperationsDash {
             severity,
             message,
             autoResolve: type === 'missed_attestation' || type === 'offline',
-            acknowledged: false
+            acknowledged: false,
+            divineEscalation: false,
+            cosmicConsequences: []
         };
 
         this.alerts.push(alert);
@@ -451,7 +476,7 @@ export class OBOLOperationsDash {
         }
 
         if (validators.length === 0) {
-            return { daily: BigInt(0), weekly: BigInt(0), monthly: BigInt(0), annual: BigInt(0), apr: 0, confidence: 0 };
+            return { daily: BigInt(0), weekly: BigInt(0), monthly: BigInt(0), annual: BigInt(0), apr: 0, confidence: 0, divineApproval: false, cosmicRisk: 0 };
         }
 
         const totalEffectiveBalance = validators.reduce((sum, v) => sum + v.effectiveBalance, BigInt(0));
@@ -469,13 +494,21 @@ export class OBOLOperationsDash {
         // Confidence based on data quality and network stability
         const confidence = Math.min(0.95, avgPerformance * 0.9 + 0.1);
 
+        // Divine approval status
+        const divineApproval = confidence > 0.9;
+
+        // Cosmic risk calculation
+        const cosmicRisk = Math.min(0.1, 1 - confidence);
+
         return {
             daily: dailyRewards,
             weekly: weeklyRewards,
             monthly: monthlyRewards,
             annual: annualRewards,
             apr: adjustedAPR * 100,
-            confidence
+            confidence,
+            divineApproval,
+            cosmicRisk
         };
     }
 

@@ -1,5 +1,7 @@
 // ⚡ PSDN Flow Tracker - Quantum Precision Crypto Monitoring
 // Real-time transaction flow analysis with solar-powered efficiency
+// 🌊 DIVINE CURRENCY WARNING: PSDN is the sacred currency of POSEIDON 🌊
+// Disruption of oceanic current flows may trigger divine retribution
 
 export interface PSDNTransaction {
     hash: string;
@@ -12,6 +14,9 @@ export interface PSDNTransaction {
     blockNumber: number;
     confirmations: number;
     status: 'pending' | 'confirmed' | 'failed';
+    divineClassification: 'mortal' | 'divine' | 'interdimensional'; // SACRED CLASSIFICATION
+    oceanicCurrentDisruption: number; // 0-1 scale - DIVINE METRIC
+    sacredBoundaryViolation: boolean; // DIVINE ALERT
 }
 
 export interface PSDNFlowMetrics {
@@ -23,25 +28,34 @@ export interface PSDNFlowMetrics {
     priceChange24h: number;
     liquidityDepth: bigint;
     marketCap: bigint;
+    divineRealmVolume: bigint; // SACRED METRIC - Volume from divine entities
+    tidalDisruptionLevel: number; // 0-1 scale - DIVINE METRIC
+    oceanicStability: number; // 0-100 scale - POSEIDON'S REALM HEALTH
+    cosmicEquilibrium: number; // 0-100 scale - Balance with OBOL flows
 }
 
 export interface FlowPattern {
-    pattern: 'accumulation' | 'distribution' | 'whale_movement' | 'retail_fomo' | 'institutional_flow';
+    pattern: 'accumulation' | 'distribution' | 'whale_movement' | 'retail_fomo' | 'institutional_flow' | 'DIVINE_INTERVENTION' | 'TIDAL_DISRUPTION' | 'SACRED_BOUNDARY_BREACH';
     confidence: number;
     timeframe: string;
     volume: bigint;
     addresses: string[];
-    significance: 'low' | 'medium' | 'high' | 'critical';
+    significance: 'low' | 'medium' | 'high' | 'critical' | 'DIVINE';
+    cosmicImpact: string[]; // DIVINE: Potential effects on realm balance
+    poseidonApproval: boolean; // DIVINE: Does this pattern honor oceanic law?
 }
 
 export interface PSDNAlert {
     id: string;
     timestamp: number;
-    type: 'price_threshold' | 'volume_spike' | 'whale_movement' | 'unusual_pattern' | 'network_congestion';
-    severity: 'info' | 'warning' | 'critical';
+    type: 'price_threshold' | 'volume_spike' | 'whale_movement' | 'unusual_pattern' | 'network_congestion' | 'DIVINE_WHALE_AWAKENING' | 'TIDAL_DISRUPTION' | 'SACRED_BOUNDARY_BREACH' | 'COSMIC_IMBALANCE_DETECTED';
+    severity: 'info' | 'warning' | 'critical' | 'DIVINE';
     message: string;
     data: any;
     acknowledged: boolean;
+    poseidonEscalation: boolean; // Auto-notify oceanic councils
+    tidalConsequences: string[]; // Potential realm disruptions
+    requiresDivineIntervention: boolean; // Needs god-tier action
 }
 
 export class PSDNFlowTracker {
@@ -52,15 +66,20 @@ export class PSDNFlowTracker {
     private websocketConnection: WebSocket | null = null;
     private priceFeeds: Map<string, number> = new Map();
     
-    // Quantum efficiency parameters
+    // Quantum efficiency parameters - ENHANCED FOR DIVINE OPERATIONS
     private readonly QUANTUM_BATCH_SIZE = 100;
     private readonly SOLAR_SYNC_INTERVAL = 5000; // 5 seconds
     private readonly FLOW_ANALYSIS_WINDOW = 3600000; // 1 hour
+    private readonly DIVINE_WHALE_THRESHOLD = BigInt('10000000000000000000000000'); // 10M PSDN - POSEIDON'S CREATURES
+    private readonly SACRED_BOUNDARY_THRESHOLD = BigInt('100000000000000000000000000'); // 100M PSDN - REALM BREACH
+    private readonly TIDAL_DISRUPTION_THRESHOLD = 0.05; // SACRED: Any significant disruption
+    private readonly COSMIC_BALANCE_ALERT_THRESHOLD = 0.1; // SACRED: Balance with OBOL realm
 
     constructor() {
         this.metrics = this.initializeMetrics();
         this.setupRealtimeFeeds();
         this.startQuantumAnalysis();
+        console.log('🌊 PSDN Flow Tracker initialized - POSEIDON CURRENCY MONITORING ACTIVE');
     }
 
     private initializeMetrics(): PSDNFlowMetrics {
@@ -72,7 +91,11 @@ export class PSDNFlowTracker {
             priceUSD: 0.0,
             priceChange24h: 0.0,
             liquidityDepth: BigInt(0),
-            marketCap: BigInt(0)
+            marketCap: BigInt(0),
+            divineRealmVolume: BigInt(0), // DIVINE METRIC
+            tidalDisruptionLevel: 0.0, // DIVINE METRIC
+            oceanicStability: 100.0, // DIVINE METRIC
+            cosmicEquilibrium: 100.0 // DIVINE METRIC
         };
     }
 
@@ -165,7 +188,10 @@ export class PSDNFlowTracker {
                 gasPrice: BigInt(logData.gasPrice || '0'),
                 blockNumber: parseInt(logData.blockNumber, 16),
                 confirmations: 0,
-                status: 'confirmed'
+                status: 'confirmed',
+                divineClassification: 'mortal',
+                oceanicCurrentDisruption: 0.0,
+                sacredBoundaryViolation: false
             };
 
             this.transactions.set(transaction.hash, transaction);
@@ -212,7 +238,9 @@ export class PSDNFlowTracker {
                 timeframe: '1h',
                 volume: totalWhaleVolume,
                 addresses: whaleTransactions.map(tx => tx.from),
-                significance: whaleTransactions.length > 5 ? 'critical' : 'high'
+                significance: whaleTransactions.length > 5 ? 'critical' : 'high',
+                cosmicImpact: [],
+                poseidonApproval: true
             };
 
             this.patterns.push(pattern);
@@ -252,7 +280,9 @@ export class PSDNFlowTracker {
             timeframe: '1h',
             volume: transactions.reduce((sum, tx) => sum + tx.amount, BigInt(0)),
             addresses: Array.from(new Set(transactions.map(tx => tx.from))),
-            significance: confidence > 0.8 ? 'high' : 'medium'
+            significance: confidence > 0.8 ? 'high' : 'medium',
+            cosmicImpact: [],
+            poseidonApproval: true
         };
 
         this.patterns.push(flowPattern);
@@ -304,7 +334,10 @@ export class PSDNFlowTracker {
             severity,
             message,
             data: data || {},
-            acknowledged: false
+            acknowledged: false,
+            poseidonEscalation: false,
+            tidalConsequences: [],
+            requiresDivineIntervention: false
         };
 
         this.alerts.push(alert);
