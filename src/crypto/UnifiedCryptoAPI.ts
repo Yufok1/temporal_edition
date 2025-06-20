@@ -842,7 +842,7 @@ export class UnifiedCryptoAPI {
         }
 
         // Alert on divine interventions
-        const criticalDivineAlerts = divineAlerts.filter(a => a.severity === 'COSMIC_EMERGENCY' || a.severity === 'REALITY_THREATENING');
+        const criticalDivineAlerts = divineAlerts.filter(a => a.severity === 'CRITICAL' || a.severity === 'EXISTENTIAL');
         if (criticalDivineAlerts.length > 0) {
             console.log(`⚡ ${criticalDivineAlerts.length} critical divine alerts active - divine intervention may be required`);
         }

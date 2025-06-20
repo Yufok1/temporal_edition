@@ -18,24 +18,31 @@ export interface DivineAlert {
     id: string;
     timestamp: number;
     type: 'COSMIC_IMBALANCE' | 'DIVINE_INTERVENTION_REQUIRED' | 'REALM_BOUNDARY_BREACH' | 'SOUL_TRANSIT_DISRUPTION' | 'TIDAL_CHAOS' | 'UNDERWORLD_OVERFLOW';
-    severity: 'DIVINE' | 'COSMIC_EMERGENCY' | 'REALITY_THREATENING';
+    severity: 'CRITICAL' | 'DIVINE' | 'EXISTENTIAL';
     message: string;
     affectedRealms: ('sea' | 'underworld' | 'mortal' | 'interdimensional')[];
     divineAuthorities: ('poseidon' | 'hades' | 'djinn_council' | 'marine_biology_watchtower')[];
     cosmicConsequences: string[];
     interventionProtocol: string;
     acknowledged: boolean;
-    timeToReality Collapse?: number; // milliseconds until dimensional breakdown
+    timeToRealityCollapse?: number; // milliseconds until dimensional breakdown
 }
 
 export interface DivineMetrics {
     psdnFlow: PSDNFlowMetrics;
     obolNetwork: NetworkMetrics;
     cosmicBalance: CosmicBalance;
-    divineIntervention sActive: boolean;
+    divineInterventionsActive: boolean;
     lastDivineAction: number;
     realityStabilityScore: number; // 0-100, below 10 = imminent collapse
     soulTransitEfficiency: number; // 0-100, divine realm connectivity health
+    psdnObolRatio: number;
+    equilibriumThreshold: number;
+    currentEquilibrium: number;
+    soulTransitRate: number; // souls per hour
+    realityStability: number; // 0-1
+    tidalDisruption: number; // 0-1
+    underworldCapacity: number; // percentage
 }
 
 export class CosmicBalanceMonitor {
@@ -87,7 +94,14 @@ export class CosmicBalanceMonitor {
             divineInterventionsActive: false,
             lastDivineAction: 0,
             realityStabilityScore: 100,
-            soulTransitEfficiency: 100
+            soulTransitEfficiency: 100,
+            psdnObolRatio: 1.0,
+            equilibriumThreshold: 0.2,
+            currentEquilibrium: 1.0,
+            soulTransitRate: 0,
+            realityStability: 1.0,
+            tidalDisruption: 0,
+            underworldCapacity: 100
         };
     }
 
@@ -165,7 +179,7 @@ export class CosmicBalanceMonitor {
         if (psdnCritical.length > 0 && obolCritical.length > 0) {
             this.createDivineAlert(
                 'REALM_BOUNDARY_BREACH',
-                'COSMIC_EMERGENCY',
+                'DIVINE',
                 'Simultaneous critical events detected in both Sea and Underworld realms',
                 ['sea', 'underworld'],
                 ['poseidon', 'hades', 'djinn_council'],
@@ -225,7 +239,7 @@ export class CosmicBalanceMonitor {
         if (stabilityScore < 30 && !this.divineMetrics.divineInterventionsActive) {
             this.createDivineAlert(
                 'COSMIC_IMBALANCE',
-                'REALITY_THREATENING',
+                'EXISTENTIAL',
                 `Reality stability critically low: ${stabilityScore.toFixed(1)}% - Dimensional collapse imminent`,
                 ['sea', 'underworld', 'mortal', 'interdimensional'],
                 ['poseidon', 'hades', 'djinn_council', 'marine_biology_watchtower'],
@@ -244,7 +258,7 @@ export class CosmicBalanceMonitor {
 
         this.createDivineAlert(
             'DIVINE_INTERVENTION_REQUIRED',
-            'COSMIC_EMERGENCY',
+            'CRITICAL',
             interventionMessage,
             this.getAffectedRealms(),
             ['poseidon', 'hades', 'djinn_council', 'marine_biology_watchtower'],
@@ -286,7 +300,7 @@ export class CosmicBalanceMonitor {
             cosmicConsequences,
             interventionProtocol,
             acknowledged: false,
-            timeToRealityCollapse: severity === 'REALITY_THREATENING' ? 300000 : undefined // 5 minutes
+            timeToRealityCollapse: severity === 'EXISTENTIAL' ? 300000 : undefined // 5 minutes
         };
 
         this.divineAlerts.push(alert);
