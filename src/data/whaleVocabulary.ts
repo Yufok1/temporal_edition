@@ -1561,3 +1561,25 @@ export const whaleVocabulary: VocabularyMapping = {
         }
     }
 }; 
+
+export interface WhalePhrase {
+    phrase: string;
+    meaning: string;
+    context: {
+        environmental: string[];
+        social: string[];
+        emotional: string[];
+        behavioral: string[];
+        seasonal: string[];
+    };
+    sentiment: {
+        tone: EmotionalTone;
+        intensity: number;
+        confidence: number;
+    };
+    usage: {
+        frequency: 'common' | 'rare' | 'ceremonial';
+        formality: 'casual' | 'formal' | 'sacred';
+        ageGroup: 'calf' | 'juvenile' | 'adult' | 'elder' | 'all';
+    };
+} 

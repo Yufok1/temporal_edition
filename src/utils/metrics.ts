@@ -202,13 +202,10 @@ export class MetricsService {
 
     private recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
         const key = this.getMetricKey(name, labels);
-        const values = this.histograms.get(key) || [];
-        values.push(value);
-        
-        // Keep only last 1000 values
-        if (values.length > 1000) {
-            values.shift();
+        if (!this.histograms.has(key)) {
+            this.histograms.set(key, []);
         }
+        this.histograms.get(key)!.push(value);
     }
 
     private getMetricKey(name: string, labels?: Record<string, string>): string {
@@ -250,20 +247,6 @@ export class MetricsService {
     recordGauge(name: string, value: number, labels?: Record<string, string>): void {
         const key = this.getMetricKey(name, labels);
         this.gauges.set(key, value);
-    }
-
-    recordHistogram(name: string, value: number, labels?: Record<string, string>): void {
-        const key = this.getMetricKey(name, labels);
-        if (!this.histograms.has(key)) {
-            this.histograms.set(key, []);
-        }
-        const values = this.histograms.get(key)!;
-        values.push(value);
-        
-        // Keep only last 1000 values
-        if (values.length > 1000) {
-            values.shift();
-        }
     }
 }
 
