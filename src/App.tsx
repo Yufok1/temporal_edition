@@ -19,6 +19,7 @@ import { getFeatureFlags } from './config/features';
 import { MonitoringService } from './MonitoringService';
 import { DjinnAudioService } from './services/DjinnAudioService';
 import { TemporalEditionService } from './services/TemporalEditionService';
+import { RiddlerExplorerService } from './services/RiddlerExplorerService';
 
 // Conditional imports based on feature flags
 const featureFlags = getFeatureFlags();
@@ -42,8 +43,19 @@ const App: React.FC = () => {
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [monitoringService] = useState(() => new MonitoringService());
   const [audioService] = useState(() => new DjinnAudioService(monitoringService));
-  // Note: TemporalEditionService requires riddler and steward - disabling for now
-  // const [temporalService] = useState(() => new TemporalEditionService(monitoringService));
+  
+  // Create minimal riddler and steward for temporal service
+  const [riddlerService] = useState(() => new RiddlerExplorerService());
+  const [defaultSteward] = useState(() => ({
+    id: 'app-steward',
+    type: 'ai' as const,
+    name: 'App Steward',
+    status: 'approved' as const,
+    lastRecognized: Date.now(),
+    peckingTier: 2 as const,
+    privileges: []
+  }));
+  const [temporalService] = useState(() => new TemporalEditionService(monitoringService, riddlerService, defaultSteward));
   const [systemMode, setSystemMode] = useState<'auricle' | 'whale' | 'standalone'>('auricle');
 
   useEffect(() => {
@@ -62,8 +74,15 @@ const App: React.FC = () => {
       try {
         // Initialize common services
         if (featureFlags.temporalEditioningEnabled) {
-          // Temporal service disabled until riddler integration is complete
-          console.log('Temporal editing would be initialized here');
+          await temporalService.initialize();
+          
+          // Start collecting temporal data
+          const interval = setInterval(async () => {
+            // generateAndExportReports doesn't return data, it exports internally
+            await temporalService.generateAndExportReports();
+          }, 60000); // Collect data every minute
+
+          return () => clearInterval(interval);
         }
 
         // Initialize audio service if needed by either system
@@ -86,9 +105,7 @@ const App: React.FC = () => {
       timestamp: Date.now(),
       metadata: {
         identity: 'user',
-        mode: systemMode,
-        whaleOpsEnabled: featureFlags.whaleOperationsEnabled,
-        auricleEnabled: featureFlags.auricleAIEnabled
+        mode: systemMode
       }
     });
   };
@@ -100,9 +117,7 @@ const App: React.FC = () => {
       timestamp: Date.now(),
       metadata: {
         identity: 'user',
-        mode: systemMode,
-        whaleOpsEnabled: featureFlags.whaleOperationsEnabled,
-        auricleEnabled: featureFlags.auricleAIEnabled
+        mode: systemMode
       }
     });
   };
@@ -131,6 +146,8 @@ const App: React.FC = () => {
       return (
         <React.Suspense fallback={<div className="loading">Loading Whale Operations...</div>}>
           <SecureWhaleInterface
+            riddler={riddlerService}
+            steward={defaultSteward}
             onSessionStart={handleSessionStart}
             onSessionEnd={handleSessionEnd}
           />
