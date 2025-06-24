@@ -42,7 +42,8 @@ const App: React.FC = () => {
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [monitoringService] = useState(() => new MonitoringService());
   const [audioService] = useState(() => new DjinnAudioService(monitoringService));
-  const [temporalService] = useState(() => new TemporalEditionService(monitoringService));
+  // Note: TemporalEditionService requires riddler and steward - disabling for now
+  // const [temporalService] = useState(() => new TemporalEditionService(monitoringService));
   const [systemMode, setSystemMode] = useState<'auricle' | 'whale' | 'standalone'>('auricle');
 
   useEffect(() => {
@@ -61,15 +62,8 @@ const App: React.FC = () => {
       try {
         // Initialize common services
         if (featureFlags.temporalEditioningEnabled) {
-          await temporalService.initialize();
-          
-          // Start collecting temporal data
-          const interval = setInterval(async () => {
-            const data = await temporalService.generateAndExportReports();
-            monitoringService.logTemporalData(data);
-          }, 60000); // Collect data every minute
-
-          return () => clearInterval(interval);
+          // Temporal service disabled until riddler integration is complete
+          console.log('Temporal editing would be initialized here');
         }
 
         // Initialize audio service if needed by either system
