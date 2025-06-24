@@ -14,8 +14,8 @@
 // 
 
 import { EventEmitter } from 'events';
-import { logger } from '../logger';
-import { MonitoringService } from '../MonitoringService';
+import logger from '../logger';
+import { MonitoringService } from './BrowserMonitoringService';
 import { RiddlerExplorerService, Steward } from './RiddlerExplorerService';
 
 export interface TemporalData {

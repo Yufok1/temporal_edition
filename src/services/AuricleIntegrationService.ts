@@ -16,7 +16,7 @@
 import { CryptographerCore } from './CryptographerCore';
 import { TemporalEditionService } from './TemporalEditionService';
 import { DjinnAudioService } from './DjinnAudioService';
-import { MonitoringService } from '../MonitoringService';
+import { MonitoringService } from './BrowserMonitoringService';
 import { createLogger } from '../utils/logger';
 
 export interface AuricleConfiguration {

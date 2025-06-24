@@ -16,7 +16,7 @@
 import React, { useState, useEffect } from 'react';
 import './styles/App.css';
 import { getFeatureFlags } from './config/features';
-import { MonitoringService } from './MonitoringService';
+import { MonitoringService } from './services/BrowserMonitoringService';
 import { DjinnAudioService } from './services/DjinnAudioService';
 import { TemporalEditionService } from './services/TemporalEditionService';
 import { RiddlerExplorerService } from './services/RiddlerExplorerService';

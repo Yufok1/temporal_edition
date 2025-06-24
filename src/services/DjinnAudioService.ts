@@ -15,7 +15,7 @@
 
 import { EventEmitter } from 'events';
 import logger from '../logger';
-import { MonitoringService } from '../MonitoringService';
+import { MonitoringService } from './BrowserMonitoringService';
 import { AudioProcessorService, AudioAnalysis } from './AudioProcessorService';
 
 export interface AudioState {

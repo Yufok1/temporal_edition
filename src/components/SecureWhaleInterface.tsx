@@ -16,7 +16,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../styles/SecureWhaleInterface.css';
 import { DjinnAudioService } from '../services/DjinnAudioService';
-import { MonitoringService } from '../MonitoringService';
+import { MonitoringService } from '../services/BrowserMonitoringService';
 import { AudioVisualizer } from './AudioVisualizer';
 import { EnhancedAudioVisualizer } from './EnhancedAudioVisualizer';
 import { RiddlerExplorerService, Steward } from '../services/RiddlerExplorerService';
