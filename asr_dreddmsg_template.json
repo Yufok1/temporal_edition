@@ -1,0 +1,323 @@
+{
+  "dredd_message": {
+    "metadata": {
+      "version": "2.0.0",
+      "protocol": "DREDD",
+      "message_type": "ASR",
+      "created_at": "2025-06-23T21:42:11Z",
+      "message_id": "dredd_asr_ASR-SESSION-001-1719169331",
+      "resonance_level": "high",
+      "quantum_ready": true,
+      "mirror_protected": true,
+      "asr_version": "2.0.0"
+    },
+    "targeting": {
+      "sigil_target": "glyph-hash-djinn-council",
+      "sigil_hash": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "resonance_requirements": {
+        "minimum_entropy": 0.8,
+        "required_sigil": true,
+        "session_key_required": true,
+        "mirror_depth_limit": 3,
+        "asr_authorization": true
+      },
+      "delivery_nodes": [
+        "ws://node1.dredd.lattice:8080/dredd",
+        "ws://node2.dredd.lattice:8081/dredd"
+      ]
+    },
+    "entropy_header": {
+      "encoded": "eyJ0aW1lc3RhbXAiOjE3MTkxNjkzMTEsInJhbmRvbV9zZWVkIjoiYTFhMmEzYTQhNSF2NyF4OSF6YjFiMmIzYjQhNSF2NyF4OSF6YzFjMmMzYzQhNSF2NyF4OSIsImVudHJvcHlfc2NvcmUiOjAuOTIsInJlc29uYW5jZV9jaGFsbGVuZ2UiOiJhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5eiIsImFzcl9oYXNoIjoiMHg4NGFhMTIzNDU2Nzg5MGFiIn0=",
+      "validation": {
+        "timestamp": 1719169331,
+        "random_seed": "a1a2a3a4!5!v7!x9!zb1b2b3b4!5!v7!x9!zc1c2c3c4!5!v7!x9",
+        "entropy_score": 0.92,
+        "resonance_challenge": "abcdefghijklmnopqrstuvwxyz",
+        "asr_hash": "0x84aa1234567890ab"
+      }
+    },
+    "encrypted_content": {
+      "encoded": "eyJlbmNyeXB0ZWRfa2V5IjoiS2tLbEttTG1Nbk5vTm9PcE9xT3FPck9zT3NPdE91T3ZPd094T3lPeU96T3tPfE99T34iLCJlbmNyeXB0ZWRfY29udGVudCI6Ik1tTW5Ob05vT3BPcU9xT3JPc09zT3NPdE91T3ZPd094T3lPeU96T3tPfE99T34iLCJxdWFudHVtX3NpZ25hdHVyZSI6ImFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoifQ==",
+      "encryption_info": {
+        "algorithm": "quantum_hybrid",
+        "kyber_enabled": true,
+        "dilithium_enabled": true,
+        "classical_fallback": true,
+        "key_size": 256,
+        "iv": "a1b2c3d4e5f67890",
+        "asr_specific": {
+          "compression_enabled": true,
+          "integrity_check": true,
+          "quantum_signature": true
+        }
+      }
+    },
+    "asr_payload": {
+      "report_id": "ASR-SESSION-001-1719169331",
+      "session_id": "SESSION-001",
+      "trigger_type": "manual_trigger",
+      "generated_at": "2025-06-23T21:42:11Z",
+      "sovereign_actions": [
+        {
+          "ticket_id": "TKT-20250623-0032",
+          "action_type": "override_watchguard_threshold",
+          "timestamp": "2025-06-23T20:45:01Z",
+          "interface_context": "GuardianControlPanel > AnomalyOverride",
+          "system_impact": "high",
+          "causal_certainty": 0.96
+        },
+        {
+          "ticket_id": "TKT-20250623-0033",
+          "action_type": "enable_portfolio_monitoring",
+          "timestamp": "2025-06-23T20:45:15Z",
+          "interface_context": "GuardianControlPanel > PortfolioSettings",
+          "system_impact": "medium",
+          "causal_certainty": 0.88
+        }
+      ],
+      "security_evolution": [
+        {
+          "event_id": "ANOM-253",
+          "event_type": "anomaly_detected",
+          "timestamp": "2025-06-23T20:45:01Z",
+          "severity": "high",
+          "status": "resolved",
+          "resolution_time": "12.4s"
+        },
+        {
+          "event_id": "THREAT-456",
+          "event_type": "threat_suppressed",
+          "timestamp": "2025-06-23T20:47:15Z",
+          "severity": "critical",
+          "status": "suppressed",
+          "suppression_time": "3.1s"
+        }
+      ],
+      "resonance_performance": [
+        {
+          "scan_id": "RESONANCE-001",
+          "timestamp": "2025-06-23T20:45:30Z",
+          "wallet_count": 15,
+          "high_resonance": 8,
+          "medium_resonance": 5,
+          "low_resonance": 2,
+          "anomaly_detected": 1
+        },
+        {
+          "scan_id": "RESONANCE-002",
+          "timestamp": "2025-06-23T20:47:00Z",
+          "wallet_count": 15,
+          "high_resonance": 10,
+          "medium_resonance": 4,
+          "low_resonance": 1,
+          "anomaly_detected": 0
+        }
+      ],
+      "observational_matches": [
+        {
+          "match_id": "MATCH-TKT-20250623-0032-0",
+          "intent_ticket": "TKT-20250623-0032",
+          "effect_event": "ANOM-253-resolved",
+          "response_time": 12.4,
+          "causal_certainty": 0.96,
+          "entropy_similarity": 0.89
+        },
+        {
+          "match_id": "MATCH-TKT-20250623-0033-0",
+          "intent_ticket": "TKT-20250623-0033",
+          "effect_event": "PORTFOLIO-789-monitoring-enabled",
+          "response_time": 5.2,
+          "causal_certainty": 0.88,
+          "entropy_similarity": 0.92
+        }
+      ],
+      "entropy_stability_index": {
+        "session_duration": "25 minutes",
+        "entropy_variance": 0.15,
+        "stability_score": 0.87,
+        "peak_entropy": 0.92,
+        "lowest_entropy": 0.34,
+        "entropy_trend": "increasing",
+        "stability_grade": "A"
+      },
+      "ticket_chronicle": [
+        {
+          "ticket_id": "TKT-20250623-0032",
+          "action_type": "override_watchguard_threshold",
+          "timestamp": "2025-06-23T20:45:01Z",
+          "system_impact": "high",
+          "chronicle_status": "active",
+          "linked_effects": ["ANOM-253-resolved"]
+        },
+        {
+          "ticket_id": "TKT-20250623-0033",
+          "action_type": "enable_portfolio_monitoring",
+          "timestamp": "2025-06-23T20:45:15Z",
+          "system_impact": "medium",
+          "chronicle_status": "active",
+          "linked_effects": ["PORTFOLIO-789-monitoring-enabled"]
+        }
+      ],
+      "attached_glyphs": [
+        {
+          "glyph_id": "GLYPH-001",
+          "type": "resonance_sigil",
+          "timestamp": "2025-06-23T20:45:01Z",
+          "encoded_data": "0x1234567890abcdef",
+          "resonance_level": "high"
+        },
+        {
+          "glyph_id": "GLYPH-002",
+          "type": "mirror_anchor",
+          "timestamp": "2025-06-23T20:47:15Z",
+          "encoded_data": "0xfedcba0987654321",
+          "resonance_level": "critical"
+        }
+      ],
+      "summary_statistics": {
+        "total_sovereign_actions": 2,
+        "total_security_events": 2,
+        "total_resonance_scans": 2,
+        "total_causal_matches": 2,
+        "avg_response_time": 8.8,
+        "avg_causal_certainty": 0.92,
+        "session_effectiveness_score": 0.94,
+        "security_posture": "enhanced",
+        "resonance_stability": "improved"
+      },
+      "drd_signature": "0x29acfedcba987654"
+    },
+    "mirror_trap": {
+      "trap_id": "trap_dredd_asr_ASR-SESSION-001-1719169331",
+      "target_sigil": "glyph-hash-djinn-council",
+      "fake_content": "System maintenance report: No significant events detected.",
+      "entropy_fingerprint": "f1f2f3f4f5f6f7f8f9fafbfcfdfefff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "noise_injection": [
+        127, 45, 89, 234, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189,
+        45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12,
+        67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123, 56, 234,
+        89, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123
+      ],
+      "trigger_conditions": {
+        "invalid_sigil": true,
+        "expired_message": true,
+        "insufficient_entropy": true,
+        "wrong_resonance_level": true,
+        "unauthorized_asr_access": true
+      },
+      "trap_actions": {
+        "log_attempt": true,
+        "inject_noise": true,
+        "return_fake_content": true,
+        "alert_security": true,
+        "block_future_attempts": true
+      }
+    },
+    "delivery_config": {
+      "ttl": 7200,
+      "expires_at": "2025-06-24T00:42:11Z",
+      "max_retries": 3,
+      "retry_interval": 30,
+      "one_time_read": false,
+      "self_destruct": false,
+      "destruction_trigger": "never",
+      "asr_specific": {
+        "archive_after_delivery": true,
+        "allow_replies": true,
+        "reply_ttl": 3600
+      }
+    },
+    "resonance_validation": {
+      "echo_signature": "echo_asr_84aa1234567890ab",
+      "resonance_hash": "res_asr_1234567890abcdef",
+      "validation_timestamp": "2025-06-23T21:42:11Z",
+      "validation_status": "pending",
+      "required_resonance_factors": [
+        "sigil_match",
+        "entropy_threshold",
+        "session_key_valid",
+        "resonance_level_appropriate",
+        "asr_authorization_valid"
+      ]
+    },
+    "stealth_config": {
+      "dispersal_enabled": true,
+      "fragment_count": 3,
+      "reassembly_nodes": [
+        "ws://reassemble1.dredd.lattice:8080",
+        "ws://reassemble2.dredd.lattice:8081"
+      ],
+      "temporal_obfuscation": {
+        "delay_layers": 2,
+        "reordering_enabled": true,
+        "erasure_layers": 1
+      }
+    },
+    "compliance": {
+      "audit_trail": true,
+      "encryption_standard": "quantum_resistant",
+      "data_retention": "90_days",
+      "regulatory_compliance": ["GDPR", "SOX", "HIPAA"],
+      "access_logging": true,
+      "asr_specific": {
+        "sovereign_oversight": true,
+        "intent_preservation": true,
+        "causal_transparency": true
+      }
+    }
+  },
+  "envelope": {
+    "envelope_id": "envelope_asr_ASR-SESSION-001-1719169331",
+    "target_sigil": "glyph-hash-djinn-council",
+    "message_hash": "sha256_hash_of_encrypted_asr_content",
+    "mirror_protection": {
+      "enabled": true,
+      "protection_level": "high",
+      "fallback_content": "Standard system report: No operational changes detected.",
+      "entropy_requirements": {
+        "minimum_score": 0.8,
+        "validation_required": true
+      }
+    },
+    "delivery_nodes": [
+      "ws://node1.dredd.lattice:8080/dredd",
+      "ws://node2.dredd.lattice:8081/dredd"
+    ],
+    "created_at": "2025-06-23T21:42:11Z",
+    "expires_at": "2025-06-24T00:42:11Z",
+    "delivery_status": "pending",
+    "asr_metadata": {
+      "report_type": "acclimation_sequencing",
+      "session_scope": "sovereign_control",
+      "trigger_source": "manual",
+      "recipient_authorization": "djinn_council_approved"
+    }
+  },
+  "validation": {
+    "message_integrity": {
+      "content_hash": "sha256_hash_of_asr_content",
+      "signature": "quantum_resistant_asr_signature",
+      "timestamp": "2025-06-23T21:42:11Z"
+    },
+    "resonance_verification": {
+      "sigil_valid": true,
+      "entropy_sufficient": true,
+      "resonance_level_appropriate": true,
+      "session_key_valid": true,
+      "asr_authorization_valid": true
+    },
+    "security_checks": {
+      "quantum_encryption_valid": true,
+      "mirror_trap_armed": true,
+      "stealth_config_active": true,
+      "compliance_verified": true,
+      "asr_integrity_verified": true
+    },
+    "asr_specific_validation": {
+      "report_structure_valid": true,
+      "causal_chain_complete": true,
+      "intent_preservation_verified": true,
+      "sovereign_oversight_maintained": true
+    }
+  }
+} 

@@ -1,0 +1,42 @@
+{
+  "deployment_info": {
+    "timestamp": "20250623_161453",
+    "deployment_date": "2025-06-23T16:14:53.959972",
+    "deployer": "ReportArchiveDeployer",
+    "version": "1.0.0"
+  },
+  "components": {
+    "report_archive_engine": {
+      "file": "report_archive_engine.js",
+      "description": "Core report archive engine with sovereign access protocol",
+      "status": "deployed"
+    },
+    "report_archive_panel": {
+      "file": "report_archive_panel.html",
+      "description": "Standalone report archive panel interface",
+      "status": "deployed"
+    },
+    "report_generator": {
+      "file": "report_generator.js",
+      "description": "Report generation system with multiple report types",
+      "status": "deployed"
+    },
+    "report_archive_integration": {
+      "file": "report_archive_integration.js",
+      "description": "Integration layer connecting all systems",
+      "status": "deployed"
+    }
+  },
+  "directories": {
+    "reports": "C:\\Users\\Shadow\\Documents\\GitHub\\temporal_edition\\reports",
+    "backups": "C:\\Users\\Shadow\\Documents\\GitHub\\temporal_edition\\backups",
+    "exports": "C:\\Users\\Shadow\\Documents\\GitHub\\temporal_edition\\reports\\exports",
+    "templates": "C:\\Users\\Shadow\\Documents\\GitHub\\temporal_edition\\reports\\templates"
+  },
+  "sample_reports": 3,
+  "system_requirements": {
+    "browser": "Modern browser with JavaScript enabled",
+    "storage": "LocalStorage for report persistence",
+    "permissions": "File system access for exports"
+  }
+}

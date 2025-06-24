@@ -1,0 +1,92 @@
+{
+  "test_timestamp": "2025-06-23T15:42:40.078807",
+  "total_cargo": 4,
+  "successful_deliveries": 4,
+  "failed_deliveries": 0,
+  "delivery_details": [
+    {
+      "cargo_id": "cargo_1750718556",
+      "envelope_id": "env_1750718556",
+      "sigil_lock": "\ud83d\udf02:a1b2c3d4e5f6g7h8",
+      "quantum_key_id": "qk_1750718556",
+      "route": [
+        "relay_0_1750718556",
+        "relay_1_1750718556",
+        "relay_2_1750718556"
+      ],
+      "mirror_anchors": [
+        "anchor_delivery_1750718556",
+        "anchor_confirmation_1750718556"
+      ],
+      "status": "delivered",
+      "timestamp": "2025-06-23T15:42:37.047714",
+      "cargo_type": "Auricle Voice Events",
+      "priority": "high",
+      "recipient": "auricle_witness"
+    },
+    {
+      "cargo_id": "cargo_1750718557",
+      "envelope_id": "env_1750718557",
+      "sigil_lock": "\ud83d\udf02:a1b2c3d4e5f6g7h8",
+      "quantum_key_id": "qk_1750718557",
+      "route": [
+        "relay_0_1750718557",
+        "relay_1_1750718557",
+        "relay_2_1750718557"
+      ],
+      "mirror_anchors": [
+        "anchor_delivery_1750718557",
+        "anchor_confirmation_1750718557"
+      ],
+      "status": "delivered",
+      "timestamp": "2025-06-23T15:42:38.051708",
+      "cargo_type": "Matrix Rain Statistics",
+      "priority": "normal",
+      "recipient": "djinn_council"
+    },
+    {
+      "cargo_id": "cargo_1750718558",
+      "envelope_id": "env_1750718558",
+      "sigil_lock": "\ud83d\udf02:a1b2c3d4e5f6g7h8",
+      "quantum_key_id": "qk_1750718558",
+      "route": [
+        "relay_0_1750718558",
+        "relay_1_1750718558",
+        "relay_2_1750718558"
+      ],
+      "mirror_anchors": [
+        "anchor_delivery_1750718558",
+        "anchor_confirmation_1750718558"
+      ],
+      "status": "delivered",
+      "timestamp": "2025-06-23T15:42:39.062296",
+      "cargo_type": "Anomaly Event",
+      "priority": "immediate",
+      "recipient": "watchguard_alpha"
+    },
+    {
+      "cargo_id": "cargo_1750718559",
+      "envelope_id": "env_1750718559",
+      "sigil_lock": "\ud83d\udf02:a1b2c3d4e5f6g7h8",
+      "quantum_key_id": "qk_1750718559",
+      "route": [
+        "relay_0_1750718559",
+        "relay_1_1750718559",
+        "relay_2_1750718559"
+      ],
+      "mirror_anchors": [
+        "anchor_delivery_1750718559",
+        "anchor_confirmation_1750718559"
+      ],
+      "status": "delivered",
+      "timestamp": "2025-06-23T15:42:40.076879",
+      "cargo_type": "ASR Report",
+      "priority": "high",
+      "recipient": "auricle_witness"
+    }
+  ],
+  "dredd_status": "operational",
+  "security_level": "maximum",
+  "mirror_feedback": "active",
+  "lawful_status": "confirmed"
+}

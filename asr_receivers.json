@@ -1,0 +1,303 @@
+{
+  "asr_receivers": {
+    "version": "2.0.0",
+    "created_at": "2025-06-23T21:42:11Z",
+    "description": "Sigil-based registry for authorized ASR recipients",
+    "recipients": {
+      "djinn_council": {
+        "sigil": "glyph-hash-djinn-council",
+        "sigil_hash": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+        "encryption_level": "critical",
+        "auto_acknowledge": true,
+        "authorization_level": "sovereign",
+        "delivery_priority": "high",
+        "allowed_asr_types": [
+          "session_based",
+          "job_based", 
+          "manual_trigger",
+          "post_orchestration"
+        ],
+        "notification_channels": [
+          "dredd_messaging",
+          "sovereign_alert"
+        ],
+        "response_required": true,
+        "response_ttl": 3600,
+        "archive_policy": "permanent",
+        "access_logging": true
+      },
+      "sovereign_archive": {
+        "sigil": "glyph-hash-sovereign-archive",
+        "sigil_hash": "0x8ba1f109551bD432803012645Hac136c772c3e3",
+        "encryption_level": "high",
+        "auto_acknowledge": false,
+        "authorization_level": "sovereign",
+        "delivery_priority": "medium",
+        "allowed_asr_types": [
+          "session_based",
+          "job_based",
+          "manual_trigger",
+          "post_orchestration"
+        ],
+        "notification_channels": [
+          "dredd_messaging"
+        ],
+        "response_required": false,
+        "response_ttl": 1800,
+        "archive_policy": "90_days",
+        "access_logging": true
+      },
+      "watch_guard": {
+        "sigil": "glyph-hash-watch-guard",
+        "sigil_hash": "0xabcdef1234567890abcdef1234567890abcdef12",
+        "encryption_level": "high",
+        "auto_acknowledge": true,
+        "authorization_level": "operational",
+        "delivery_priority": "high",
+        "allowed_asr_types": [
+          "session_based",
+          "job_based",
+          "post_orchestration"
+        ],
+        "notification_channels": [
+          "dredd_messaging",
+          "watch_guard_alert"
+        ],
+        "response_required": true,
+        "response_ttl": 7200,
+        "archive_policy": "30_days",
+        "access_logging": true
+      },
+      "lattice_core": {
+        "sigil": "glyph-hash-lattice-core",
+        "sigil_hash": "0xcccccccccccccccccccccccccccccccccccccc",
+        "encryption_level": "critical",
+        "auto_acknowledge": true,
+        "authorization_level": "system",
+        "delivery_priority": "critical",
+        "allowed_asr_types": [
+          "post_orchestration",
+          "system_wide"
+        ],
+        "notification_channels": [
+          "dredd_messaging",
+          "lattice_alert",
+          "emergency_broadcast"
+        ],
+        "response_required": true,
+        "response_ttl": 1800,
+        "archive_policy": "permanent",
+        "access_logging": true
+      },
+      "mirror_keyring_protocol": {
+        "sigil": "glyph-hash-mkp",
+        "sigil_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "encryption_level": "high",
+        "auto_acknowledge": true,
+        "authorization_level": "operational",
+        "delivery_priority": "medium",
+        "allowed_asr_types": [
+          "session_based",
+          "job_based"
+        ],
+        "notification_channels": [
+          "dredd_messaging"
+        ],
+        "response_required": false,
+        "response_ttl": 3600,
+        "archive_policy": "60_days",
+        "access_logging": true
+      },
+      "resonance_scanner": {
+        "sigil": "glyph-hash-resonance-scanner",
+        "sigil_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "encryption_level": "medium",
+        "auto_acknowledge": false,
+        "authorization_level": "operational",
+        "delivery_priority": "low",
+        "allowed_asr_types": [
+          "job_based"
+        ],
+        "notification_channels": [
+          "dredd_messaging"
+        ],
+        "response_required": false,
+        "response_ttl": 7200,
+        "archive_policy": "30_days",
+        "access_logging": true
+      },
+      "entropy_monitor": {
+        "sigil": "glyph-hash-entropy-monitor",
+        "sigil_hash": "0xdddddddddddddddddddddddddddddddddddddddd",
+        "encryption_level": "medium",
+        "auto_acknowledge": false,
+        "authorization_level": "operational",
+        "delivery_priority": "low",
+        "allowed_asr_types": [
+          "session_based",
+          "job_based"
+        ],
+        "notification_channels": [
+          "dredd_messaging"
+        ],
+        "response_required": false,
+        "response_ttl": 3600,
+        "archive_policy": "45_days",
+        "access_logging": true
+      },
+      "chronicle_linker": {
+        "sigil": "glyph-hash-chronicle-linker",
+        "sigil_hash": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "encryption_level": "high",
+        "auto_acknowledge": true,
+        "authorization_level": "operational",
+        "delivery_priority": "medium",
+        "allowed_asr_types": [
+          "session_based",
+          "post_orchestration"
+        ],
+        "notification_channels": [
+          "dredd_messaging"
+        ],
+        "response_required": true,
+        "response_ttl": 1800,
+        "archive_policy": "90_days",
+        "access_logging": true
+      }
+    },
+    "delivery_groups": {
+      "sovereign_oversight": {
+        "members": [
+          "djinn_council",
+          "sovereign_archive"
+        ],
+        "delivery_strategy": "all_members",
+        "encryption_level": "critical",
+        "priority": "highest"
+      },
+      "operational_team": {
+        "members": [
+          "watch_guard",
+          "mirror_keyring_protocol",
+          "chronicle_linker"
+        ],
+        "delivery_strategy": "all_members",
+        "encryption_level": "high",
+        "priority": "high"
+      },
+      "system_monitors": {
+        "members": [
+          "lattice_core",
+          "resonance_scanner",
+          "entropy_monitor"
+        ],
+        "delivery_strategy": "selective",
+        "encryption_level": "medium",
+        "priority": "medium"
+      }
+    },
+    "delivery_rules": {
+      "session_based_asr": {
+        "default_recipients": [
+          "djinn_council",
+          "sovereign_archive",
+          "watch_guard"
+        ],
+        "optional_recipients": [
+          "mirror_keyring_protocol",
+          "chronicle_linker"
+        ],
+        "encryption_level": "high",
+        "ttl": 7200
+      },
+      "job_based_asr": {
+        "default_recipients": [
+          "watch_guard",
+          "resonance_scanner"
+        ],
+        "optional_recipients": [
+          "entropy_monitor",
+          "mirror_keyring_protocol"
+        ],
+        "encryption_level": "medium",
+        "ttl": 3600
+      },
+      "manual_trigger_asr": {
+        "default_recipients": [
+          "djinn_council",
+          "sovereign_archive"
+        ],
+        "optional_recipients": [
+          "watch_guard",
+          "lattice_core"
+        ],
+        "encryption_level": "critical",
+        "ttl": 14400
+      },
+      "post_orchestration_asr": {
+        "default_recipients": [
+          "lattice_core",
+          "djinn_council",
+          "watch_guard"
+        ],
+        "optional_recipients": [
+          "chronicle_linker",
+          "sovereign_archive"
+        ],
+        "encryption_level": "critical",
+        "ttl": 14400
+      }
+    },
+    "security_settings": {
+      "sigil_validation": {
+        "required": true,
+        "validation_method": "blockchain_verification",
+        "fallback_method": "local_registry"
+      },
+      "encryption_requirements": {
+        "minimum_level": "medium",
+        "quantum_resistant": true,
+        "key_rotation": true
+      },
+      "access_control": {
+        "ip_whitelist": [],
+        "rate_limiting": {
+          "asr_per_hour": 10,
+          "burst_limit": 3
+        },
+        "authentication": {
+          "required": true,
+          "methods": ["sigil", "session_key", "entropy_validation"]
+        }
+      },
+      "audit_requirements": {
+        "delivery_logging": true,
+        "access_logging": true,
+        "response_logging": true,
+        "retention_period": "90_days"
+      }
+    },
+    "notification_templates": {
+      "asr_delivered": {
+        "subject": "ASR Delivered Successfully",
+        "template": "Acclimation Sequencing Report {report_id} has been delivered to {recipient} via DREDD infrastructure.",
+        "priority": "info"
+      },
+      "asr_acknowledged": {
+        "subject": "ASR Acknowledged",
+        "template": "ASR {report_id} has been acknowledged by {recipient} with response time {response_time}s.",
+        "priority": "info"
+      },
+      "asr_failed": {
+        "subject": "ASR Delivery Failed",
+        "template": "Failed to deliver ASR {report_id} to {recipient}. Error: {error_message}",
+        "priority": "error"
+      },
+      "asr_response_received": {
+        "subject": "ASR Response Received",
+        "template": "Response received for ASR {report_id} from {recipient}: {response_content}",
+        "priority": "info"
+      }
+    }
+  }
+} 

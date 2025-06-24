@@ -1,0 +1,284 @@
+{
+  "dredd_config": {
+    "version": "2.0.0",
+    "protocol": "DREDD",
+    "created_at": "2024-01-15T12:00:00.000Z",
+    "relay_nodes": [
+      "ws://node1.dredd.lattice:8080/dredd",
+      "ws://node2.dredd.lattice:8081/dredd",
+      "ws://node3.dredd.lattice:8082/dredd",
+      "ws://node4.dredd.lattice:8083/dredd",
+      "ws://node5.dredd.lattice:8084/dredd"
+    ],
+    "sigil_registry": {
+      "glyph-hash-01": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "glyph-hash-02": "0x8ba1f109551bD432803012645Hac136c772c3e3",
+      "djinn-resonance-01": "0x1234567890123456789012345678901234567890",
+      "wallet-divination-01": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "djinn-council-01": "0xfedcba0987654321fedcba0987654321fedcba09",
+      "governance-api-01": "0x9876543210abcdef9876543210abcdef98765432",
+      "sigil-distortion-01": "0x5555555555555555555555555555555555555555",
+      "mirror-keyring-01": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "watch-guard-01": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "lattice-core-01": "0xcccccccccccccccccccccccccccccccccccccc"
+    },
+    "quantum_encryption": {
+      "kyber_enabled": true,
+      "dilithium_enabled": true,
+      "classical_fallback": true,
+      "key_sizes": {
+        "kyber": 1024,
+        "dilithium": 256,
+        "classical": 256
+      },
+      "encryption_modes": {
+        "hybrid": true,
+        "post_quantum": true,
+        "quantum_safe": true
+      }
+    },
+    "mirror_protection": {
+      "trap_enabled": true,
+      "noise_injection": true,
+      "entropy_validation": true,
+      "trap_levels": {
+        "low": {
+          "log_attempt": true,
+          "return_fake_content": true
+        },
+        "medium": {
+          "log_attempt": true,
+          "return_fake_content": true,
+          "inject_noise": true
+        },
+        "high": {
+          "log_attempt": true,
+          "return_fake_content": true,
+          "inject_noise": true,
+          "alert_security": true
+        },
+        "critical": {
+          "log_attempt": true,
+          "return_fake_content": true,
+          "inject_noise": true,
+          "alert_security": true,
+          "block_future_attempts": true,
+          "trigger_countermeasures": true
+        }
+      }
+    },
+    "entropy_thresholds": {
+      "low": 0.3,
+      "medium": 0.5,
+      "high": 0.7,
+      "critical": 0.9
+    },
+    "service_hooks": {
+      "WalletDivinationService": {
+        "sigil": "wallet-divination-01",
+        "encryption_level": "high",
+        "auto_retry": true,
+        "message_types": [
+          "balance_alert",
+          "anomaly_detected", 
+          "validation_complete",
+          "portfolio_update",
+          "watch_guard_trigger"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.7,
+          "required_sigil": true,
+          "session_key_required": true
+        }
+      },
+      "DjinnCouncilService": {
+        "sigil": "djinn-council-01",
+        "encryption_level": "critical",
+        "auto_retry": true,
+        "message_types": [
+          "governance_ruling",
+          "consensus_reached",
+          "emergency_alert",
+          "policy_decision",
+          "steward_election"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.9,
+          "required_sigil": true,
+          "session_key_required": true,
+          "multi_sig_required": true
+        }
+      },
+      "GovernanceAPI": {
+        "sigil": "governance-api-01",
+        "encryption_level": "high",
+        "auto_retry": true,
+        "message_types": [
+          "steward_coordination",
+          "policy_update",
+          "access_granted",
+          "permission_change",
+          "audit_log"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.7,
+          "required_sigil": true,
+          "session_key_required": true
+        }
+      },
+      "SigilDistortionEngine": {
+        "sigil": "sigil-distortion-01",
+        "encryption_level": "medium",
+        "auto_retry": false,
+        "message_types": [
+          "glyph_update",
+          "resonance_shift",
+          "anchor_creation",
+          "echo_signature",
+          "mirror_trap_activation"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.5,
+          "required_sigil": true,
+          "session_key_required": false
+        }
+      },
+      "MirrorKeyringProtocol": {
+        "sigil": "mirror-keyring-01",
+        "encryption_level": "high",
+        "auto_retry": true,
+        "message_types": [
+          "keyring_sync",
+          "resonance_check",
+          "mirror_trap_triggered",
+          "entropy_log",
+          "echo_signature"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.7,
+          "required_sigil": true,
+          "session_key_required": true
+        }
+      },
+      "WatchGuard": {
+        "sigil": "watch-guard-01",
+        "encryption_level": "high",
+        "auto_retry": true,
+        "message_types": [
+          "threat_detected",
+          "portfolio_alert",
+          "anomaly_report",
+          "intervention_required",
+          "guard_status"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.7,
+          "required_sigil": true,
+          "session_key_required": true
+        }
+      },
+      "LatticeCore": {
+        "sigil": "lattice-core-01",
+        "encryption_level": "critical",
+        "auto_retry": true,
+        "message_types": [
+          "lattice_status",
+          "node_health",
+          "resonance_network",
+          "system_integrity",
+          "emergency_broadcast"
+        ],
+        "resonance_requirements": {
+          "minimum_entropy": 0.9,
+          "required_sigil": true,
+          "session_key_required": true,
+          "multi_sig_required": true
+        }
+      }
+    },
+    "integration_settings": {
+      "default_ttl": 3600,
+      "max_retries": 3,
+      "retry_interval": 30,
+      "audit_enabled": true,
+      "mirror_protection": true,
+      "stealth_mode": {
+        "enabled": true,
+        "dispersal_nodes": 3,
+        "temporal_obfuscation": true,
+        "fragment_messages": true
+      },
+      "compliance": {
+        "gdpr_compliant": true,
+        "sox_compliant": true,
+        "hipaa_compliant": true,
+        "audit_trail_required": true,
+        "data_retention_policy": "until_delivery"
+      }
+    },
+    "monitoring": {
+      "prometheus_metrics": true,
+      "grafana_dashboards": true,
+      "alerting": {
+        "enabled": true,
+        "channels": [
+          "slack",
+          "email",
+          "webhook"
+        ],
+        "thresholds": {
+          "message_failure_rate": 0.05,
+          "decryption_failure_rate": 0.01,
+          "entropy_violation_rate": 0.02
+        }
+      },
+      "logging": {
+        "level": "INFO",
+        "format": "json",
+        "output": "file",
+        "retention_days": 30
+      }
+    },
+    "security": {
+      "session_management": {
+        "session_timeout": 3600,
+        "max_sessions_per_sigil": 5,
+        "session_rotation": true
+      },
+      "access_control": {
+        "ip_whitelist": [],
+        "rate_limiting": {
+          "messages_per_minute": 60,
+          "burst_limit": 10
+        },
+        "authentication": {
+          "required": true,
+          "methods": ["sigil", "session_key", "entropy_validation"]
+        }
+      },
+      "encryption": {
+        "algorithm": "quantum_hybrid",
+        "key_rotation": true,
+        "key_rotation_interval": 86400,
+        "backup_encryption": true
+      }
+    },
+    "performance": {
+      "message_queue": {
+        "max_size": 10000,
+        "priority_levels": 5,
+        "persistence": true
+      },
+      "caching": {
+        "enabled": true,
+        "ttl": 300,
+        "max_size": 1000
+      },
+      "connection_pooling": {
+        "enabled": true,
+        "max_connections": 100,
+        "connection_timeout": 30
+      }
+    }
+  }
+} 

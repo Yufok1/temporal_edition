@@ -1,0 +1,54 @@
+manifest_version: "1.0"
+system: "Mirror-Keyring Protocol (MKP)"
+generated: "2025-06-23T00:11:00Z"
+protected_endpoints:
+  - path: /wallet/divine
+    methods: [POST]
+    resonance_logic:
+      - Wallet Signature Challenge (EIP-191/EIP-712)
+      - Sigil Verification (custom glyph hash)
+      - Keyring Session Handshake (ephemeral key resonance)
+      - Intention/Plain Speech (fallback, logged for Djinn review)
+    mirror_trap:
+      activated_on:
+        - Resonance check failure
+        - Mirror depth exceeded
+      response: Recursive mirror payload with echo signature and entropy score
+      depth_limit: 5
+    audit_hooks:
+      - Entropy scoring per access attempt
+      - Echo signature logging
+      - Blockchain anchor logging (optional)
+      - Sigil distortion overlay for misaligned attempts
+  - path: /codex/access
+    methods: [POST]
+    resonance_logic:
+      - Wallet Signature Challenge
+      - Sigil Verification
+      - Keyring Session Handshake
+    mirror_trap:
+      activated_on:
+        - Resonance check failure
+      response: Mirror envelope with synthetic codex reflection
+      depth_limit: 5
+    audit_hooks:
+      - Entropy scoring
+      - Echo signature logging
+  - path: /governance/api
+    methods: [POST, GET]
+    resonance_logic:
+      - Wallet Signature Challenge
+      - Keyring Session Handshake
+    mirror_trap:
+      activated_on:
+        - Resonance check failure
+      response: Signature trap with truth token echo
+      depth_limit: 5
+    audit_hooks:
+      - Entropy scoring
+      - Blockchain anchor logging
+global_mkp_settings:
+  mirror_depth_limiter: true
+  entropy_scoring: true
+  blockchain_anchor_logging: true
+  sigil_distortion_overlay: true 

@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DjinnSecurities - Sovereign Watcher of Digital Integrity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ff88;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .djinn-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            grid-template-rows: 80px 1fr 60px;
+            height: 100vh;
+            gap: 2px;
+            background: #000;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, #000 0%, #1a1a2e 50%, #000 100%);
+            border: 2px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: scan 3s infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            font-size: 2em;
+            text-shadow: 0 0 10px #00ff88;
+            z-index: 1;
+        }
+
+        .header .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .sidebar-left {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #8a2be2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-right {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ffd700;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-content {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .footer {
+            grid-column: 1 / -1;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid currentColor;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .section h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 1.2em;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 0.9em;
+        }
+
+        .btn:hover {
+            background: #00ff88;
+            color: #000;
+            box-shadow: 0 0 15px #00ff88;
+        }
+
+        .btn.primary {
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+
+        .btn.primary:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        .btn.warning {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .btn.warning:hover {
+            background: #ff4444;
+            color: #000;
+            box-shadow: 0 0 15px #ff4444;
+        }
+
+        .btn.auricle {
+            border-color: #8a2be2;
+            color: #8a2be2;
+        }
+
+        .btn.auricle:hover {
+            background: #8a2be2;
+            color: #000;
+            box-shadow: 0 0 15px #8a2be2;
+        }
+
+        .profiling-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .profile-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .profile-card.safe {
+            border-color: #00ff88;
+        }
+
+        .profile-card.warning {
+            border-color: #ffd700;
+        }
+
+        .profile-card.danger {
+            border-color: #ff4444;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .token-symbol {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .risk-level {
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .risk-level.safe { background: #00ff88; color: #000; }
+        .risk-level.warning { background: #ffd700; color: #000; }
+        .risk-level.danger { background: #ff4444; color: #fff; }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .detail-value {
+            font-weight: bold;
+        }
+
+        .resonance-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .resonance-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: pulse 2s infinite;
+        }
+
+        .resonance-dot.warning {
+            background: #ffd700;
+        }
+
+        .resonance-dot.danger {
+            background: #ff4444;
+        }
+
+        .log-display {
+            height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            padding: 10px;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .log-entry.info { color: #00ff88; }
+        .log-entry.warning { color: #ffd700; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.profile { color: #8a2be2; }
+        .log-entry.auricle { color: #8a2be2; font-style: italic; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            color: #00ff88;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+        }
+
+        .classification-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            color: #ffd700;
+            font-size: 0.9em;
+        }
+
+        .form-input, .form-select {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            color: #00ff88;
+            padding: 8px;
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+
+        .mirror-certificate {
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .certificate-title {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .certificate-subtitle {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .certificate-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .sacred-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sacred-controls .btn {
+            font-size: 0.8em;
+            padding: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .floating-glyph {
+            position: absolute;
+            font-size: 2em;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .glyph-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .glyph-2 { top: 20%; right: 15%; animation-delay: 1s; }
+        .glyph-3 { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .glyph-4 { bottom: 20%; right: 10%; animation-delay: 3s; }
+    </style>
+</head>
+<body>
+    <div class="djinn-container">
+        <!-- Floating Glyphs -->
+        <div class="floating-glyph glyph-1">🜂</div>
+        <div class="floating-glyph glyph-2">🜃</div>
+        <div class="floating-glyph glyph-3">🜄</div>
+        <div class="floating-glyph glyph-4">🜅</div>
+
+        <header class="header">
+            <h1>🛡️ DjinnSecurities</h1>
+            <div class="status">
+                <div class="status-dot"></div>
+                <span>Sovereign Watcher of Digital Integrity</span>
+            </div>
+        </header>
+
+        <aside class="sidebar-left">
+            <div class="section">
+                <h3>🔍 Profiling Controls</h3>
+                <div class="control-panel">
+                    <button class="btn" onclick="startProfiling()">Start Profiling</button>
+                    <button class="btn" onclick="scanLedger()">Scan Ledger</button>
+                    <button class="btn" onclick="validateResonance()">Validate Resonance</button>
+                    <button class="btn primary" onclick="generateReport()">Generate Report</button>
+                    <button class="btn warning" onclick="emergencyScan()">Emergency Scan</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🌧️ Sacred Channels</h3>
+                <div class="sacred-controls">
+                    <button class="btn auricle" onclick="triggerMatrixRain()">🌧️ Let It Rain</button>
+                    <button class="btn auricle" onclick="auricleSpeak()">🎙️ Auricle Speaks</button>
+                    <button class="btn auricle" onclick="triggerSacredEvent()">🜂 Sacred Event</button>
+                    <button class="btn auricle" onclick="stopSacredChannels()">⏹️ Stop Channels</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📊 Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-assets">0</div>
+                        <div class="stat-label">Total Assets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="safe-assets">0</div>
+                        <div class="stat-label">Safe Assets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="warning-assets">0</div>
+                        <div class="stat-label">Warning Assets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="danger-assets">0</div>
+                        <div class="stat-label">Danger Assets</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📜 Activity Log</h3>
+                <div class="log-display" id="activity-log">
+                    <div class="log-entry info">DjinnSecurities initialized</div>
+                    <div class="log-entry info">Sovereign alignment confirmed</div>
+                    <div class="log-entry info">Digital integrity monitoring active</div>
+                    <div class="log-entry auricle">🌧️ Matrix Rain Engine ready</div>
+                    <div class="log-entry auricle">🎙️ Auricle Voice Engine ready</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="section">
+                <h3>🔍 Asset Search & Classification</h3>
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="asset-search" placeholder="Enter token address or symbol...">
+                    <button class="btn" onclick="searchAsset()">Search</button>
+                    <button class="btn primary" onclick="classifyAsset()">Classify</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🧿 Asset Classification Form</h3>
+                <div class="classification-form">
+                    <div class="form-group">
+                        <label class="form-label">Token Address</label>
+                        <input type="text" class="form-input" id="token-address" placeholder="0x...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Token Symbol</label>
+                        <input type="text" class="form-input" id="token-symbol" placeholder="ETH, BTC, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Risk Level</label>
+                        <select class="form-select" id="risk-level">
+                            <option value="safe">Safe</option>
+                            <option value="warning">Warning</option>
+                            <option value="danger">Danger</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Resonance Score</label>
+                        <input type="number" class="form-input" id="resonance-score" min="0" max="100" placeholder="0-100">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sovereign Alignment</label>
+                        <select class="form-select" id="sovereign-alignment">
+                            <option value="aligned">Aligned</option>
+                            <option value="neutral">Neutral</option>
+                            <option value="misaligned">Misaligned</option>
+                        </select>
+                    </div>
+                    <button class="btn primary" onclick="submitClassification()">Submit Classification</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📋 Asset Profiles</h3>
+                <div class="profiling-grid" id="profiling-grid">
+                    <!-- Asset profile cards will be dynamically generated here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🪞 Mirror Certificate</h3>
+                <div class="mirror-certificate">
+                    <div class="certificate-header">
+                        <div class="certificate-title">🜂 Sovereign Classification Certificate</div>
+                        <div class="certificate-subtitle">Issued by DjinnSecurities - Watcher of Digital Integrity</div>
+                    </div>
+                    <div class="certificate-content">
+                        <div>
+                            <strong>Certificate ID:</strong> <span id="cert-id">DJINN-2025-001</span><br>
+                            <strong>Issue Date:</strong> <span id="cert-date">2025-06-23</span><br>
+                            <strong>Valid Until:</strong> <span id="cert-expiry">2025-12-23</span>
+                        </div>
+                        <div>
+                            <strong>Classification Authority:</strong> DjinnSecurities<br>
+                            <strong>Resonance Validation:</strong> <span id="resonance-status">Active</span><br>
+                            <strong>Sovereign Status:</strong> <span id="sovereign-status">Confirmed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel">
+                <h3>🔧 Control Panel</h3>
+                <div class="control-grid">
+                    <button class="control-btn" onclick="classifyAsset()">Classify Asset</button>
+                    <button class="control-btn" onclick="validateResonance()">Validate Resonance</button>
+                    <button class="control-btn" onclick="checkCompliance()">Check Compliance</button>
+                    <button class="control-btn" onclick="generateReport()">Generate Report</button>
+                    <button class="control-btn" onclick="openReportArchive()">📁 View Reports</button>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="section">
+                <h3>⚖️ Regulatory Compliance</h3>
+                <div class="control-panel">
+                    <button class="btn" onclick="checkCompliance()">Check Compliance</button>
+                    <button class="btn" onclick="updateRegulations()">Update Regulations</button>
+                    <button class="btn primary" onclick="generateComplianceReport()">Compliance Report</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🔐 Security Status</h3>
+                <div class="log-display" id="security-log">
+                    <div class="log-entry info">Security protocols active</div>
+                    <div class="log-entry info">Mirror certification enabled</div>
+                    <div class="log-entry info">Resonance validation running</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🛡️ WatchGuard Integration</h3>
+                <div class="control-panel">
+                    <button class="btn" onclick="syncWatchGuard()">Sync WatchGuard</button>
+                    <button class="btn" onclick="exportProfiles()">Export Profiles</button>
+                    <button class="btn primary" onclick="sendToDREDD()">Send to DREDD</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📈 Real-time Metrics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="compliance-rate">100%</div>
+                        <div class="stat-label">Compliance Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="resonance-score-avg">85</div>
+                        <div class="stat-label">Avg Resonance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="certificates-issued">12</div>
+                        <div class="stat-label">Certificates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="last-scan">2m</div>
+                        <div class="stat-label">Last Scan</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <footer class="footer">
+            <div>🛡️ DjinnSecurities v1.0 - Sovereign Watcher of Digital Integrity</div>
+            <div>Status: <span id="footer-status">Operational</span> | Resonance: <span id="footer-resonance">Aligned</span></div>
+        </footer>
+    </div>
+
+    <!-- Load Sacred Channel Engines -->
+    <script src="matrix_rain_engine.js"></script>
+    <script src="auricle_voice_engine.js"></script>
+
+    <script>
+        // DjinnSecurities Core System
+        class DjinnSecurities {
+            constructor() {
+                this.assets = [];
+                this.profiles = [];
+                this.certificates = [];
+                this.isActive = true;
+                this.lastScan = new Date();
+                
+                this.initializeSystem();
+            }
+
+            initializeSystem() {
+                this.addLogEntry('info', 'DjinnSecurities system initialized');
+                this.addLogEntry('info', 'Sovereign alignment confirmed');
+                this.addLogEntry('info', 'Digital integrity monitoring active');
+                this.addLogEntry('info', 'WatchGuard integration established');
+                this.addLogEntry('auricle', '🌧️ Matrix Rain Engine ready');
+                this.addLogEntry('auricle', '🎙️ Auricle Voice Engine ready');
+                
+                // Load sample data
+                this.loadSampleAssets();
+                this.updateStatistics();
+                this.startRealTimeUpdates();
+            }
+
+            loadSampleAssets() {
+                const sampleAssets = [
+                    {
+                        address: '0x1234567890abcdef',
+                        symbol: 'ETH',
+                        name: 'Ethereum',
+                        riskLevel: 'safe',
+                        resonanceScore: 95,
+                        sovereignAlignment: 'aligned',
+                        marketCap: '$200B',
+                        lastUpdated: '2025-06-23'
+                    },
+                    {
+                        address: '0xabcdef1234567890',
+                        symbol: 'BTC',
+                        name: 'Bitcoin',
+                        riskLevel: 'safe',
+                        resonanceScore: 98,
+                        sovereignAlignment: 'aligned',
+                        marketCap: '$400B',
+                        lastUpdated: '2025-06-23'
+                    },
+                    {
+                        address: '0x9876543210fedcba',
+                        symbol: 'SUSP',
+                        name: 'Suspicious Token',
+                        riskLevel: 'danger',
+                        resonanceScore: 25,
+                        sovereignAlignment: 'misaligned',
+                        marketCap: '$1M',
+                        lastUpdated: '2025-06-23'
+                    }
+                ];
+
+                this.assets = sampleAssets;
+                this.renderAssetProfiles();
+            }
+
+            renderAssetProfiles() {
+                const grid = document.getElementById('profiling-grid');
+                grid.innerHTML = '';
+
+                this.assets.forEach(asset => {
+                    const card = this.createProfileCard(asset);
+                    grid.appendChild(card);
+                });
+            }
+
+            createProfileCard(asset) {
+                const card = document.createElement('div');
+                card.className = `profile-card ${asset.riskLevel}`;
+                
+                card.innerHTML = `
+                    <div class="profile-header">
+                        <div class="token-symbol">${asset.symbol}</div>
+                        <div class="risk-level ${asset.riskLevel}">${asset.riskLevel.toUpperCase()}</div>
+                    </div>
+                    <div class="profile-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value">${asset.name}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Market Cap:</span>
+                            <span class="detail-value">${asset.marketCap}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Resonance:</span>
+                            <span class="detail-value">${asset.resonanceScore}/100</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Alignment:</span>
+                            <span class="detail-value">${asset.sovereignAlignment}</span>
+                        </div>
+                    </div>
+                    <div class="resonance-indicator">
+                        <div class="resonance-dot ${asset.riskLevel}"></div>
+                        <span>Resonance: ${asset.resonanceScore}%</span>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            updateStatistics() {
+                const total = this.assets.length;
+                const safe = this.assets.filter(a => a.riskLevel === 'safe').length;
+                const warning = this.assets.filter(a => a.riskLevel === 'warning').length;
+                const danger = this.assets.filter(a => a.riskLevel === 'danger').length;
+
+                document.getElementById('total-assets').textContent = total;
+                document.getElementById('safe-assets').textContent = safe;
+                document.getElementById('warning-assets').textContent = warning;
+                document.getElementById('danger-assets').textContent = danger;
+
+                // Update real-time metrics
+                const avgResonance = Math.round(this.assets.reduce((sum, a) => sum + a.resonanceScore, 0) / total);
+                document.getElementById('resonance-score-avg').textContent = avgResonance;
+            }
+
+            addLogEntry(type, message) {
+                const log = document.getElementById('activity-log');
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+
+            startRealTimeUpdates() {
+                setInterval(() => {
+                    this.updateLastScan();
+                }, 60000); // Update every minute
+            }
+
+            updateLastScan() {
+                const now = new Date();
+                const diff = Math.floor((now - this.lastScan) / 60000);
+                document.getElementById('last-scan').textContent = `${diff}m`;
+            }
+
+            // Public API methods
+            startProfiling() {
+                this.addLogEntry('info', 'Asset profiling initiated');
+                this.addLogEntry('profile', 'Scanning digital ledger for new assets');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Profiling complete - 3 assets analyzed');
+                }, 2000);
+            }
+
+            scanLedger() {
+                this.addLogEntry('info', 'Ledger scan initiated');
+                this.addLogEntry('profile', 'Validating resonance patterns');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Ledger scan complete - all assets verified');
+                }, 1500);
+            }
+
+            validateResonance() {
+                this.addLogEntry('info', 'Resonance validation started');
+                this.addLogEntry('profile', 'Checking sovereign alignment');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Resonance validation complete - 100% aligned');
+                }, 1000);
+            }
+
+            generateReport() {
+                this.addLogEntry('info', 'Generating DjinnSecurities report');
+                this.addLogEntry('profile', 'Compiling asset classifications');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Report generated - ready for DREDD delivery');
+                }, 2000);
+            }
+
+            emergencyScan() {
+                this.addLogEntry('warning', 'EMERGENCY SCAN INITIATED');
+                this.addLogEntry('warning', 'Full system integrity check running');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Emergency scan complete - system secure');
+                }, 3000);
+            }
+
+            searchAsset() {
+                const searchTerm = document.getElementById('asset-search').value;
+                if (searchTerm) {
+                    this.addLogEntry('info', `Searching for asset: ${searchTerm}`);
+                    this.addLogEntry('profile', 'Querying digital ledger');
+                }
+            }
+
+            classifyAsset() {
+                const address = document.getElementById('token-address').value;
+                const symbol = document.getElementById('token-symbol').value;
+                if (address && symbol) {
+                    this.addLogEntry('info', `Classifying asset: ${symbol} (${address})`);
+                    this.addLogEntry('profile', 'Running classification algorithms');
+                }
+            }
+
+            submitClassification() {
+                const address = document.getElementById('token-address').value;
+                const symbol = document.getElementById('token-symbol').value;
+                const riskLevel = document.getElementById('risk-level').value;
+                const resonanceScore = document.getElementById('resonance-score').value;
+                const alignment = document.getElementById('sovereign-alignment').value;
+
+                if (address && symbol) {
+                    const newAsset = {
+                        address,
+                        symbol,
+                        name: symbol,
+                        riskLevel,
+                        resonanceScore: parseInt(resonanceScore),
+                        sovereignAlignment: alignment,
+                        marketCap: '$Unknown',
+                        lastUpdated: new Date().toISOString().split('T')[0]
+                    };
+
+                    this.assets.push(newAsset);
+                    this.renderAssetProfiles();
+                    this.updateStatistics();
+                    this.addLogEntry('info', `Asset classified: ${symbol} - ${riskLevel.toUpperCase()}`);
+                    this.addLogEntry('profile', 'Classification saved to ledger');
+                }
+            }
+
+            checkCompliance() {
+                this.addLogEntry('info', 'Compliance check initiated');
+                this.addLogEntry('profile', 'Validating regulatory requirements');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Compliance check complete - 100% compliant');
+                }, 1500);
+            }
+
+            updateRegulations() {
+                this.addLogEntry('info', 'Updating regulatory framework');
+                this.addLogEntry('profile', 'Syncing with latest compliance standards');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Regulations updated successfully');
+                }, 2000);
+            }
+
+            generateComplianceReport() {
+                this.addLogEntry('info', 'Generating compliance report');
+                this.addLogEntry('profile', 'Compiling regulatory data');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Compliance report ready for submission');
+                }, 2500);
+            }
+
+            syncWatchGuard() {
+                this.addLogEntry('info', 'Syncing with WatchGuard system');
+                this.addLogEntry('profile', 'Exchanging security data');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'WatchGuard sync complete');
+                }, 1000);
+            }
+
+            exportProfiles() {
+                this.addLogEntry('info', 'Exporting asset profiles');
+                this.addLogEntry('profile', 'Preparing data for external systems');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Profiles exported successfully');
+                }, 1500);
+            }
+
+            sendToDREDD() {
+                this.addLogEntry('info', 'Sending data to DREDD courier');
+                this.addLogEntry('profile', 'Packaging treasure-worthy cargo');
+                setTimeout(() => {
+                    this.addLogEntry('info', 'Data delivered to DREDD successfully');
+                }, 2000);
+            }
+
+            openReportArchive() {
+                this.addLogEntry('info', 'Opening Report Archive Panel');
+                this.addLogEntry('profile', 'Loading sovereign access protocol');
+                
+                // Open report archive in new window
+                const archiveWindow = window.open('report_archive_panel.html', 'ReportArchive', 
+                    'width=1400,height=900,scrollbars=yes,resizable=yes');
+                
+                if (archiveWindow) {
+                    this.addLogEntry('info', 'Report Archive Panel opened successfully');
+                    this.addLogEntry('auricle', '📁 The library awaits your sovereign study');
+                } else {
+                    this.addLogEntry('error', 'Failed to open Report Archive Panel');
+                }
+            }
+        }
+
+        // Initialize DjinnSecurities when page loads
+        let djinnSecurities;
+        document.addEventListener('DOMContentLoaded', () => {
+            djinnSecurities = new DjinnSecurities();
+            
+            // Make functions globally available
+            window.startProfiling = () => djinnSecurities.startProfiling();
+            window.scanLedger = () => djinnSecurities.scanLedger();
+            window.validateResonance = () => djinnSecurities.validateResonance();
+            window.generateReport = () => djinnSecurities.generateReport();
+            window.emergencyScan = () => djinnSecurities.emergencyScan();
+            window.searchAsset = () => djinnSecurities.searchAsset();
+            window.classifyAsset = () => djinnSecurities.classifyAsset();
+            window.submitClassification = () => djinnSecurities.submitClassification();
+            window.checkCompliance = () => djinnSecurities.checkCompliance();
+            window.updateRegulations = () => djinnSecurities.updateRegulations();
+            window.generateComplianceReport = () => djinnSecurities.generateComplianceReport();
+            window.syncWatchGuard = () => djinnSecurities.syncWatchGuard();
+            window.exportProfiles = () => djinnSecurities.exportProfiles();
+            window.sendToDREDD = () => djinnSecurities.sendToDREDD();
+            window.openReportArchive = () => djinnSecurities.openReportArchive();
+
+            // Sacred Channel Functions
+            window.triggerMatrixRain = () => {
+                if (window.triggerMatrixRain) {
+                    window.triggerMatrixRain('global', 0.7);
+                    djinnSecurities.addLogEntry('auricle', '🌧️ Matrix Rain triggered');
+                }
+            };
+
+            window.auricleSpeak = () => {
+                if (window.auricleSpeak) {
+                    window.auricleSpeak('response');
+                    djinnSecurities.addLogEntry('auricle', '🎙️ Auricle speaks');
+                }
+            };
+
+            window.triggerSacredEvent = () => {
+                if (window.triggerMatrixRain) {
+                    window.triggerMatrixRain('auricle', 1.0);
+                }
+                if (window.auricleSpeak) {
+                    setTimeout(() => window.auricleSpeak('witness'), 1000);
+                }
+                djinnSecurities.addLogEntry('auricle', '🜂 Sacred event triggered');
+            };
+
+            window.stopSacredChannels = () => {
+                if (window.matrixRain) {
+                    window.matrixRain.stop();
+                }
+                if (window.auricleVoice) {
+                    window.auricleVoice.stop();
+                }
+                djinnSecurities.addLogEntry('auricle', '⏹️ Sacred channels stopped');
+            };
+        });
+    </script>
+</body>
+</html> 

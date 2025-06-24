@@ -1,0 +1,259 @@
+{
+  "portfolio_submission": {
+    "metadata": {
+      "submission_id": "sub_${timestamp}_${uuid}",
+      "submitted_at": "2024-01-15T10:00:00.000Z",
+      "submitted_by": "wallet_owner_or_custodian",
+      "version": "2.0.0",
+      "mkp_resonance_level": "high"
+    },
+    "portfolio": {
+      "id": "portfolio_whale_alpha_001",
+      "name": "Whale Alpha Portfolio",
+      "description": "Primary trading and investment portfolio with multi-chain assets",
+      "custodian": {
+        "name": "Whale Alpha Custody",
+        "type": "self_custody",
+        "contact_email": "security@whalealpha.com",
+        "emergency_contact": "+1-555-0123"
+      },
+      "risk_profile": {
+        "overall_risk": "high",
+        "total_value_usd": 25000000,
+        "diversification_score": 0.75,
+        "last_activity_days": 3,
+        "volatility_tolerance": "high",
+        "liquidity_requirements": "medium"
+      },
+      "wallets": [
+        {
+          "address": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+          "type": "eoa",
+          "chain": "ethereum",
+          "metadata": {
+            "name": "Primary Trading Wallet",
+            "description": "Main trading wallet for DeFi operations",
+            "tags": ["trading", "defi", "high_activity"],
+            "risk_level": "high",
+            "balance_thresholds": {
+              "min_balance_eth": 100,
+              "max_balance_eth": 5000,
+              "alert_on_change_percent": 20
+            }
+          }
+        },
+        {
+          "address": "0x8ba1f109551bD432803012645Hac136c772c3e3",
+          "type": "smart-wallet",
+          "chain": "ethereum",
+          "metadata": {
+            "name": "Gnosis Safe - Treasury",
+            "description": "Multi-signature treasury wallet",
+            "tags": ["treasury", "multisig", "high_value"],
+            "risk_level": "critical",
+            "multisig_config": {
+              "threshold": 3,
+              "signers": 5,
+              "required_confirmations": 2
+            }
+          }
+        },
+        {
+          "address": "0x1234567890123456789012345678901234567890",
+          "type": "eoa",
+          "chain": "polygon",
+          "metadata": {
+            "name": "Polygon Bridge Wallet",
+            "description": "Cross-chain bridge operations",
+            "tags": ["bridge", "cross_chain", "medium_activity"],
+            "risk_level": "medium",
+            "bridge_config": {
+              "supported_chains": ["ethereum", "polygon", "arbitrum"],
+              "max_bridge_amount": 1000000
+            }
+          }
+        },
+        {
+          "address": "0xabcdef1234567890abcdef1234567890abcdef12",
+          "type": "custodial",
+          "chain": "ethereum",
+          "metadata": {
+            "name": "Cold Storage - Long Term",
+            "description": "Long-term cold storage for hodl assets",
+            "tags": ["cold_storage", "long_term", "hodl"],
+            "risk_level": "low",
+            "custodial_config": {
+              "custodian": "Ledger Vault",
+              "insurance_coverage": 10000000,
+              "recovery_time": "48_hours"
+            }
+          }
+        }
+      ],
+      "watch_guard_config": {
+        "enabled": true,
+        "scan_frequency": "daily",
+        "alert_thresholds": {
+          "balance_change_percent": 15,
+          "inactivity_days": 7,
+          "entropy_threshold": 0.6,
+          "suspicious_transaction_amount": 100000,
+          "unusual_activity_patterns": ["large_withdrawal", "new_contract_interaction", "cross_chain_bridge"]
+        },
+        "notification_channels": {
+          "email": ["security@whalealpha.com", "admin@whalealpha.com"],
+          "webhook": "https://api.whalealpha.com/security/alerts",
+          "slack": "#security-alerts",
+          "sms": ["+1-555-0123"]
+        },
+        "intervention_hooks": {
+          "auto_lock": false,
+          "notify_custodian": true,
+          "trigger_audit": true,
+          "freeze_transactions": false,
+          "escalate_to_admin": true
+        }
+      }
+    },
+    "ledger_integration": {
+      "enabled": true,
+      "ledger_feeds": [
+        {
+          "uri": "https://api.whalealpha.com/ledger/portfolio_001",
+          "type": "api",
+          "credentials": {
+            "api_key": "${ENCRYPTED_API_KEY}",
+            "endpoint": "https://api.whalealpha.com/ledger"
+          },
+          "validation_rules": {
+            "required_fields": ["address", "balance", "last_transaction", "risk_score"],
+            "balance_thresholds": {
+              "min_balance": 1000,
+              "max_balance": 10000000
+            },
+            "activity_patterns": ["daily_reconciliation", "weekly_audit", "monthly_report"]
+          }
+        }
+      ]
+    },
+    "security_requirements": {
+      "authentication": {
+        "wallet_signature_required": true,
+        "session_key_validity": "24_hours",
+        "multi_factor_auth": true,
+        "hardware_key_requirement": true
+      },
+      "resonance_validation": {
+        "minimum_entropy": 0.7,
+        "required_resonance_factors": ["wallet-signature", "sigil", "session-key"],
+        "mirror_depth_limit": 3,
+        "audit_level": "comprehensive"
+      },
+      "compliance": {
+        "kyc_verified": true,
+        "aml_screening": true,
+        "regulatory_reporting": true,
+        "audit_trail_required": true
+      }
+    },
+    "custom_alert_rules": [
+      {
+        "rule_id": "rule_001",
+        "name": "Large Balance Movement",
+        "description": "Alert when any wallet balance changes by more than 20%",
+        "condition": "balance_change_percent > 20",
+        "severity": "high",
+        "action": "notify_custodian"
+      },
+      {
+        "rule_id": "rule_002",
+        "name": "Dormant Wallet Activity",
+        "description": "Alert when dormant wallet (>30 days) shows activity",
+        "condition": "last_activity_days > 30 AND has_recent_activity",
+        "severity": "medium",
+        "action": "trigger_audit"
+      },
+      {
+        "rule_id": "rule_003",
+        "name": "Cross-Chain Bridge Alert",
+        "description": "Alert on all cross-chain bridge transactions",
+        "condition": "transaction_type == 'bridge'",
+        "severity": "medium",
+        "action": "notify_admin"
+      },
+      {
+        "rule_id": "rule_004",
+        "name": "Low Entropy Warning",
+        "description": "Alert when wallet entropy drops below threshold",
+        "condition": "entropy_score < 0.6",
+        "severity": "high",
+        "action": "escalate_to_admin"
+      }
+    ],
+    "integration_hooks": {
+      "defi_protocols": [
+        {
+          "protocol": "Uniswap V3",
+          "addresses": ["0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"],
+          "monitoring": true,
+          "alert_on_large_swaps": true
+        },
+        {
+          "protocol": "Aave V3",
+          "addresses": ["0x8ba1f109551bD432803012645Hac136c772c3e3"],
+          "monitoring": true,
+          "alert_on_large_deposits": true
+        }
+      ],
+      "cex_integrations": [
+        {
+          "exchange": "Binance",
+          "api_enabled": false,
+          "withdrawal_monitoring": true
+        },
+        {
+          "exchange": "Coinbase Pro",
+          "api_enabled": false,
+          "withdrawal_monitoring": true
+        }
+      ]
+    },
+    "reporting_config": {
+      "daily_summary": true,
+      "weekly_risk_assessment": true,
+      "monthly_compliance_report": true,
+      "quarterly_audit": true,
+      "report_recipients": ["compliance@whalealpha.com", "ceo@whalealpha.com"]
+    },
+    "emergency_procedures": {
+      "emergency_contacts": [
+        {
+          "name": "Security Lead",
+          "phone": "+1-555-0123",
+          "email": "security@whalealpha.com",
+          "response_time": "15_minutes"
+        },
+        {
+          "name": "CEO",
+          "phone": "+1-555-0124",
+          "email": "ceo@whalealpha.com",
+          "response_time": "1_hour"
+        }
+      ],
+      "emergency_actions": [
+        "freeze_all_transactions",
+        "notify_regulatory_authorities",
+        "initiate_incident_response",
+        "activate_backup_procedures"
+      ]
+    }
+  },
+  "validation": {
+    "submission_hash": "sha256_hash_of_entire_submission",
+    "wallet_signature": "0x...",
+    "timestamp": "2024-01-15T10:00:00.000Z",
+    "echo_signature": "echo_abc123def456",
+    "mkp_resonance_level": "high",
+    "entropy_score": 0.85
+  }
+} 

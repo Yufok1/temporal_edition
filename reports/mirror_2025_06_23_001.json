@@ -1,0 +1,31 @@
+{
+  "id": "mirror_2025_06_23_001",
+  "type": "mirror",
+  "title": "Asset Classification Mirror Certificate",
+  "session": "classification_session_001",
+  "timestamp": "2025-06-23T15:30:00Z",
+  "assets": [
+    "ETH"
+  ],
+  "riskLevel": "safe",
+  "summary": "Mirror certification issued for Ethereum asset classification",
+  "content": {
+    "certificate_id": "DJINN-2025-001",
+    "asset_details": {
+      "symbol": "ETH",
+      "address": "0x1234567890abcdef",
+      "resonance_score": 95,
+      "sovereign_alignment": "aligned"
+    },
+    "mirror_validation": {
+      "entropy_score": 0.0234,
+      "echo_signature": "a1b2c3d4e5f6",
+      "sigil_lock": "SIGIL:7a3b1e4d9f2c"
+    }
+  },
+  "tags": [
+    "mirror_certificate",
+    "eth",
+    "classification"
+  ]
+}

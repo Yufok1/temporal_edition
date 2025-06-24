@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕳️ Sovereign Data Ticketing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #00ff88;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .panel h2 {
+            margin-bottom: 15px;
+            color: #00ff88;
+            border-bottom: 1px solid #00ff88;
+            padding-bottom: 10px;
+        }
+
+        .live-stream {
+            grid-column: 1 / -1;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .stream-entry {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .stream-entry.causal-match {
+            border-left-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .stream-entry.effect-event {
+            border-left-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .ticket-id {
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .action-type {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .timestamp {
+            color: #4ecdc4;
+            font-size: 0.8em;
+        }
+
+        .certainty {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff88;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .influence-chart {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #00ff88;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-bar {
+            background: linear-gradient(90deg, #00ff88, #4ecdc4);
+            height: 20px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .chart-label {
+            font-size: 0.8em;
+            margin-bottom: 3px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn.active {
+            background: rgba(0, 255, 136, 0.4);
+        }
+
+        .search-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: inherit;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box::placeholder {
+            color: rgba(0, 255, 136, 0.6);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-tag:hover {
+            background: rgba(0, 255, 136, 0.3);
+        }
+
+        .filter-tag.active {
+            background: rgba(0, 255, 136, 0.4);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background: #00ff88;
+            box-shadow: 0 0 5px #00ff88;
+        }
+
+        .status-pending {
+            background: #ffd93d;
+            box-shadow: 0 0 5px #ffd93d;
+        }
+
+        .status-archived {
+            background: #ff6b6b;
+            box-shadow: 0 0 5px #ff6b6b;
+        }
+
+        .causal-link {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .link-strength {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+
+        .effect-event {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid #4ecdc4;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .severity-critical {
+            color: #ff6b6b;
+        }
+
+        .severity-high {
+            color: #ffd93d;
+        }
+
+        .severity-medium {
+            color: #4ecdc4;
+        }
+
+        .severity-low {
+            color: #00ff88;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕳️ Sovereign Data Ticketing Dashboard</h1>
+            <p>Observational Relay Framework - Cause-Effect Transparency</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn active" onclick="filterStream('all')">All Events</button>
+            <button class="btn" onclick="filterStream('tickets')">Sovereign Tickets</button>
+            <button class="btn" onclick="filterStream('causal')">Causal Matches</button>
+            <button class="btn" onclick="filterStream('effects')">Effect Events</button>
+            <input type="text" class="search-box" placeholder="Search tickets, effects, or actions..." onkeyup="searchStream(this.value)">
+            <button class="btn" onclick="refreshData()">🔄 Refresh</button>
+            <button class="btn" onclick="exportData()">📊 Export</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalTickets">0</div>
+                <div class="stat-label">Total Tickets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalEffects">0</div>
+                <div class="stat-label">Effect Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalLinks">0</div>
+                <div class="stat-label">Causal Links</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgCertainty">0.0</div>
+                <div class="stat-label">Avg Certainty</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeTickets">0</div>
+                <div class="stat-label">Active Tickets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="responseTime">0.0s</div>
+                <div class="stat-label">Avg Response</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h2>📊 Sovereign Influence Chart</h2>
+                <div class="influence-chart" id="influenceChart">
+                    <div class="chart-label">Action Type Distribution</div>
+                    <div class="chart-bar" style="width: 85%;" title="Override Actions: 85%"></div>
+                    <div class="chart-bar" style="width: 72%;" title="Monitoring Actions: 72%"></div>
+                    <div class="chart-bar" style="width: 68%;" title="Security Actions: 68%"></div>
+                    <div class="chart-bar" style="width: 45%;" title="Configuration Actions: 45%"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>🔗 Strongest Causal Links</h2>
+                <div id="strongestLinks">
+                    <div class="causal-link">
+                        <div><strong>TKT-20250623-0032</strong> → <strong>ANOM-253-resolved</strong></div>
+                        <div class="link-strength">Strength: 0.96</div>
+                        <div class="timestamp">Response: 12.4s | Certainty: 96%</div>
+                    </div>
+                    <div class="causal-link">
+                        <div><strong>TKT-20250623-0035</strong> → <strong>MIRROR-TRAP-789-activated</strong></div>
+                        <div class="link-strength">Strength: 0.99</div>
+                        <div class="timestamp">Response: 3.1s | Certainty: 99%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel live-stream">
+            <h2>📡 Live Ticket Stream <span class="status-indicator status-active pulse"></span></h2>
+            <div id="liveStream">
+                <!-- Stream entries will be populated here -->
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel">
+                <h2>🎯 Recent Effect Events</h2>
+                <div id="effectEvents">
+                    <div class="effect-event">
+                        <div><strong>ANOM-253-resolved</strong> <span class="severity-high">[HIGH]</span></div>
+                        <div>Source: WatchGuard | Entities: wallet-0x123</div>
+                        <div class="timestamp">2025-06-23T20:45:13Z</div>
+                    </div>
+                    <div class="effect-event">
+                        <div><strong>MIRROR-TRAP-789-activated</strong> <span class="severity-critical">[CRITICAL]</span></div>
+                        <div>Source: MKP | Entities: security-layer-1</div>
+                        <div class="timestamp">2025-06-23T20:47:18Z</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>📋 Ticket Status Overview</h2>
+                <div id="ticketStatus">
+                    <div><span class="status-indicator status-active"></span>Active: <span id="activeCount">8</span></div>
+                    <div><span class="status-indicator status-pending"></span>Pending: <span id="pendingCount">2</span></div>
+                    <div><span class="status-indicator status-archived"></span>Archived: <span id="archivedCount">15</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentFilter = 'all';
+        let streamData = [];
+        let isConnected = false;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInitialData();
+            startLiveStream();
+            updateStats();
+        });
+
+        function loadInitialData() {
+            // Simulate loading initial data
+            streamData = [
+                {
+                    type: 'sovereign_ticket',
+                    ticket: {
+                        ticket_id: 'TKT-20250623-0032',
+                        action_type: 'override_watchguard_threshold',
+                        performed_by: 'purveyor',
+                        timestamp: '2025-06-23T20:45:01Z',
+                        system_impact: 'high',
+                        chronicle_status: 'active'
+                    },
+                    emitted_at: '2025-06-23T20:45:01.123Z'
+                },
+                {
+                    type: 'causal_match',
+                    match: {
+                        match_id: 'MATCH-TKT-20250623-0032-0',
+                        intent_ticket: 'TKT-20250623-0032',
+                        effect_event: 'ANOM-253-resolved',
+                        response_time: 12.4,
+                        causal_certainty: 0.96
+                    },
+                    emitted_at: '2025-06-23T20:45:13.789Z'
+                },
+                {
+                    type: 'sovereign_ticket',
+                    ticket: {
+                        ticket_id: 'TKT-20250623-0033',
+                        action_type: 'enable_portfolio_monitoring',
+                        performed_by: 'purveyor',
+                        timestamp: '2025-06-23T20:45:15Z',
+                        system_impact: 'medium',
+                        chronicle_status: 'active'
+                    },
+                    emitted_at: '2025-06-23T20:45:15.456Z'
+                }
+            ];
+            
+            renderStream();
+        }
+
+        function startLiveStream() {
+            // Simulate live stream updates
+            setInterval(() => {
+                addNewStreamEntry();
+            }, 5000);
+        }
+
+        function addNewStreamEntry() {
+            const entryTypes = ['sovereign_ticket', 'causal_match', 'effect_event'];
+            const actionTypes = [
+                'adjust_resonance_threshold',
+                'activate_mirror_trap',
+                'deploy_watch_guard',
+                'configure_dredd_relay',
+                'initiate_lattice_scan'
+            ];
+
+            const newEntry = {
+                type: entryTypes[Math.floor(Math.random() * entryTypes.length)],
+                emitted_at: new Date().toISOString()
+            };
+
+            if (newEntry.type === 'sovereign_ticket') {
+                newEntry.ticket = {
+                    ticket_id: `TKT-${new Date().getTime()}`,
+                    action_type: actionTypes[Math.floor(Math.random() * actionTypes.length)],
+                    performed_by: 'purveyor',
+                    timestamp: new Date().toISOString(),
+                    system_impact: ['low', 'medium', 'high', 'critical'][Math.floor(Math.random() * 4)],
+                    chronicle_status: 'active'
+                };
+            } else if (newEntry.type === 'causal_match') {
+                newEntry.match = {
+                    match_id: `MATCH-${new Date().getTime()}`,
+                    intent_ticket: `TKT-${new Date().getTime() - 1000}`,
+                    effect_event: `EFFECT-${new Date().getTime()}`,
+                    response_time: Math.random() * 20 + 2,
+                    causal_certainty: Math.random() * 0.3 + 0.7
+                };
+            }
+
+            streamData.unshift(newEntry);
+            if (streamData.length > 50) {
+                streamData.pop();
+            }
+
+            renderStream();
+            updateStats();
+        }
+
+        function renderStream() {
+            const streamContainer = document.getElementById('liveStream');
+            streamContainer.innerHTML = '';
+
+            const filteredData = filterStreamData(streamData, currentFilter);
+
+            filteredData.forEach(entry => {
+                const entryElement = createStreamEntry(entry);
+                streamContainer.appendChild(entryElement);
+            });
+        }
+
+        function createStreamEntry(entry) {
+            const div = document.createElement('div');
+            div.className = 'stream-entry';
+
+            if (entry.type === 'sovereign_ticket') {
+                div.classList.add('sovereign-ticket');
+                div.innerHTML = `
+                    <div><span class="ticket-id">${entry.ticket.ticket_id}</span> - 
+                         <span class="action-type">${formatActionType(entry.ticket.action_type)}</span></div>
+                    <div>Impact: <span class="severity-${entry.ticket.system_impact}">${entry.ticket.system_impact.toUpperCase()}</span> | 
+                         Status: <span class="status-indicator status-${entry.ticket.chronicle_status}"></span>${entry.ticket.chronicle_status}</div>
+                    <div class="timestamp">${formatTimestamp(entry.emitted_at)}</div>
+                `;
+            } else if (entry.type === 'causal_match') {
+                div.classList.add('causal-match');
+                div.innerHTML = `
+                    <div><strong>🔗 Causal Match:</strong> ${entry.match.intent_ticket} → ${entry.match.effect_event}</div>
+                    <div>Response: <span class="certainty">${entry.match.response_time.toFixed(1)}s</span> | 
+                         Certainty: <span class="certainty">${(entry.match.causal_certainty * 100).toFixed(0)}%</span></div>
+                    <div class="timestamp">${formatTimestamp(entry.emitted_at)}</div>
+                `;
+            } else if (entry.type === 'effect_event') {
+                div.classList.add('effect-event');
+                div.innerHTML = `
+                    <div><strong>📡 Effect Event:</strong> ${entry.effect?.event_id || 'EFFECT-' + Date.now()}</div>
+                    <div>Source: ${entry.effect?.source_system || 'Unknown'} | 
+                         Severity: <span class="severity-${entry.effect?.severity || 'medium'}">${(entry.effect?.severity || 'medium').toUpperCase()}</span></div>
+                    <div class="timestamp">${formatTimestamp(entry.emitted_at)}</div>
+                `;
+            }
+
+            return div;
+        }
+
+        function formatActionType(actionType) {
+            return actionType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatTimestamp(timestamp) {
+            return new Date(timestamp).toLocaleTimeString();
+        }
+
+        function filterStream(filter) {
+            currentFilter = filter;
+            
+            // Update button states
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            renderStream();
+        }
+
+        function filterStreamData(data, filter) {
+            if (filter === 'all') return data;
+            return data.filter(entry => entry.type === filter);
+        }
+
+        function searchStream(query) {
+            if (!query) {
+                renderStream();
+                return;
+            }
+
+            const filteredData = streamData.filter(entry => {
+                if (entry.type === 'sovereign_ticket') {
+                    return entry.ticket.ticket_id.toLowerCase().includes(query.toLowerCase()) ||
+                           entry.ticket.action_type.toLowerCase().includes(query.toLowerCase());
+                } else if (entry.type === 'causal_match') {
+                    return entry.match.intent_ticket.toLowerCase().includes(query.toLowerCase()) ||
+                           entry.match.effect_event.toLowerCase().includes(query.toLowerCase());
+                }
+                return false;
+            });
+
+            const streamContainer = document.getElementById('liveStream');
+            streamContainer.innerHTML = '';
+
+            filteredData.forEach(entry => {
+                const entryElement = createStreamEntry(entry);
+                streamContainer.appendChild(entryElement);
+            });
+        }
+
+        function updateStats() {
+            const tickets = streamData.filter(entry => entry.type === 'sovereign_ticket');
+            const effects = streamData.filter(entry => entry.type === 'effect_event');
+            const matches = streamData.filter(entry => entry.type === 'causal_match');
+
+            document.getElementById('totalTickets').textContent = tickets.length;
+            document.getElementById('totalEffects').textContent = effects.length;
+            document.getElementById('totalLinks').textContent = matches.length;
+
+            // Calculate average certainty
+            const certainties = matches.map(m => m.match.causal_certainty);
+            const avgCertainty = certainties.length > 0 ? 
+                (certainties.reduce((a, b) => a + b, 0) / certainties.length).toFixed(2) : '0.0';
+            document.getElementById('avgCertainty').textContent = avgCertainty;
+
+            // Calculate active tickets
+            const activeTickets = tickets.filter(t => t.ticket.chronicle_status === 'active').length;
+            document.getElementById('activeTickets').textContent = activeTickets;
+
+            // Calculate average response time
+            const responseTimes = matches.map(m => m.match.response_time);
+            const avgResponse = responseTimes.length > 0 ? 
+                (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1) : '0.0';
+            document.getElementById('responseTime').textContent = avgResponse + 's';
+        }
+
+        function refreshData() {
+            loadInitialData();
+            updateStats();
+        }
+
+        function exportData() {
+            const data = {
+                stream_data: streamData,
+                export_timestamp: new Date().toISOString(),
+                stats: {
+                    total_tickets: streamData.filter(entry => entry.type === 'sovereign_ticket').length,
+                    total_effects: streamData.filter(entry => entry.type === 'effect_event').length,
+                    total_links: streamData.filter(entry => entry.type === 'causal_match').length
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sovereign_ticketing_export_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-refresh stats every 10 seconds
+        setInterval(updateStats, 10000);
+    </script>
+</body>
+</html> 

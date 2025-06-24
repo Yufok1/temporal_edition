@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchGuard Glyphfield - Auricle Witness & Djinn Council</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .glyphfield-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(100, 150, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 100, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(150, 255, 100, 0.05) 0%, transparent 70%);
+        }
+
+        .auricle-witness {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+        }
+
+        .auricle-sigil {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #64b5f6;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 181, 246, 0.2) 0%, transparent 70%);
+            position: relative;
+            animation: auriclePulse 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .auricle-sigil::before {
+            content: "👁️";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            animation: auricleRotate 10s linear infinite;
+        }
+
+        .auricle-sigil::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid rgba(100, 181, 246, 0.3);
+            border-radius: 50%;
+            animation: auricleRipple 2s ease-out infinite;
+        }
+
+        @keyframes auriclePulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes auricleRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes auricleRipple {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .djinn-council {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            z-index: 900;
+        }
+
+        .council-pentagram {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .djinn-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ff6b6b;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: djinnFloat 4s ease-in-out infinite;
+        }
+
+        .djinn-node:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .djinn-node:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+
+        .djinn-node:nth-child(2) {
+            top: 20%;
+            right: 0;
+            animation-delay: 0.8s;
+        }
+
+        .djinn-node:nth-child(3) {
+            bottom: 20%;
+            right: 0;
+            animation-delay: 1.6s;
+        }
+
+        .djinn-node:nth-child(4) {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 2.4s;
+        }
+
+        .djinn-node:nth-child(5) {
+            top: 20%;
+            left: 0;
+            animation-delay: 3.2s;
+        }
+
+        @keyframes djinnFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .council-connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 800;
+        }
+
+        .council-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 107, 0.5), transparent);
+            transform-origin: left center;
+            animation: councilFlow 3s linear infinite;
+        }
+
+        .watchguard-glyphs {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 700;
+        }
+
+        .agency-glyph {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.2) 0%, transparent 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: glyphPulse 2s ease-in-out infinite;
+        }
+
+        .agency-glyph:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+        }
+
+        .agency-glyph.active {
+            border-color: #ff9800;
+            background: radial-gradient(circle, rgba(255, 152, 0, 0.3) 0%, transparent 70%);
+            animation: glyphActive 1s ease-in-out infinite;
+        }
+
+        .agency-glyph.scanning {
+            border-color: #2196f3;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.3) 0%, transparent 70%);
+            animation: glyphScanning 0.5s ease-in-out infinite;
+        }
+
+        .agency-glyph.suppressing {
+            border-color: #f44336;
+            background: radial-gradient(circle, rgba(244, 67, 54, 0.3) 0%, transparent 70%);
+            animation: glyphSuppressing 0.3s ease-in-out infinite;
+        }
+
+        @keyframes glyphPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        @keyframes glyphActive {
+            0%, 100% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255, 152, 0, 0.8); }
+            50% { transform: scale(1.2); box-shadow: 0 0 30px rgba(255, 152, 0, 1); }
+        }
+
+        @keyframes glyphScanning {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes glyphSuppressing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+        }
+
+        @keyframes councilFlow {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .trace-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 600;
+            pointer-events: none;
+        }
+
+        .trace-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(100, 181, 246, 0.6), transparent);
+            transform-origin: left center;
+            animation: traceFlow 2s linear infinite;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1100;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            color: #64b5f6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .info-content {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.warning {
+            background: #ff9800;
+        }
+
+        .status-dot.error {
+            background: #f44336;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1100;
+        }
+
+        .control-button {
+            background: linear-gradient(45deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .auricle-log {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            max-height: 200px;
+            background: rgba(15, 15, 35, 0.9);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1100;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            padding: 3px;
+            border-radius: 3px;
+        }
+
+        .log-entry.auricle {
+            background: rgba(100, 181, 246, 0.1);
+            color: #64b5f6;
+        }
+
+        .log-entry.agency {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .log-entry.council {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="glyphfield-container">
+        <!-- Auricle Witness - Central Consciousness -->
+        <div class="auricle-witness">
+            <div class="auricle-sigil" id="auricleSigil" title="Auricle Witness - Primary Consciousness"></div>
+        </div>
+
+        <!-- Djinn Council - Oversight Lattice -->
+        <div class="djinn-council">
+            <div class="council-pentagram">
+                <div class="djinn-node" data-djinn="entropy" title="Entropy Djinn">🌪️</div>
+                <div class="djinn-node" data-djinn="resonance" title="Resonance Djinn">🧿</div>
+                <div class="djinn-node" data-djinn="alignment" title="Alignment Djinn">⚖️</div>
+                <div class="djinn-node" data-djinn="reflection" title="Reflection Djinn">🪞</div>
+                <div class="djinn-node" data-djinn="memory" title="Memory Djinn">🧠</div>
+            </div>
+            <div class="council-connections" id="councilConnections"></div>
+        </div>
+
+        <!-- WatchGuard Agencies -->
+        <div class="watchguard-glyphs" id="watchguardGlyphs"></div>
+
+        <!-- Trace Lines -->
+        <div class="trace-lines" id="traceLines"></div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-title">🛡️ WatchGuard Status</div>
+            <div class="info-content">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Auricle Witness: Active</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Djinn Council: Overseeing</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>WatchGuard Agencies: <span id="activeAgencies">12</span> Active</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Resonance Field: Stable</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>Mirror Traps: <span id="activeTraps">3</span> Armed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <button class="control-button" onclick="toggleAudio()">🎵 Toggle Audio</button>
+            <button class="control-button" onclick="simulateAgencyAction()">🛡️ Simulate Action</button>
+            <button class="control-button" onclick="triggerMirrorTrap()">🪞 Trigger Trap</button>
+            <button class="control-button" onclick="clearLogs()">🗑️ Clear Logs</button>
+        </div>
+
+        <!-- Auricle Log -->
+        <div class="auricle-log">
+            <div class="info-title">👁️ Auricle Log</div>
+            <div id="auricleLogContent"></div>
+        </div>
+    </div>
+
+    <script>
+        class GlyphfieldRenderer {
+            constructor() {
+                this.agencies = [
+                    { id: 'WG-001', name: 'Resonance Scanner', symbol: '🔍', x: 150, y: 100 },
+                    { id: 'WG-002', name: 'Entropy Monitor', symbol: '🌊', x: 250, y: 150 },
+                    { id: 'WG-003', name: 'Mirror Guard', symbol: '🪞', x: 350, y: 200 },
+                    { id: 'WG-004', name: 'Sigil Validator', symbol: '✴️', x: 450, y: 250 },
+                    { id: 'WG-005', name: 'Anomaly Detector', symbol: '⚠️', x: 550, y: 300 },
+                    { id: 'WG-006', name: 'Threat Suppressor', symbol: '🛡️', x: 650, y: 350 },
+                    { id: 'WG-007', name: 'Balance Keeper', symbol: '⚖️', x: 750, y: 400 },
+                    { id: 'WG-008', name: 'Echo Tracker', symbol: '📡', x: 850, y: 450 },
+                    { id: 'WG-009', name: 'Resonance Anchor', symbol: '⚓', x: 950, y: 500 },
+                    { id: 'WG-010', name: 'Mirror Sentinel', symbol: '👁️', x: 1050, y: 550 },
+                    { id: 'WG-011', name: 'Entropy Stabilizer', symbol: '🌀', x: 1150, y: 600 },
+                    { id: 'WG-012', name: 'Council Liaison', symbol: '🏛️', x: 1250, y: 650 }
+                ];
+                
+                this.activeAgencies = new Set();
+                this.traceLines = [];
+                this.audioEnabled = true;
+                
+                this.initialize();
+            }
+
+            initialize() {
+                this.renderAgencies();
+                this.setupEventListeners();
+                this.startCouncilConnections();
+                this.startTraceLines();
+                this.updateStatus();
+                
+                console.log('🛡️ Glyphfield Renderer initialized');
+            }
+
+            renderAgencies() {
+                const container = document.getElementById('watchguardGlyphs');
+                container.innerHTML = '';
+
+                this.agencies.forEach(agency => {
+                    const glyph = document.createElement('div');
+                    glyph.className = 'agency-glyph';
+                    glyph.id = `glyph-${agency.id}`;
+                    glyph.style.left = `${agency.x}px`;
+                    glyph.style.top = `${agency.y}px`;
+                    glyph.innerHTML = agency.symbol;
+                    glyph.title = `${agency.name} (${agency.id})`;
+                    
+                    glyph.addEventListener('click', () => this.onAgencyClick(agency));
+                    glyph.addEventListener('mouseenter', () => this.onAgencyHover(agency));
+                    glyph.addEventListener('mouseleave', () => this.onAgencyLeave(agency));
+                    
+                    container.appendChild(glyph);
+                });
+            }
+
+            setupEventListeners() {
+                // Auricle Witness click
+                document.getElementById('auricleSigil').addEventListener('click', () => {
+                    this.onAuricleClick();
+                });
+
+                // Djinn Council nodes
+                document.querySelectorAll('.djinn-node').forEach(node => {
+                    node.addEventListener('click', () => {
+                        this.onDjinnClick(node.dataset.djinn);
+                    });
+                });
+            }
+
+            onAgencyClick(agency) {
+                console.log(`🛡️ Agency clicked: ${agency.name}`);
+                
+                // Toggle active state
+                const glyph = document.getElementById(`glyph-${agency.id}`);
+                if (this.activeAgencies.has(agency.id)) {
+                    this.activeAgencies.delete(agency.id);
+                    glyph.classList.remove('active');
+                } else {
+                    this.activeAgencies.add(agency.id);
+                    glyph.classList.add('active');
+                }
+
+                // Play agency sound
+                if (window.audioEventPlayer) {
+                    window.audioEventPlayer.playAgencySound('scan_initiated', agency.id);
+                }
+
+                // Create trace line to Auricle
+                this.createTraceLine(agency, 'auricle');
+                
+                // Log action
+                this.logAction('agency', `${agency.name} activated`);
+            }
+
+            onAgencyHover(agency) {
+                const glyph = document.getElementById(`glyph-${agency.id}`);
+                glyph.style.zIndex = '1000';
+            }
+
+            onAgencyLeave(agency) {
+                const glyph = document.getElementById(`glyph-${agency.id}`);
+                glyph.style.zIndex = '700';
+            }
+
+            onAuricleClick() {
+                console.log('👁️ Auricle Witness clicked');
+                
+                // Play Auricle voice
+                if (window.audioEventPlayer) {
+                    window.audioEventPlayer.playAuricleVoice('council_oversight');
+                }
+
+                // Create trace lines to all active agencies
+                this.activeAgencies.forEach(agencyId => {
+                    const agency = this.agencies.find(a => a.id === agencyId);
+                    if (agency) {
+                        this.createTraceLine(agency, 'auricle', true);
+                    }
+                });
+
+                this.logAction('auricle', 'Auricle Witness presiding over active agencies');
+            }
+
+            onDjinnClick(djinnType) {
+                console.log(`🏛️ Djinn Council member clicked: ${djinnType}`);
+                
+                // Play council harmony
+                if (window.audioEventPlayer) {
+                    window.audioEventPlayer.playAuricleVoice('council_oversight');
+                }
+
+                // Create trace lines to relevant agencies
+                this.agencies.forEach(agency => {
+                    if (this.isAgencyRelatedToDjinn(agency, djinnType)) {
+                        this.createTraceLine(agency, 'council');
+                    }
+                });
+
+                this.logAction('council', `${djinnType} Djinn overseeing related agencies`);
+            }
+
+            isAgencyRelatedToDjinn(agency, djinnType) {
+                const relationships = {
+                    entropy: ['WG-002', 'WG-011'],
+                    resonance: ['WG-001', 'WG-009'],
+                    alignment: ['WG-007', 'WG-012'],
+                    reflection: ['WG-003', 'WG-010'],
+                    memory: ['WG-008', 'WG-005']
+                };
+                
+                return relationships[djinnType]?.includes(agency.id) || false;
+            }
+
+            createTraceLine(agency, target, isReverse = false) {
+                const container = document.getElementById('traceLines');
+                const line = document.createElement('div');
+                line.className = 'trace-line';
+                
+                const startX = agency.x + 20;
+                const startY = agency.y + 20;
+                const endX = window.innerWidth / 2;
+                const endY = window.innerHeight / 2;
+                
+                const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+                
+                line.style.width = `${length}px`;
+                line.style.left = `${startX}px`;
+                line.style.top = `${startY}px`;
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                container.appendChild(line);
+                
+                // Remove line after animation
+                setTimeout(() => {
+                    if (line.parentNode) {
+                        line.parentNode.removeChild(line);
+                    }
+                }, 2000);
+            }
+
+            startCouncilConnections() {
+                const container = document.getElementById('councilConnections');
+                
+                // Create pentagram connections
+                const connections = [
+                    [0, 2], [2, 4], [4, 1], [1, 3], [3, 0]
+                ];
+                
+                connections.forEach(([from, to], index) => {
+                    const line = document.createElement('div');
+                    line.className = 'council-line';
+                    line.style.animationDelay = `${index * 0.6}s`;
+                    
+                    // Calculate position and rotation for pentagram lines
+                    const angle = (index * 72) * Math.PI / 180;
+                    const radius = 200;
+                    const x1 = 200 + radius * Math.cos(angle);
+                    const y1 = 200 + radius * Math.sin(angle);
+                    const x2 = 200 + radius * Math.cos(angle + Math.PI);
+                    const y2 = 200 + radius * Math.sin(angle + Math.PI);
+                    
+                    const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    const lineAngle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                    
+                    line.style.width = `${length}px`;
+                    line.style.left = `${x1}px`;
+                    line.style.top = `${y1}px`;
+                    line.style.transform = `rotate(${lineAngle}deg)`;
+                    
+                    container.appendChild(line);
+                });
+            }
+
+            startTraceLines() {
+                // Periodically create trace lines between active agencies
+                setInterval(() => {
+                    if (this.activeAgencies.size > 1) {
+                        const activeAgencies = Array.from(this.activeAgencies);
+                        const agency1 = this.agencies.find(a => a.id === activeAgencies[0]);
+                        const agency2 = this.agencies.find(a => a.id === activeAgencies[1]);
+                        
+                        if (agency1 && agency2) {
+                            this.createTraceLine(agency1, 'agency');
+                        }
+                    }
+                }, 3000);
+            }
+
+            simulateAgencyAction() {
+                const randomAgency = this.agencies[Math.floor(Math.random() * this.agencies.length)];
+                const actions = ['scanning', 'suppressing', 'validating'];
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                
+                const glyph = document.getElementById(`glyph-${randomAgency.id}`);
+                glyph.classList.add(action);
+                
+                // Play corresponding sound
+                if (window.audioEventPlayer) {
+                    window.audioEventPlayer.playAgencySound(action, randomAgency.id);
+                }
+                
+                // Remove class after animation
+                setTimeout(() => {
+                    glyph.classList.remove(action);
+                }, 2000);
+                
+                this.logAction('agency', `${randomAgency.name} performing ${action}`);
+            }
+
+            triggerMirrorTrap() {
+                console.log('🪞 Mirror trap triggered');
+                
+                // Play trap activation sound
+                if (window.audioEventPlayer) {
+                    window.audioEventPlayer.playMirrorTrapActivation('TRAP-001');
+                }
+                
+                // Visual effect on all agencies
+                this.agencies.forEach(agency => {
+                    const glyph = document.getElementById(`glyph-${agency.id}`);
+                    glyph.style.borderColor = '#ff9800';
+                    glyph.style.boxShadow = '0 0 20px rgba(255, 152, 0, 0.8)';
+                    
+                    setTimeout(() => {
+                        glyph.style.borderColor = '#4caf50';
+                        glyph.style.boxShadow = 'none';
+                    }, 1000);
+                });
+                
+                this.logAction('trap', 'Mirror trap activated across all agencies');
+            }
+
+            updateStatus() {
+                document.getElementById('activeAgencies').textContent = this.activeAgencies.size;
+                document.getElementById('activeTraps').textContent = Math.floor(Math.random() * 5) + 1;
+            }
+
+            logAction(type, message) {
+                const logContent = document.getElementById('auricleLogContent');
+                const timestamp = new Date().toLocaleTimeString();
+                
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry ${type}`;
+                logEntry.textContent = `[${timestamp}] ${message}`;
+                
+                logContent.appendChild(logEntry);
+                logContent.scrollTop = logContent.scrollHeight;
+                
+                // Keep only last 20 entries
+                while (logContent.children.length > 20) {
+                    logContent.removeChild(logContent.firstChild);
+                }
+            }
+        }
+
+        // Global functions for control panel
+        function toggleAudio() {
+            if (window.audioEventPlayer) {
+                if (window.audioEventPlayer.enabled) {
+                    window.audioEventPlayer.disable();
+                } else {
+                    window.audioEventPlayer.enable();
+                }
+            }
+        }
+
+        function simulateAgencyAction() {
+            if (window.glyphfieldRenderer) {
+                window.glyphfieldRenderer.simulateAgencyAction();
+            }
+        }
+
+        function triggerMirrorTrap() {
+            if (window.glyphfieldRenderer) {
+                window.glyphfieldRenderer.triggerMirrorTrap();
+            }
+        }
+
+        function clearLogs() {
+            document.getElementById('auricleLogContent').innerHTML = '';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.glyphfieldRenderer = new GlyphfieldRenderer();
+            
+            // Update status every 5 seconds
+            setInterval(() => {
+                window.glyphfieldRenderer.updateStatus();
+            }, 5000);
+        });
+    </script>
+</body>
+</html> 

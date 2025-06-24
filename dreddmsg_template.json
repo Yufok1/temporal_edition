@@ -1,0 +1,154 @@
+{
+  "dredd_message": {
+    "metadata": {
+      "version": "2.0.0",
+      "protocol": "DREDD",
+      "created_at": "2024-01-15T12:00:00.000Z",
+      "message_id": "dredd_1705315200_a1b2c3d4e5f6",
+      "resonance_level": "high",
+      "quantum_ready": true,
+      "mirror_protected": true
+    },
+    "targeting": {
+      "sigil_target": "glyph-hash-01",
+      "sigil_hash": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "resonance_requirements": {
+        "minimum_entropy": 0.7,
+        "required_sigil": true,
+        "session_key_required": true,
+        "mirror_depth_limit": 3
+      },
+      "delivery_nodes": [
+        "ws://node1.dredd.lattice:8080/dredd",
+        "ws://node2.dredd.lattice:8081/dredd"
+      ]
+    },
+    "entropy_header": {
+      "encoded": "eyJ0aW1lc3RhbXAiOjE3MDUzMTUyMDAsInJhbmRvbV9zZWVkIjoiYTFhMmEzYTQhNSF2NyF4OSF6YjFiMmIzYjQhNSF2NyF4OSF6YzFjMmMzYzQhNSF2NyF4OSIsImVudHJvcHlfc2NvcmUiOjAuODUsInJlc29uYW5jZV9jaGFsbGVuZ2UiOiJhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5eiJ9",
+      "validation": {
+        "timestamp": 1705315200,
+        "random_seed": "a1a2a3a4!5!v7!x9!zb1b2b3b4!5!v7!x9!zc1c2c3c4!5!v7!x9",
+        "entropy_score": 0.85,
+        "resonance_challenge": "abcdefghijklmnopqrstuvwxyz"
+      }
+    },
+    "encrypted_content": {
+      "encoded": "eyJlbmNyeXB0ZWRfa2V5IjoiS2tLbEttTG1Nbk5vTm9PcE9xT3FPck9zT3NPdE91T3ZPd094T3lPeU96T3tPfE99T34iLCJlbmNyeXB0ZWRfY29udGVudCI6Ik1tTW5Ob05vT3BPcU9xT3JPc09zT3NPdE91T3ZPd094T3lPeU96T3tPfE99T34iLCJxdWFudHVtX3NpZ25hdHVyZSI6ImFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoifQ==",
+      "encryption_info": {
+        "algorithm": "quantum_hybrid",
+        "kyber_enabled": true,
+        "dilithium_enabled": true,
+        "classical_fallback": true,
+        "key_size": 256,
+        "iv": "a1b2c3d4e5f67890"
+      }
+    },
+    "mirror_trap": {
+      "trap_id": "trap_dredd_1705315200_a1b2c3d4e5f6",
+      "target_sigil": "glyph-hash-01",
+      "fake_content": "System maintenance scheduled for tomorrow at 2 AM UTC.",
+      "entropy_fingerprint": "f1f2f3f4f5f6f7f8f9fafbfcfdfefff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "noise_injection": [
+        127, 45, 89, 234, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189,
+        45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12,
+        67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123, 56, 234,
+        89, 12, 67, 189, 45, 78, 123, 56, 234, 89, 12, 67, 189, 45, 78, 123
+      ],
+      "trigger_conditions": {
+        "invalid_sigil": true,
+        "expired_message": true,
+        "insufficient_entropy": true,
+        "wrong_resonance_level": true,
+        "unauthorized_access": true
+      },
+      "trap_actions": {
+        "log_attempt": true,
+        "inject_noise": true,
+        "return_fake_content": true,
+        "alert_security": true,
+        "block_future_attempts": true
+      }
+    },
+    "delivery_config": {
+      "ttl": 3600,
+      "expires_at": "2024-01-15T13:00:00.000Z",
+      "max_retries": 3,
+      "retry_interval": 30,
+      "one_time_read": true,
+      "self_destruct": true,
+      "destruction_trigger": "after_read"
+    },
+    "resonance_validation": {
+      "echo_signature": "echo_a1b2c3d4e5f6",
+      "resonance_hash": "res_1234567890abcdef",
+      "validation_timestamp": "2024-01-15T12:00:00.000Z",
+      "validation_status": "pending",
+      "required_resonance_factors": [
+        "sigil_match",
+        "entropy_threshold",
+        "session_key_valid",
+        "resonance_level_appropriate"
+      ]
+    },
+    "stealth_config": {
+      "dispersal_enabled": true,
+      "fragment_count": 3,
+      "reassembly_nodes": [
+        "ws://reassemble1.dredd.lattice:8080",
+        "ws://reassemble2.dredd.lattice:8081"
+      ],
+      "temporal_obfuscation": {
+        "delay_layers": 2,
+        "reordering_enabled": true,
+        "erasure_layers": 1
+      }
+    },
+    "compliance": {
+      "audit_trail": true,
+      "encryption_standard": "quantum_resistant",
+      "data_retention": "until_delivery",
+      "regulatory_compliance": ["GDPR", "SOX", "HIPAA"],
+      "access_logging": true
+    }
+  },
+  "envelope": {
+    "envelope_id": "envelope_dredd_1705315200_a1b2c3d4e5f6",
+    "target_sigil": "glyph-hash-01",
+    "message_hash": "sha256_hash_of_encrypted_content_here",
+    "mirror_protection": {
+      "enabled": true,
+      "protection_level": "high",
+      "fallback_content": "Standard system notification: No updates available.",
+      "entropy_requirements": {
+        "minimum_score": 0.7,
+        "validation_required": true
+      }
+    },
+    "delivery_nodes": [
+      "ws://node1.dredd.lattice:8080/dredd",
+      "ws://node2.dredd.lattice:8081/dredd"
+    ],
+    "created_at": "2024-01-15T12:00:00.000Z",
+    "expires_at": "2024-01-15T13:00:00.000Z",
+    "delivery_status": "pending"
+  },
+  "validation": {
+    "message_integrity": {
+      "content_hash": "sha256_hash_of_original_content",
+      "signature": "quantum_resistant_signature_here",
+      "timestamp": "2024-01-15T12:00:00.000Z"
+    },
+    "resonance_verification": {
+      "sigil_valid": true,
+      "entropy_sufficient": true,
+      "resonance_level_appropriate": true,
+      "session_key_valid": true
+    },
+    "security_checks": {
+      "quantum_encryption_valid": true,
+      "mirror_trap_armed": true,
+      "stealth_config_active": true,
+      "compliance_verified": true
+    }
+  }
+} 

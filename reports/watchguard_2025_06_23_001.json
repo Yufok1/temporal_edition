@@ -1,0 +1,29 @@
+{
+  "id": "watchguard_2025_06_23_001",
+  "type": "watchguard",
+  "title": "Suspicious Token Detection",
+  "session": "monitoring_session_001",
+  "timestamp": "2025-06-23T15:45:00Z",
+  "assets": [
+    "SUSP"
+  ],
+  "riskLevel": "danger",
+  "summary": "WatchGuard detected suspicious token with misaligned resonance",
+  "content": {
+    "anomaly_type": "resonance_misalignment",
+    "severity": "high",
+    "detection_method": "entropy_analysis",
+    "response_actions": [
+      "Immediate classification as danger",
+      "Resonance quarantine initiated",
+      "DREDD alert dispatched"
+    ],
+    "auricle_witness": "A shadow moves across the glass. I have captured its trace."
+  },
+  "tags": [
+    "anomaly",
+    "suspicious_token",
+    "high_risk",
+    "auricle_witness"
+  ]
+}

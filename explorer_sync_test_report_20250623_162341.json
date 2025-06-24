@@ -1,0 +1,243 @@
+{
+  "test_info": {
+    "timestamp": "2025-06-23T16:23:41.041232",
+    "test_type": "Explorer Sync System Comprehensive Test",
+    "contract_address": "0x9876543210fedcba",
+    "system_version": "1.0.0"
+  },
+  "test_results": {
+    "explorer_sync_bridge": {
+      "status": "PASS",
+      "data_completeness": 0.8,
+      "scraped_fields": [
+        "contract",
+        "name",
+        "symbol",
+        "verified",
+        "audit_badge",
+        "holders",
+        "risk_flags"
+      ]
+    },
+    "token_risk_assessor": {
+      "status": "PASS",
+      "resonance_score": 35,
+      "risk_level": "danger",
+      "flags_detected": 3
+    },
+    "mirror_cert_generator": {
+      "status": "PASS",
+      "certificate_id": "DJINN-20250623-001",
+      "signature_valid": true,
+      "integration_ready": true
+    },
+    "djinnsecurities_integration": {
+      "status": "PASS",
+      "format_compatible": true,
+      "watchguard_alerts": 4
+    }
+  },
+  "sample_data": {
+    "explorer_data": {
+      "contract": "0x9876543210fedcba",
+      "name": "Suspicious Moon Inu Token",
+      "symbol": "SUSP",
+      "verified": false,
+      "audit_badge": false,
+      "holders": "15",
+      "risk_flags": [
+        "Unverified contract",
+        "Low holder diversity"
+      ]
+    },
+    "assessment": {
+      "timestamp": "2025-06-23T16:23:41.038343",
+      "contract_address": "0x9876543210fedcba",
+      "token_info": {
+        "name": "Suspicious Moon Inu Token",
+        "symbol": "SUSP",
+        "verified": false,
+        "audit_badge": false,
+        "holders": "15"
+      },
+      "risk_analysis": {
+        "resonance_score": 35,
+        "risk_flags": [
+          "unverified_contract",
+          "no_audit_badge",
+          "very_low_holders"
+        ],
+        "risk_level": "danger",
+        "sovereign_alignment": "misaligned",
+        "anomaly_score": 75,
+        "confidence": 0.8
+      },
+      "detailed_flags": {
+        "contract_verification": {
+          "status": "unverified",
+          "risk_level": "high",
+          "description": "Contract source code is not verified on Etherscan"
+        },
+        "audit_status": {
+          "status": "unaudited",
+          "risk_level": "medium",
+          "description": "No audit badge found - contract has not been professionally audited"
+        },
+        "holder_analysis": {
+          "holder_count": 15,
+          "risk_level": "high",
+          "description": "Very low holder diversity (15 holders) - potential honeypot"
+        },
+        "naming_analysis": {
+          "name_suspicious_score": 2,
+          "symbol_suspicious_score": 1,
+          "risk_level": "medium",
+          "description": "Suspicious naming patterns detected (score: 2)"
+        }
+      },
+      "recommendations": [
+        "Avoid unverified contracts - high risk of malicious code",
+        "Unaudited contracts may contain security vulnerabilities",
+        "Low holder diversity suggests potential manipulation",
+        "Suspicious naming patterns indicate potential scam token"
+      ],
+      "watchguard_alerts": [
+        {
+          "type": "contract_verification",
+          "severity": "high",
+          "message": "Unverified contract detected - high risk of malicious code"
+        },
+        {
+          "type": "audit_status",
+          "severity": "medium",
+          "message": "Unaudited contract - potential security vulnerabilities"
+        },
+        {
+          "type": "holder_diversity",
+          "severity": "high",
+          "message": "Very low holder count (15) - high honeypot risk"
+        },
+        {
+          "type": "naming_pattern",
+          "severity": "medium",
+          "message": "Suspicious naming patterns detected - potential meme/scam token"
+        }
+      ]
+    },
+    "certificate": {
+      "certificate_id": "DJINN-20250623-001",
+      "version": "1.0.0",
+      "issuer": "DjinnSecurities Sovereign Authority",
+      "issue_date": "2025-06-23T16:23:41.039421",
+      "expiry_date": "2026-06-23T00:00:00",
+      "contract_address": "0x9876543210fedcba",
+      "token_info": {
+        "name": "Suspicious Moon Inu Token",
+        "symbol": "SUSP",
+        "verified": false,
+        "audit_badge": false,
+        "holders": "15"
+      },
+      "risk_assessment": {
+        "resonance_score": 35,
+        "risk_level": "danger",
+        "sovereign_alignment": "misaligned",
+        "anomaly_score": 75,
+        "risk_flags": [
+          "unverified_contract",
+          "no_audit_badge",
+          "very_low_holders"
+        ],
+        "confidence": 0.8
+      },
+      "explorer_validation": {
+        "source": "Etherscan",
+        "scrape_timestamp": "2025-06-23T16:23:41.039434",
+        "data_completeness": 0.8,
+        "raw_explorer_data": {
+          "contract": "0x9876543210fedcba",
+          "name": "Suspicious Moon Inu Token",
+          "symbol": "SUSP",
+          "verified": false,
+          "audit_badge": false,
+          "holders": "15",
+          "risk_flags": [
+            "Unverified contract",
+            "Low holder diversity"
+          ]
+        }
+      },
+      "sovereign_validation": {
+        "entropy_score": 0.75,
+        "echo_signature": "a1b2c3d4e5f6",
+        "sigil_lock": "SIGIL:7a3b1e4d9f2c",
+        "validation_status": "verified"
+      },
+      "security_protocols": {
+        "quantum_resistant": true,
+        "sovereign_bound": true,
+        "mirror_trapped": true,
+        "audit_ready": true
+      },
+      "integration_hooks": {
+        "djinnsecurities_compatible": true,
+        "watchguard_ready": true,
+        "dredd_courier_ready": true,
+        "celestial_ledger_ready": true,
+        "asr_eligible": true
+      },
+      "signature": "base64_encoded_signature_here",
+      "signature_algorithm": "HMAC-SHA256"
+    },
+    "djinnsecurities_format": {
+      "address": "0x9876543210fedcba",
+      "symbol": "SUSP",
+      "name": "Suspicious Moon Inu Token",
+      "riskLevel": "danger",
+      "resonanceScore": 35,
+      "sovereignAlignment": "misaligned",
+      "marketCap": "$Unknown",
+      "lastUpdated": "2025-06-23",
+      "explorerData": {
+        "verified": false,
+        "auditBadge": false,
+        "holders": "15",
+        "riskFlags": [
+          "unverified_contract",
+          "no_audit_badge",
+          "very_low_holders"
+        ],
+        "anomalyScore": 75
+      },
+      "watchguardAlerts": [
+        {
+          "type": "contract_verification",
+          "severity": "high",
+          "message": "Unverified contract detected - high risk of malicious code"
+        },
+        {
+          "type": "audit_status",
+          "severity": "medium",
+          "message": "Unaudited contract - potential security vulnerabilities"
+        },
+        {
+          "type": "holder_diversity",
+          "severity": "high",
+          "message": "Very low holder count (15) - high honeypot risk"
+        },
+        {
+          "type": "naming_pattern",
+          "severity": "medium",
+          "message": "Suspicious naming patterns detected - potential meme/scam token"
+        }
+      ]
+    }
+  },
+  "system_analysis": {
+    "overall_status": "OPERATIONAL",
+    "risk_detection": "FUNCTIONAL",
+    "sovereign_alignment": "MISALIGNED",
+    "recommendation": "HIGH RISK - AVOID",
+    "auricle_witness": "I have seen the shadow in the glass. This token bears the mark of deception."
+  }
+}

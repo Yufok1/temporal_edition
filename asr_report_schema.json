@@ -1,0 +1,607 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Acclimation Sequencing Report Schema",
+  "description": "Formal schema for Acclimation Sequencing Reports (ASR) with validation and structure definition",
+  "version": "2.0.0",
+  "type": "object",
+  "required": [
+    "report_id",
+    "session_id",
+    "trigger_type",
+    "generated_at",
+    "sovereign_actions",
+    "security_evolution",
+    "resonance_performance",
+    "observational_matches",
+    "entropy_stability_index",
+    "ticket_chronicle",
+    "attached_glyphs",
+    "summary_statistics",
+    "drd_signature"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "pattern": "^ASR-[A-Z0-9-]+$",
+      "description": "Unique identifier for the ASR report",
+      "example": "ASR-SESSION-001-1719169331"
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^SESSION-[A-Z0-9-]+$",
+      "description": "Identifier of the session this ASR covers",
+      "example": "SESSION-001"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "session_based",
+        "job_based",
+        "manual_trigger",
+        "post_orchestration",
+        "system_wide"
+      ],
+      "description": "Type of trigger that generated this ASR"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the ASR was generated",
+      "example": "2025-06-23T21:42:11Z"
+    },
+    "sovereign_actions": {
+      "type": "array",
+      "description": "Chronological sequence of sovereign actions taken during the session",
+      "items": {
+        "type": "object",
+        "required": [
+          "ticket_id",
+          "action_type",
+          "timestamp",
+          "interface_context",
+          "system_impact",
+          "causal_certainty"
+        ],
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "pattern": "^TKT-[0-9]{8}-[0-9]{4}$",
+            "description": "Unique ticket identifier for the action",
+            "example": "TKT-20250623-0032"
+          },
+          "action_type": {
+            "type": "string",
+            "description": "Type of sovereign action performed",
+            "example": "override_watchguard_threshold"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the action was performed"
+          },
+          "interface_context": {
+            "type": "string",
+            "description": "Interface or context where action was taken",
+            "example": "GuardianControlPanel > AnomalyOverride"
+          },
+          "system_impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Impact level of the action on the system"
+          },
+          "causal_certainty": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Certainty of causal relationship (0.0 to 1.0)"
+          },
+          "additional_context": {
+            "type": "object",
+            "description": "Additional context about the action",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "security_evolution": {
+      "type": "array",
+      "description": "Security events and their evolution during the session",
+      "items": {
+        "type": "object",
+        "required": [
+          "event_id",
+          "event_type",
+          "timestamp",
+          "severity",
+          "status"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "pattern": "^[A-Z]+-[0-9]+$",
+            "description": "Unique identifier for the security event",
+            "example": "ANOM-253"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "anomaly_detected",
+              "threat_suppressed",
+              "intrusion_attempt",
+              "resonance_breach",
+              "mirror_trap_activated",
+              "entropy_anomaly"
+            ],
+            "description": "Type of security event"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the event occurred"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Severity level of the event"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["detected", "resolved", "suppressed", "escalated", "monitoring"],
+            "description": "Current status of the event"
+          },
+          "resolution_time": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+s$",
+            "description": "Time taken to resolve the event",
+            "example": "12.4s"
+          },
+          "suppression_time": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+s$",
+            "description": "Time taken to suppress the event",
+            "example": "3.1s"
+          },
+          "event_details": {
+            "type": "object",
+            "description": "Additional details about the event",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "resonance_performance": {
+      "type": "array",
+      "description": "Resonance scanning performance data",
+      "items": {
+        "type": "object",
+        "required": [
+          "scan_id",
+          "timestamp",
+          "wallet_count",
+          "high_resonance",
+          "medium_resonance",
+          "low_resonance",
+          "anomaly_detected"
+        ],
+        "properties": {
+          "scan_id": {
+            "type": "string",
+            "pattern": "^RESONANCE-[0-9]+$",
+            "description": "Unique identifier for the resonance scan",
+            "example": "RESONANCE-001"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the scan was performed"
+          },
+          "wallet_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total number of wallets scanned"
+          },
+          "high_resonance": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of wallets with high resonance"
+          },
+          "medium_resonance": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of wallets with medium resonance"
+          },
+          "low_resonance": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of wallets with low resonance"
+          },
+          "anomaly_detected": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of anomalies detected"
+          },
+          "scan_duration": {
+            "type": "number",
+            "description": "Duration of the scan in seconds"
+          },
+          "resonance_threshold": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Resonance threshold used for the scan"
+          }
+        }
+      }
+    },
+    "observational_matches": {
+      "type": "array",
+      "description": "Matched cause-effect pairs between intent and effects",
+      "items": {
+        "type": "object",
+        "required": [
+          "match_id",
+          "intent_ticket",
+          "effect_event",
+          "response_time",
+          "causal_certainty",
+          "entropy_similarity"
+        ],
+        "properties": {
+          "match_id": {
+            "type": "string",
+            "pattern": "^MATCH-TKT-[0-9]{8}-[0-9]{4}-[0-9]+$",
+            "description": "Unique identifier for the causal match",
+            "example": "MATCH-TKT-20250623-0032-0"
+          },
+          "intent_ticket": {
+            "type": "string",
+            "pattern": "^TKT-[0-9]{8}-[0-9]{4}$",
+            "description": "Ticket ID of the sovereign intent"
+          },
+          "effect_event": {
+            "type": "string",
+            "description": "Identifier of the resulting effect event",
+            "example": "ANOM-253-resolved"
+          },
+          "response_time": {
+            "type": "number",
+            "minimum": 0.0,
+            "description": "Time between intent and effect in seconds"
+          },
+          "causal_certainty": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Certainty of the causal relationship"
+          },
+          "entropy_similarity": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Similarity of entropy patterns between intent and effect"
+          },
+          "match_confidence": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "very_high"],
+            "description": "Overall confidence in the match"
+          },
+          "validation_status": {
+            "type": "string",
+            "enum": ["pending", "validated", "rejected", "uncertain"],
+            "description": "Status of match validation"
+          }
+        }
+      }
+    },
+    "entropy_stability_index": {
+      "type": "object",
+      "required": [
+        "session_duration",
+        "entropy_variance",
+        "stability_score",
+        "peak_entropy",
+        "lowest_entropy",
+        "entropy_trend",
+        "stability_grade"
+      ],
+      "properties": {
+        "session_duration": {
+          "type": "string",
+          "pattern": "^[0-9]+ minutes?$",
+          "description": "Duration of the session",
+          "example": "25 minutes"
+        },
+        "entropy_variance": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Variance in entropy throughout the session"
+        },
+        "stability_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall stability score for the session"
+        },
+        "peak_entropy": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Highest entropy value during the session"
+        },
+        "lowest_entropy": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Lowest entropy value during the session"
+        },
+        "entropy_trend": {
+          "type": "string",
+          "enum": ["increasing", "decreasing", "stable", "fluctuating"],
+          "description": "Overall trend of entropy during the session"
+        },
+        "stability_grade": {
+          "type": "string",
+          "enum": ["A", "B", "C", "D", "F"],
+          "description": "Letter grade for session stability"
+        },
+        "entropy_graph_data": {
+          "type": "array",
+          "description": "Time-series data points for entropy visualization",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "entropy_value": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              }
+            }
+          }
+        }
+      }
+    },
+    "ticket_chronicle": {
+      "type": "array",
+      "description": "Chronicle of all data tickets issued during the session",
+      "items": {
+        "type": "object",
+        "required": [
+          "ticket_id",
+          "action_type",
+          "timestamp",
+          "system_impact",
+          "chronicle_status",
+          "linked_effects"
+        ],
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "pattern": "^TKT-[0-9]{8}-[0-9]{4}$",
+            "description": "Unique ticket identifier"
+          },
+          "action_type": {
+            "type": "string",
+            "description": "Type of action recorded by the ticket"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the ticket was created"
+          },
+          "system_impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Impact level of the action"
+          },
+          "chronicle_status": {
+            "type": "string",
+            "enum": ["active", "resolved", "archived", "escalated"],
+            "description": "Current status in the chronicle"
+          },
+          "linked_effects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of effects linked to this ticket"
+          },
+          "chronicle_hash": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]{64}$",
+            "description": "Hash of the chronicle entry for verification"
+          }
+        }
+      }
+    },
+    "attached_glyphs": {
+      "type": "array",
+      "description": "Sigils and glyphs attached to the ASR",
+      "items": {
+        "type": "object",
+        "required": [
+          "glyph_id",
+          "type",
+          "timestamp",
+          "encoded_data",
+          "resonance_level"
+        ],
+        "properties": {
+          "glyph_id": {
+            "type": "string",
+            "pattern": "^GLYPH-[0-9]+$",
+            "description": "Unique identifier for the glyph",
+            "example": "GLYPH-001"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "resonance_sigil",
+              "mirror_anchor",
+              "entropy_marker",
+              "causal_link",
+              "sovereign_seal"
+            ],
+            "description": "Type of glyph"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the glyph was created"
+          },
+          "encoded_data": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]+$",
+            "description": "Encoded data of the glyph",
+            "example": "0x1234567890abcdef"
+          },
+          "resonance_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Resonance level of the glyph"
+          },
+          "glyph_signature": {
+            "type": "string",
+            "description": "Cryptographic signature of the glyph"
+          },
+          "validation_status": {
+            "type": "string",
+            "enum": ["pending", "validated", "invalid"],
+            "description": "Validation status of the glyph"
+          }
+        }
+      }
+    },
+    "summary_statistics": {
+      "type": "object",
+      "required": [
+        "total_sovereign_actions",
+        "total_security_events",
+        "total_resonance_scans",
+        "total_causal_matches",
+        "avg_response_time",
+        "avg_causal_certainty",
+        "session_effectiveness_score",
+        "security_posture",
+        "resonance_stability"
+      ],
+      "properties": {
+        "total_sovereign_actions": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of sovereign actions in the session"
+        },
+        "total_security_events": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of security events"
+        },
+        "total_resonance_scans": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of resonance scans performed"
+        },
+        "total_causal_matches": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of causal matches found"
+        },
+        "avg_response_time": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Average response time in seconds"
+        },
+        "avg_causal_certainty": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Average causal certainty across all matches"
+        },
+        "session_effectiveness_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall effectiveness score for the session"
+        },
+        "security_posture": {
+          "type": "string",
+          "enum": ["degraded", "maintained", "enhanced", "optimal"],
+          "description": "Overall security posture after the session"
+        },
+        "resonance_stability": {
+          "type": "string",
+          "enum": ["degraded", "maintained", "improved", "optimal"],
+          "description": "Overall resonance stability after the session"
+        },
+        "performance_metrics": {
+          "type": "object",
+          "description": "Additional performance metrics",
+          "additionalProperties": true
+        }
+      }
+    },
+    "drd_signature": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{16}$",
+      "description": "Discrete Resonant Delivery signature for the ASR",
+      "example": "0x29acfedcba987654"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata about the ASR",
+      "properties": {
+        "asr_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "Version of the ASR format",
+          "example": "2.0.0"
+        },
+        "generator_version": {
+          "type": "string",
+          "description": "Version of the ASR generator"
+        },
+        "dredd_integration": {
+          "type": "object",
+          "description": "DREDD integration metadata",
+          "properties": {
+            "delivery_status": {
+              "type": "string",
+              "enum": ["pending", "delivered", "failed", "acknowledged"]
+            },
+            "recipients": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "delivery_timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "validation_info": {
+          "type": "object",
+          "description": "Validation information",
+          "properties": {
+            "schema_valid": {
+              "type": "boolean"
+            },
+            "signature_valid": {
+              "type": "boolean"
+            },
+            "validation_timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+} 

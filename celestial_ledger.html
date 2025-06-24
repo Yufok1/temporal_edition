@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celestial Ledger - Divine Scroll of WatchGuard Operations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(100, 150, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 100, 150, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(150, 255, 100, 0.05) 0%, transparent 70%),
+                linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .celestial-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .cosmic-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(100, 150, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100, 150, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridFlow 20s linear infinite;
+        }
+
+        @keyframes gridFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .timeline-axis {
+            position: absolute;
+            bottom: 100px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(100, 150, 255, 0.8), transparent);
+        }
+
+        .timeline-marker {
+            position: absolute;
+            bottom: 95px;
+            width: 2px;
+            height: 20px;
+            background: rgba(100, 150, 255, 0.6);
+            transform: translateX(-50%);
+        }
+
+        .timeline-label {
+            position: absolute;
+            bottom: 120px;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            color: #b0b0b0;
+            white-space: nowrap;
+        }
+
+        .orbiting-paths {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orbit-path {
+            position: absolute;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 50%;
+            animation: orbitRotate 30s linear infinite;
+        }
+
+        .orbit-path.auricle {
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            border-color: rgba(100, 181, 246, 0.5);
+        }
+
+        .orbit-path.council {
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        .orbit-path.watchguard {
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
+            border-color: rgba(76, 175, 80, 0.5);
+        }
+
+        @keyframes orbitRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .operation-node {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: nodePulse 2s ease-in-out infinite;
+        }
+
+        .operation-node:hover {
+            transform: scale(2);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .operation-node.auricle {
+            background: #64b5f6;
+            color: #64b5f6;
+        }
+
+        .operation-node.council {
+            background: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .operation-node.watchguard {
+            background: #4caf50;
+            color: #4caf50;
+        }
+
+        .operation-node.anomaly {
+            background: #ff9800;
+            color: #ff9800;
+        }
+
+        .operation-node.suppression {
+            background: #f44336;
+            color: #f44336;
+        }
+
+        @keyframes nodePulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .ledger-scroll {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 400px;
+            height: calc(100vh - 40px);
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 15px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .scroll-header {
+            padding: 20px;
+            border-bottom: 2px solid rgba(100, 150, 255, 0.2);
+            text-align: center;
+        }
+
+        .scroll-header h2 {
+            color: #64b5f6;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .scroll-header p {
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+
+        .ledger-entries {
+            padding: 20px;
+        }
+
+        .ledger-entry {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(100, 150, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ledger-entry:hover {
+            border-color: #64b5f6;
+            box-shadow: 0 4px 15px rgba(100, 150, 255, 0.2);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .entry-type {
+            font-weight: bold;
+            color: #64b5f6;
+        }
+
+        .entry-time {
+            font-size: 0.8em;
+            color: #b0b0b0;
+        }
+
+        .entry-description {
+            color: #e0e0e0;
+            margin-bottom: 8px;
+        }
+
+        .entry-metrics {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8em;
+        }
+
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .metric-label {
+            color: #b0b0b0;
+        }
+
+        .metric-value {
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .balance-graph {
+            position: absolute;
+            bottom: 150px;
+            right: 20px;
+            width: 300px;
+            height: 200px;
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
+        }
+
+        .graph-title {
+            color: #64b5f6;
+            font-size: 1em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .graph-canvas {
+            width: 100%;
+            height: calc(100% - 30px);
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 5px;
+        }
+
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
+        }
+
+        .control-button {
+            background: linear-gradient(45deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .control-button.active {
+            background: linear-gradient(45deg, #4caf50, #388e3c);
+        }
+
+        .hover-info {
+            position: absolute;
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.8em;
+            pointer-events: none;
+            z-index: 1001;
+            max-width: 250px;
+        }
+
+        .hover-info h4 {
+            color: #64b5f6;
+            margin-bottom: 5px;
+        }
+
+        .hover-info p {
+            color: #e0e0e0;
+            margin-bottom: 3px;
+        }
+
+        .session-replay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 15, 35, 0.95);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .replay-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .replay-button {
+            background: rgba(100, 150, 255, 0.2);
+            color: #64b5f6;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .replay-button:hover {
+            background: rgba(100, 150, 255, 0.3);
+        }
+
+        .replay-button.active {
+            background: #64b5f6;
+            color: white;
+        }
+
+        .replay-slider {
+            width: 200px;
+        }
+
+        .replay-time {
+            color: #b0b0b0;
+            font-size: 0.9em;
+            min-width: 80px;
+        }
+
+        .cosmic-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(100, 150, 255, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 10s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .ledger-scroll {
+                width: 300px;
+            }
+            
+            .balance-graph {
+                width: 250px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ledger-scroll {
+                width: 100%;
+                height: 50vh;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                border-radius: 15px 15px 0 0;
+            }
+            
+            .balance-graph {
+                display: none;
+            }
+            
+            .control-panel {
+                top: 10px;
+                right: 10px;
+                padding: 10px;
+            }
+            
+            .session-replay {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="celestial-container">
+        <!-- Cosmic Grid Background -->
+        <div class="cosmic-grid"></div>
+
+        <!-- Timeline Axis -->
+        <div class="timeline-axis">
+            <div class="timeline-marker" style="left: 10%">
+                <div class="timeline-label">24h ago</div>
+            </div>
+            <div class="timeline-marker" style="left: 30%">
+                <div class="timeline-label">12h ago</div>
+            </div>
+            <div class="timeline-marker" style="left: 50%">
+                <div class="timeline-label">6h ago</div>
+            </div>
+            <div class="timeline-marker" style="left: 70%">
+                <div class="timeline-label">2h ago</div>
+            </div>
+            <div class="timeline-marker" style="left: 90%">
+                <div class="timeline-label">Now</div>
+            </div>
+        </div>
+
+        <!-- Orbiting Paths -->
+        <div class="orbiting-paths">
+            <div class="orbit-path auricle"></div>
+            <div class="orbit-path council"></div>
+            <div class="orbit-path watchguard"></div>
+        </div>
+
+        <!-- Operation Nodes -->
+        <div id="operationNodes"></div>
+
+        <!-- Cosmic Particles -->
+        <div class="cosmic-particles" id="cosmicParticles"></div>
+
+        <!-- Ledger Scroll -->
+        <div class="ledger-scroll">
+            <div class="scroll-header">
+                <h2>🌌 Celestial Ledger</h2>
+                <p>Divine Scroll of WatchGuard Operations</p>
+            </div>
+            <div class="ledger-entries" id="ledgerEntries">
+                <!-- Ledger entries will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Balance vs Action Graph -->
+        <div class="balance-graph">
+            <div class="graph-title">📈 Balance vs. Action Graph</div>
+            <canvas class="graph-canvas" id="balanceGraph"></canvas>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <button class="control-button" onclick="toggleReplay()">🔄 Replay Mode</button>
+            <button class="control-button" onclick="toggleParticles()">✨ Particles</button>
+            <button class="control-button" onclick="exportLedger()">📤 Export</button>
+            <button class="control-button" onclick="clearLedger()">🗑️ Clear</button>
+        </div>
+
+        <!-- Session Replay Controls -->
+        <div class="session-replay">
+            <div class="replay-controls">
+                <button class="replay-button" id="playPauseBtn" onclick="togglePlayPause()">⏸️</button>
+                <button class="replay-button" onclick="stepBackward()">⏪</button>
+                <button class="replay-button" onclick="stepForward()">⏩</button>
+            </div>
+            <input type="range" class="replay-slider" id="replaySlider" min="0" max="100" value="0">
+            <div class="replay-time" id="replayTime">00:00:00</div>
+        </div>
+
+        <!-- Hover Info Panel -->
+        <div class="hover-info" id="hoverInfo" style="display: none;"></div>
+    </div>
+
+    <script>
+        class CelestialLedger {
+            constructor() {
+                this.operations = [];
+                this.currentTime = 0;
+                this.isReplaying = false;
+                this.particlesEnabled = true;
+                this.replaySpeed = 1;
+                
+                this.initialize();
+            }
+
+            initialize() {
+                this.generateSampleData();
+                this.renderOperationNodes();
+                this.renderLedgerEntries();
+                this.initializeGraph();
+                this.startParticles();
+                this.setupEventListeners();
+                
+                console.log('🌌 Celestial Ledger initialized');
+            }
+
+            generateSampleData() {
+                const now = Date.now();
+                const operations = [
+                    {
+                        id: 'OP-001',
+                        type: 'auricle',
+                        timestamp: now - 86400000, // 24h ago
+                        description: 'Auricle Witness presiding over system initialization',
+                        metrics: { entropy: 0.92, resonance: 0.88, balance: 15.742 },
+                        position: { x: 10, y: 30 }
+                    },
+                    {
+                        id: 'OP-002',
+                        type: 'council',
+                        timestamp: now - 43200000, // 12h ago
+                        description: 'Djinn Council oversight - Entropy stabilization',
+                        metrics: { entropy: 0.85, resonance: 0.91, balance: 18.456 },
+                        position: { x: 30, y: 45 }
+                    },
+                    {
+                        id: 'OP-003',
+                        type: 'watchguard',
+                        timestamp: now - 21600000, // 6h ago
+                        description: 'WatchGuard anomaly detection and suppression',
+                        metrics: { entropy: 0.78, resonance: 0.94, balance: 22.891 },
+                        position: { x: 50, y: 60 }
+                    },
+                    {
+                        id: 'OP-004',
+                        type: 'anomaly',
+                        timestamp: now - 7200000, // 2h ago
+                        description: 'Critical anomaly detected - Mirror breach attempt',
+                        metrics: { entropy: 0.45, resonance: 0.67, balance: 8.456 },
+                        position: { x: 70, y: 75 }
+                    },
+                    {
+                        id: 'OP-005',
+                        type: 'suppression',
+                        timestamp: now - 3600000, // 1h ago
+                        description: 'Threat suppression successful - Balance restored',
+                        metrics: { entropy: 0.87, resonance: 0.89, balance: 23.891 },
+                        position: { x: 85, y: 80 }
+                    },
+                    {
+                        id: 'OP-006',
+                        type: 'auricle',
+                        timestamp: now - 1800000, // 30min ago
+                        description: 'Auricle Witness - Sovereign alignment verified',
+                        metrics: { entropy: 0.94, resonance: 0.96, balance: 25.234 },
+                        position: { x: 90, y: 85 }
+                    }
+                ];
+
+                this.operations = operations;
+            }
+
+            renderOperationNodes() {
+                const container = document.getElementById('operationNodes');
+                container.innerHTML = '';
+
+                this.operations.forEach(operation => {
+                    const node = document.createElement('div');
+                    node.className = `operation-node ${operation.type}`;
+                    node.style.left = `${operation.position.x}%`;
+                    node.style.top = `${operation.position.y}%`;
+                    node.title = operation.description;
+
+                    node.addEventListener('click', () => this.onNodeClick(operation));
+                    node.addEventListener('mouseenter', (e) => this.onNodeHover(e, operation));
+                    node.addEventListener('mouseleave', () => this.onNodeLeave());
+
+                    container.appendChild(node);
+                });
+            }
+
+            renderLedgerEntries() {
+                const container = document.getElementById('ledgerEntries');
+                container.innerHTML = '';
+
+                this.operations.slice().reverse().forEach(operation => {
+                    const entry = document.createElement('div');
+                    entry.className = 'ledger-entry';
+                    entry.onclick = () => this.onEntryClick(operation);
+
+                    const timeAgo = this.getTimeAgo(operation.timestamp);
+                    const typeIcon = this.getTypeIcon(operation.type);
+
+                    entry.innerHTML = `
+                        <div class="entry-header">
+                            <span class="entry-type">${typeIcon} ${operation.type.toUpperCase()}</span>
+                            <span class="entry-time">${timeAgo}</span>
+                        </div>
+                        <div class="entry-description">${operation.description}</div>
+                        <div class="entry-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Entropy:</span>
+                                <span class="metric-value">${operation.metrics.entropy}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Resonance:</span>
+                                <span class="metric-value">${operation.metrics.resonance}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Balance:</span>
+                                <span class="metric-value">${operation.metrics.balance} ETH</span>
+                            </div>
+                        </div>
+                    `;
+
+                    container.appendChild(entry);
+                });
+            }
+
+            initializeGraph() {
+                const canvas = document.getElementById('balanceGraph');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+
+                // Draw graph
+                this.drawBalanceGraph(ctx);
+            }
+
+            drawBalanceGraph(ctx) {
+                const width = ctx.canvas.width;
+                const height = ctx.canvas.height;
+                const padding = 20;
+
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw grid
+                ctx.strokeStyle = 'rgba(100, 150, 255, 0.2)';
+                ctx.lineWidth = 1;
+
+                // Vertical lines
+                for (let i = 0; i <= 10; i++) {
+                    const x = padding + (width - 2 * padding) * i / 10;
+                    ctx.beginPath();
+                    ctx.moveTo(x, padding);
+                    ctx.lineTo(x, height - padding);
+                    ctx.stroke();
+                }
+
+                // Horizontal lines
+                for (let i = 0; i <= 5; i++) {
+                    const y = padding + (height - 2 * padding) * i / 5;
+                    ctx.beginPath();
+                    ctx.moveTo(padding, y);
+                    ctx.lineTo(width - padding, y);
+                    ctx.stroke();
+                }
+
+                // Draw balance line
+                ctx.strokeStyle = '#64b5f6';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+
+                this.operations.forEach((operation, index) => {
+                    const x = padding + (width - 2 * padding) * (index / (this.operations.length - 1));
+                    const y = height - padding - (height - 2 * padding) * (operation.metrics.balance / 30);
+                    
+                    if (index === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+
+                ctx.stroke();
+
+                // Draw points
+                ctx.fillStyle = '#64b5f6';
+                this.operations.forEach((operation, index) => {
+                    const x = padding + (width - 2 * padding) * (index / (this.operations.length - 1));
+                    const y = height - padding - (height - 2 * padding) * (operation.metrics.balance / 30);
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                });
+            }
+
+            startParticles() {
+                if (!this.particlesEnabled) return;
+
+                const container = document.getElementById('cosmicParticles');
+                
+                setInterval(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                    particle.style.animationDelay = Math.random() * 5 + 's';
+                    
+                    container.appendChild(particle);
+                    
+                    // Remove particle after animation
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 15000);
+                }, 500);
+            }
+
+            setupEventListeners() {
+                // Replay slider
+                const slider = document.getElementById('replaySlider');
+                slider.addEventListener('input', (e) => {
+                    this.seekToTime(e.target.value);
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.initializeGraph();
+                });
+            }
+
+            onNodeClick(operation) {
+                console.log('🌌 Operation clicked:', operation);
+                
+                // Highlight node
+                const nodes = document.querySelectorAll('.operation-node');
+                nodes.forEach(node => node.style.transform = 'scale(1)');
+                
+                const clickedNode = event.target;
+                clickedNode.style.transform = 'scale(3)';
+                clickedNode.style.boxShadow = '0 0 30px currentColor';
+                
+                // Show detailed info
+                this.showOperationDetails(operation);
+            }
+
+            onNodeHover(event, operation) {
+                const hoverInfo = document.getElementById('hoverInfo');
+                hoverInfo.innerHTML = `
+                    <h4>${operation.type.toUpperCase()} Operation</h4>
+                    <p><strong>Time:</strong> ${this.getTimeAgo(operation.timestamp)}</p>
+                    <p><strong>Description:</strong> ${operation.description}</p>
+                    <p><strong>Entropy:</strong> ${operation.metrics.entropy}</p>
+                    <p><strong>Resonance:</strong> ${operation.metrics.resonance}</p>
+                    <p><strong>Balance:</strong> ${operation.metrics.balance} ETH</p>
+                `;
+                
+                hoverInfo.style.left = event.pageX + 10 + 'px';
+                hoverInfo.style.top = event.pageY - 10 + 'px';
+                hoverInfo.style.display = 'block';
+            }
+
+            onNodeLeave() {
+                document.getElementById('hoverInfo').style.display = 'none';
+            }
+
+            onEntryClick(operation) {
+                console.log('📜 Ledger entry clicked:', operation);
+                
+                // Scroll to corresponding node
+                const node = document.querySelector(`[title="${operation.description}"]`);
+                if (node) {
+                    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Highlight node
+                    node.style.transform = 'scale(3)';
+                    node.style.boxShadow = '0 0 30px currentColor';
+                    
+                    setTimeout(() => {
+                        node.style.transform = 'scale(1)';
+                        node.style.boxShadow = 'none';
+                    }, 2000);
+                }
+            }
+
+            showOperationDetails(operation) {
+                // Create modal or expand ledger entry
+                const entry = document.querySelector(`[onclick*="${operation.id}"]`);
+                if (entry) {
+                    entry.style.borderColor = '#64b5f6';
+                    entry.style.boxShadow = '0 0 20px rgba(100, 150, 255, 0.5)';
+                    
+                    setTimeout(() => {
+                        entry.style.borderColor = '';
+                        entry.style.boxShadow = '';
+                    }, 3000);
+                }
+            }
+
+            getTimeAgo(timestamp) {
+                const now = Date.now();
+                const diff = now - timestamp;
+                
+                const hours = Math.floor(diff / 3600000);
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m ago`;
+                } else {
+                    return `${minutes}m ago`;
+                }
+            }
+
+            getTypeIcon(type) {
+                const icons = {
+                    auricle: '👁️',
+                    council: '🏛️',
+                    watchguard: '🛡️',
+                    anomaly: '⚠️',
+                    suppression: '🛑'
+                };
+                return icons[type] || '💠';
+            }
+
+            seekToTime(percentage) {
+                const totalTime = this.operations[this.operations.length - 1].timestamp - this.operations[0].timestamp;
+                const targetTime = this.operations[0].timestamp + (totalTime * percentage / 100);
+                
+                this.currentTime = targetTime;
+                this.updateReplayDisplay();
+            }
+
+            updateReplayDisplay() {
+                const timeStr = new Date(this.currentTime).toLocaleTimeString();
+                document.getElementById('replayTime').textContent = timeStr;
+            }
+
+            toggleReplay() {
+                this.isReplaying = !this.isReplaying;
+                const btn = document.querySelector('.control-button');
+                btn.classList.toggle('active');
+                
+                if (this.isReplaying) {
+                    this.startReplay();
+                } else {
+                    this.stopReplay();
+                }
+            }
+
+            startReplay() {
+                // Start replay animation
+                console.log('🔄 Replay started');
+            }
+
+            stopReplay() {
+                // Stop replay animation
+                console.log('⏸️ Replay stopped');
+            }
+
+            toggleParticles() {
+                this.particlesEnabled = !this.particlesEnabled;
+                const btn = document.querySelectorAll('.control-button')[1];
+                btn.classList.toggle('active');
+                
+                if (this.particlesEnabled) {
+                    this.startParticles();
+                }
+            }
+
+            exportLedger() {
+                const data = {
+                    operations: this.operations,
+                    exportedAt: new Date().toISOString(),
+                    version: '1.0.0'
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'celestial-ledger-export.json';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+            }
+
+            clearLedger() {
+                if (confirm('Are you sure you want to clear the celestial ledger?')) {
+                    this.operations = [];
+                    this.renderOperationNodes();
+                    this.renderLedgerEntries();
+                    this.initializeGraph();
+                }
+            }
+        }
+
+        // Global functions for controls
+        function togglePlayPause() {
+            const btn = document.getElementById('playPauseBtn');
+            if (btn.textContent === '⏸️') {
+                btn.textContent = '▶️';
+                // Pause replay
+            } else {
+                btn.textContent = '⏸️';
+                // Resume replay
+            }
+        }
+
+        function stepBackward() {
+            const slider = document.getElementById('replaySlider');
+            const newValue = Math.max(0, parseInt(slider.value) - 10);
+            slider.value = newValue;
+            slider.dispatchEvent(new Event('input'));
+        }
+
+        function stepForward() {
+            const slider = document.getElementById('replaySlider');
+            const newValue = Math.min(100, parseInt(slider.value) + 10);
+            slider.value = newValue;
+            slider.dispatchEvent(new Event('input'));
+        }
+
+        function toggleReplay() {
+            if (window.celestialLedger) {
+                window.celestialLedger.toggleReplay();
+            }
+        }
+
+        function toggleParticles() {
+            if (window.celestialLedger) {
+                window.celestialLedger.toggleParticles();
+            }
+        }
+
+        function exportLedger() {
+            if (window.celestialLedger) {
+                window.celestialLedger.exportLedger();
+            }
+        }
+
+        function clearLedger() {
+            if (window.celestialLedger) {
+                window.celestialLedger.clearLedger();
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.celestialLedger = new CelestialLedger();
+        });
+    </script>
+</body>
+</html> 

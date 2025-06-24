@@ -1,82 +1,226 @@
+# Copyright 2024 The Temporal Editioner Contributors
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  # MKP Metrics Exporter
+  mkp-metrics:
+    build: .
+    container_name: mkp-metrics-exporter
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
-      - NODE_ENV=development
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - LOG_LEVEL=debug
+      - MKP_ENV=production
+      - PROMETHEUS_PORT=8000
     volumes:
-      - .:/app
-      - /app/node_modules
-    depends_on:
-      - redis
-      - prometheus
-      - grafana
-      - alertmanager
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    command: redis-server --appendonly yes
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+    networks:
+      - mkp-network
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
+      test: ["CMD", "curl", "-f", "http://localhost:8000/metrics"]
+      interval: 30s
+      timeout: 10s
       retries: 3
+      start_period: 40s
 
+  # MKP Blockchain Logger
+  mkp-blockchain:
+    build: .
+    container_name: mkp-blockchain-logger
+    command: ["python", "blockchain_logger.py"]
+    environment:
+      - MKP_ENV=production
+      - BLOCKCHAIN_TYPE=local
+      - RPC_URL=http://localhost:8545
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./anomalies:/app/anomalies
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    depends_on:
+      - mkp-metrics
+
+  # MKP Sigil Distortion Engine
+  mkp-sigil:
+    build: .
+    container_name: mkp-sigil-distortion
+    command: ["python", "sigil_distort.py"]
+    environment:
+      - MKP_ENV=production
+      - SIGIL_CACHE_SIZE=1000
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./sigils:/app/sigils
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    depends_on:
+      - mkp-metrics
+
+  # MKP Gate Resonance Mesh (TypeScript service)
+  mkp-grm:
+    build: .
+    container_name: mkp-gate-resonance-mesh
+    command: ["node", "dist/MKPGateResonanceMesh.js"]
+    ports:
+      - "8001:8001"
+    environment:
+      - MKP_ENV=production
+      - GRM_PORT=8001
+      - NODE_ENV=production
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./src:/app/src
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    depends_on:
+      - mkp-metrics
+
+  # Prometheus for metrics collection
   prometheus:
-    image: prom/prometheus:v2.45.0
+    image: prom/prometheus:latest
+    container_name: mkp-prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules:/etc/prometheus/rules
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    depends_on:
-      - redis
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - mkp-network
+    restart: unless-stopped
 
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mkp-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=mkp_secure_password
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./mirror_entropy_dashboard.json:/etc/grafana/provisioning/dashboards/mkp_dashboard.json
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Redis for session storage
+  redis:
+    image: redis:7-alpine
+    container_name: mkp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # PostgreSQL for persistent data
+  postgres:
+    image: postgres:15-alpine
+    container_name: mkp-postgres
+    environment:
+      - POSTGRES_DB=mkp
+      - POSTGRES_USER=mkp_user
+      - POSTGRES_PASSWORD=mkp_secure_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - mkp-network
+    restart: unless-stopped
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: mkp-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - mkp-network
+    restart: unless-stopped
+    depends_on:
+      - mkp-metrics
+      - mkp-grm
+      - grafana
+
+  # Alertmanager for notifications
   alertmanager:
-    image: prom/alertmanager:v0.25.0
+    image: prom/alertmanager:latest
+    container_name: mkp-alertmanager
     ports:
       - "9093:9093"
     volumes:
-      - ./alertmanager:/etc/alertmanager
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager/templates:/etc/alertmanager/templates
       - alertmanager_data:/alertmanager
+    networks:
+      - mkp-network
+    restart: unless-stopped
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
       - '--storage.path=/alertmanager'
 
-  grafana:
-    image: grafana/grafana:10.0.0
-    ports:
-      - "3001:3000"
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    depends_on:
-      - prometheus
-      - alertmanager
-
 volumes:
-  redis_data:
   prometheus_data:
+    driver: local
   grafana_data:
-  alertmanager_data: 
+    driver: local
+  redis_data:
+    driver: local
+  postgres_data:
+    driver: local
+  alertmanager_data:
+    driver: local
+
+networks:
+  mkp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 
