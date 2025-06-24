@@ -17,17 +17,21 @@ import { EventEmitter } from 'events';
 import logger from '../logger';
 import { RiddlerExplorerService, Steward } from './RiddlerExplorerService';
 
-export type ThreatLevel = 'parasite' | 'flea' | 'rodent' | 'cat' | 'dog' | 'elephant' | 'dragon';
-export type WatcherState = 'dormant' | 'alert' | 'hunting' | 'engaged';
+export type ThreatLevel = 'virus' | 'bacteria' | 'parasite' | 'mite' | 'tick' | 'flea' | 'spider' | 'scorpion' | 
+  'mouse' | 'rat' | 'rodent' | 'ferret' | 'weasel' | 'cat' | 'lynx' | 'dog' | 'wolf' | 'hyena' | 
+  'bear' | 'lion' | 'tiger' | 'rhino' | 'elephant' | 'mammoth' | 'dragon' | 'hydra' | 'leviathan' | 'titan';
+
+export type WatcherState = 'dormant' | 'alert' | 'hunting' | 'engaged' | 'frenzied' | 'berserk';
 
 export interface Threat {
   id: string;
   level: ThreatLevel;
   description: string;
-  severity: number; // 1-10
+  severity: number; // 1-100
   location: string;
   timestamp: number;
   handled: boolean;
+  escalations: number;
 }
 
 export interface Watcher {
@@ -37,6 +41,8 @@ export interface Watcher {
   threatsHandled: number;
   lastActive: number;
   capabilities: string[];
+  energyLevel: number; // 0-100
+  aggression: number; // 0-10
 }
 
 export class WatchguardExplorer extends EventEmitter {
@@ -44,7 +50,11 @@ export class WatchguardExplorer extends EventEmitter {
   private threats: Map<string, Threat> = new Map();
   private riddler: RiddlerExplorerService;
   private steward: Steward;
-  private escalationChain: ThreatLevel[] = ['parasite', 'flea', 'rodent', 'cat', 'dog', 'elephant', 'dragon'];
+  private escalationChain: ThreatLevel[] = [
+    'virus', 'bacteria', 'parasite', 'mite', 'tick', 'flea', 'spider', 'scorpion',
+    'mouse', 'rat', 'rodent', 'ferret', 'weasel', 'cat', 'lynx', 'dog', 'wolf', 'hyena',
+    'bear', 'lion', 'tiger', 'rhino', 'elephant', 'mammoth', 'dragon', 'hydra', 'leviathan', 'titan'
+  ];
   
   constructor(riddler: RiddlerExplorerService, steward: Steward) {
     super();
