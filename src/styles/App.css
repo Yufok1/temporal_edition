@@ -15,6 +15,140 @@ limitations under the License.
 
 */
 
+.App {
+  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+  color: white;
+}
+
+.system-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.mode-indicator {
+  background: rgba(79, 158, 255, 0.2);
+  color: #4f9eff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  border: 1px solid rgba(79, 158, 255, 0.3);
+  font-weight: 500;
+}
+
+.separation-status {
+  background: rgba(68, 255, 68, 0.2);
+  color: #44ff44;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  border: 1px solid rgba(68, 255, 68, 0.3);
+  font-weight: 500;
+}
+
+.standalone-interface {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem;
+}
+
+.standalone-interface h1 {
+  color: #4f9eff;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.standalone-interface p {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.feature-status {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: left;
+  min-width: 300px;
+}
+
+.feature-status h3 {
+  color: #4f9eff;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.feature-status ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-status li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+}
+
+.feature-status li:last-child {
+  border-bottom: none;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #4f9eff;
+  font-size: 1.1rem;
+}
+
+.loading::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid #4f9eff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .system-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .standalone-interface {
+    padding: 1rem;
+  }
+  
+  .standalone-interface h1 {
+    font-size: 2rem;
+  }
+  
+  .feature-status {
+    min-width: auto;
+    width: 100%;
+  }
+}
 
 .app {
   min-height: 100vh;
@@ -84,14 +218,6 @@ limitations under the License.
   .app {
     padding: 5px;
   }
-}
-
-.App {
-  text-align: center;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
 }
 
 h1 {

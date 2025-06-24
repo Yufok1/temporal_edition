@@ -7,8 +7,24 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "jest",
+    "eject": "react-scripts eject",
+    "test:integration": "jest --config=jest.integration.config.js",
+    "test:benchmarks": "jest --config=jest.integration.config.js src/__tests__/benchmarks/",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "start:auricle": "scripts/configure-system.sh start auricle-only",
+    "start:whale": "scripts/configure-system.sh start whale-only",
+    "start:crypto": "scripts/configure-system.sh start crypto-only",
+    "start:dev": "scripts/configure-system.sh start development",
+    "start:minimal": "scripts/configure-system.sh start minimal",
+    "config:auricle": "scripts/configure-system.sh config auricle-only",
+    "config:whale": "scripts/configure-system.sh config whale-only",
+    "config:crypto": "scripts/configure-system.sh config crypto-only",
+    "config:dev": "scripts/configure-system.sh config development",
+    "config:minimal": "scripts/configure-system.sh config minimal",
+    "system:status": "scripts/configure-system.sh status",
+    "system:validate": "scripts/configure-system.sh validate"
   },
   "dependencies": {
     "@types/react": "^18.0.0",
