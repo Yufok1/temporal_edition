@@ -64,71 +64,64 @@ export class WatchguardExplorer extends EventEmitter {
   }
 
   private initializeWatchers(): void {
-    // Initialize the hierarchy of watchers
-    this.watchers.set('parasite', {
-      id: 'watch-parasite',
-      type: 'parasite',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['memory_leak_detection', 'micro_intrusion_scan', 'bit_flip_detection']
+    // Initialize the FULL hierarchy of watchers with wallet associations
+    const watcherConfigs: Array<{type: ThreatLevel, wallet?: string, capabilities: string[], aggression: number}> = [
+      // Micro level
+      {type: 'virus', aggression: 1, capabilities: ['code_injection', 'replication_detection', 'mutation_tracking']},
+      {type: 'bacteria', aggression: 1, capabilities: ['colony_detection', 'growth_pattern_analysis', 'contamination_tracking']},
+      {type: 'parasite', aggression: 2, capabilities: ['memory_leak_detection', 'micro_intrusion_scan', 'bit_flip_detection']},
+      {type: 'mite', wallet: '0x934931532Ac97294866C3df955dE33891c2F7ACa', aggression: 2, capabilities: ['dust_attack_detection', 'micro_transaction_analysis']},
+      {type: 'tick', wallet: '0x69E1A832a800aB448595717115B98E53C8644b0C', aggression: 3, capabilities: ['persistent_threat_detection', 'blood_drain_monitoring']},
+      {type: 'flea', wallet: '0x2aE46AAdE49Bf2f62dea91fd1338Dd89BAef042e', aggression: 3, capabilities: ['packet_sniffing', 'port_scan_detection', 'small_payload_analysis']},
+      
+      // Small creatures
+      {type: 'spider', aggression: 4, capabilities: ['web_traffic_analysis', 'trap_detection', 'connection_mapping']},
+      {type: 'scorpion', wallet: '0xc2BF3D050AD7b43a01dE4CEf0C7f1D432dE71A3D', aggression: 5, capabilities: ['venom_payload_detection', 'sting_operation_tracking']},
+      {type: 'mouse', wallet: '0x5A12c5a8F6a57101550C4591C46E8ecA13a01fe0', aggression: 2, capabilities: ['nibble_attack_detection', 'resource_pilfering']},
+      {type: 'rat', wallet: '0xE7dcF9fbB1DCec6aF351145a83B68f014377cf7e', aggression: 3, capabilities: ['tunnel_detection', 'plague_vector_analysis']},
+      {type: 'rodent', aggression: 3, capabilities: ['file_integrity_check', 'process_monitoring', 'resource_theft_detection']},
+      
+      // Medium creatures
+      {type: 'ferret', aggression: 4, capabilities: ['tunnel_exploration', 'hidden_cache_detection']},
+      {type: 'weasel', aggression: 5, capabilities: ['stealth_infiltration', 'deception_detection']},
+      {type: 'cat', wallet: '0x722796ED8Da9c1210052Fb546641201137FFE2a6', aggression: 5, capabilities: ['stealth_attack_detection', 'privilege_escalation_monitoring']},
+      {type: 'lynx', aggression: 6, capabilities: ['advanced_stalking', 'silent_kill_detection']},
+      {type: 'dog', wallet: '0xa4dcccd4c7a0f1204a572e1c4DC1e77B7A1AcCfb', aggression: 4, capabilities: ['perimeter_defense', 'intrusion_prevention', 'loyalty_verification']},
+      {type: 'wolf', wallet: '0x4822AF6214a909A6e41eB4D74C430E8390b069a7', aggression: 7, capabilities: ['pack_coordination', 'hunt_pattern_analysis', 'alpha_protocol']},
+      {type: 'hyena', aggression: 6, capabilities: ['scavenger_detection', 'group_attack_monitoring']},
+      
+      // Large predators
+      {type: 'bear', aggression: 8, capabilities: ['brute_force_detection', 'hibernation_monitoring', 'territory_defense']},
+      {type: 'lion', aggression: 8, capabilities: ['pride_coordination', 'apex_predator_protocol', 'roar_broadcast']},
+      {type: 'tiger', aggression: 9, capabilities: ['solitary_hunt_tracking', 'ambush_detection', 'stripe_camouflage_analysis']},
+      
+      // Massive creatures
+      {type: 'rhino', aggression: 7, capabilities: ['charge_detection', 'armor_penetration_test', 'horn_attack_analysis']},
+      {type: 'elephant', wallet: '0x05ABf6397ACD321d4727FD1A5D7EEF9ad7aa2CE1', aggression: 5, capabilities: ['heavy_load_analysis', 'memory_forensics', 'herd_protection']},
+      {type: 'mammoth', aggression: 6, capabilities: ['ice_age_protocol', 'massive_stomp_detection', 'tusk_warfare']},
+      
+      // Mythical creatures
+      {type: 'dragon', wallet: '0xb255e01321FFf9e0b06EF9B1f5ad1a4efb5Fc845', aggression: 10, capabilities: ['catastrophic_threat_response', 'cryptographic_fire', 'hoard_protection']},
+      {type: 'hydra', aggression: 10, capabilities: ['multi_head_coordination', 'regeneration_protocol', 'poison_breath']},
+      {type: 'leviathan', aggression: 10, capabilities: ['deep_sea_monitoring', 'tsunami_generation', 'abyss_control']},
+      {type: 'titan', aggression: 10, capabilities: ['reality_warping', 'divine_intervention', 'cosmos_manipulation']}
+    ];
+
+    // Initialize all watchers
+    watcherConfigs.forEach(config => {
+      this.watchers.set(config.type, {
+        id: `watch-${config.type}`,
+        type: config.type,
+        state: config.type === 'dog' ? 'alert' : 'dormant',
+        threatsHandled: 0,
+        lastActive: config.type === 'dog' ? Date.now() : 0,
+        capabilities: config.capabilities,
+        energyLevel: 100,
+        aggression: config.aggression
+      });
     });
 
-    this.watchers.set('flea', {
-      id: 'watch-flea',
-      type: 'flea',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['packet_sniffing', 'port_scan_detection', 'small_payload_analysis']
-    });
-
-    this.watchers.set('rodent', {
-      id: 'watch-rodent',
-      type: 'rodent',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['file_integrity_check', 'process_monitoring', 'resource_theft_detection']
-    });
-
-    this.watchers.set('cat', {
-      id: 'watch-cat',
-      type: 'cat',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['stealth_attack_detection', 'privilege_escalation_monitoring', 'lateral_movement_tracking']
-    });
-
-    this.watchers.set('dog', {
-      id: 'watch-dog',
-      type: 'dog',
-      state: 'alert',
-      threatsHandled: 0,
-      lastActive: Date.now(),
-      capabilities: ['perimeter_defense', 'intrusion_prevention', 'loyalty_verification', 'pack_coordination']
-    });
-
-    this.watchers.set('elephant', {
-      id: 'watch-elephant',
-      type: 'elephant',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['heavy_load_analysis', 'ddos_mitigation', 'infrastructure_protection', 'memory_forensics']
-    });
-
-    this.watchers.set('dragon', {
-      id: 'watch-dragon',
-      type: 'dragon',
-      state: 'dormant',
-      threatsHandled: 0,
-      lastActive: 0,
-      capabilities: ['catastrophic_threat_response', 'system_wide_purge', 'cryptographic_fire', 'temporal_rollback']
-    });
-
-    logger.info('Watchguard hierarchy initialized');
+    logger.info('Full Watchguard hierarchy initialized with ' + this.watchers.size + ' watchers');
   }
 
   async detectThreat(data: any): Promise<Threat | null> {
